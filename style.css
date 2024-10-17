@@ -160,6 +160,7 @@ section {
   justify-content: center;
   gap: 5rem;
   height: 80vh;
+  position: relative;
 }
 
 .section__pic-container {
@@ -391,6 +392,7 @@ article p {
   justify-content: center;
   flex-direction: column;
   height: 70vh;
+  position: relative;
 }
 
 .contact-info-upper-container {
