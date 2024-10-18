@@ -441,7 +441,7 @@ footer p {
 
 #gallery {
   position: relative;
-  height: 100vh; /* Ensure the gallery section does not exceed the screen size */
+  height: 500px;
   overflow: hidden;
 }
 
@@ -455,7 +455,8 @@ footer p {
   min-width: 100%;
   box-sizing: border-box;
   position: relative;
-  height: 100%; /* Ensure each slide takes the full height of the screen */
+  display: flex;
+  flex-direction: column; /* Stack the image and description vertically */
 }
 
 .gallery-slide img {

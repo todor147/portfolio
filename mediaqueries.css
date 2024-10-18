@@ -96,4 +96,36 @@
   .text-container {
     text-align: justify;
   }
+  #about {
+    margin-top: -20vh;
+  }
+  #experience {
+    margin-top: -5vh;
+  }
+  #gallery {
+    position: relative;
+    height: auto !important;
+    overflow: hidden;
+  }
+  .gallery-slide {
+    min-width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column; /* Stack the image and description vertically */
+  }
+  .gallery-slide img {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    display: block;
+  }
+  .description {
+    background-color: rgb(250, 250, 250); /* Set background color to white */
+    color: black; /* Set text color to black for contrast */
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center; /* Center the text */
+    width: 100%; /* Make the description take the full width of the slide */
+    box-sizing: border-box; /* Include padding in the element's total width and height */
+  }
 }
