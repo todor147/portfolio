@@ -97,7 +97,6 @@ a:hover {
   position: absolute;
   top: 100%;
   right: 0%;
-  background-color: white;
   width: fit-content;
   max-height: 0;
   overflow: hidden;
@@ -120,6 +119,7 @@ a:hover {
 
 .menu-links.open {
   max-height: 300px;
+  z-index: 1000;
 }
 
 .hamburger-icon.open span:first-child {
@@ -306,7 +306,6 @@ section {
 
 #experience {
   position: relative;
-  margin-bottom: 75vh;
 }
 
 .experience-sub-title {
@@ -372,8 +371,8 @@ article p {
 
 .project-img {
   border-radius: 2rem;
-  width: 50%;
-  height: 50%;
+  width: 100%;
+  height: auto;
 }
 
 .project-title {
