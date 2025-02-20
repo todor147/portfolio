@@ -7,9 +7,19 @@
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="mediaqueries.css" />
     <link rel="icon" href="./assets/favcon.png" type="image/jpeg" />
+    <meta name="description" content="Todor Aleksandrov - Computer Science Student Portfolio. Featuring projects, experience, and skills in software development and hospitality.">
+    <meta name="keywords" content="Todor Aleksandrov, Portfolio, Computer Science, Software Development, University of Limerick">
+    <meta property="og:title" content="Todor Aleksandrov - Portfolio">
+    <meta property="og:description" content="Computer Science Student Portfolio">
+    <meta property="og:image" content="./assets/profile-pic.jpg">
+    <meta property="og:url" content="https://your-website-url.com">
+    <meta name="twitter:card" content="summary_large_image">
   </head>
 
   <body>
+    <div class="loader-wrapper">
+      <div class="loader"></div>
+    </div>
     <nav id="desktop-nav">
       <div class="logo">Todor Aleksandrov</div>
       <div>
@@ -26,9 +36,7 @@
       <div class="logo">Todor Aleksandrov</div>
       <div class="hamburger-menu">
         <div class="hamburger-icon" onclick="toggleMenu()">
-          <span></span>
-          <span></span>
-          <span></span>
+          ☰
         </div>
         <div class="menu-links">
           <li><a href="#about" onclick="toggleMenu()">About</a></li>
@@ -38,6 +46,7 @@
           <li><a href="#gallery" onclick="toggleMenu()">Gallery</a></li>
         </div>
       </div>
+      <div class="menu-overlay"></div>
     </nav>
     <section id="profile">
       <div class="section__pic-container">
@@ -57,7 +66,7 @@
           >
             View CV
           </button>
-          <button class="btn btn-color-1" onclick="location.href='./#contact'">
+          <button class="btn btn-color-1" onclick="location.href='#contact'">
             Contact Info
           </button>
         </div>
@@ -76,12 +85,6 @@
           />
         </div>
       </div>
-      <img
-        src="./assets/arrow.jpg"
-        alt="Arrow Icon"
-        class="icon arrow"
-        onclick="location.href='./#about'"
-      />
     </section>
     <section id="about">
       <p class="section__text__p1">Get To Know More</p>
@@ -101,7 +104,8 @@
                 src="./assets/experience.jpg"
                 alt="Experience icon"
                 class="icon"
-                onclick="location.href='./#experience'"
+                onclick="location.href='#experience'"
+                style="cursor: pointer;"
               />
               <h3>Experience</h3>
               <p>
@@ -139,12 +143,6 @@
           </div>
         </div>
       </div>
-      <img
-        src="./assets/arrow.jpg"
-        alt="Arrow Icon"
-        class="icon arrow"
-        onclick="location.href='./#experience'"
-      />
     </section>
     <section id="experience">
       <p class="section__text__p1">Explore my</p>
@@ -432,12 +430,6 @@
           </div>
         </div>
       </div>
-      <img
-        src="./assets/arrow.jpg"
-        alt="Arrow Icon"
-        class="icon arrow"
-        onclick="location.href='./#projects'"
-      />
     </section>
     <section id="projects">
       <p class="section__text__p1">Browse My</p>
@@ -473,12 +465,6 @@
           </div>
         </div>
       </div>
-      <img
-        src="./assets/arrow.jpg"
-        alt="Arrow Icon"
-        class="icon arrow"
-        onclick="location.href='./#contact'"
-      />
     </section>
     <section id="contact">
       <p class="section__text__p1">Get In Touch</p>
@@ -508,21 +494,13 @@
           </p>
         </div>
       </div>
-      <img
-        src="./assets/arrow.jpg"
-        alt="Arrow Icon"
-        class="icon arrow"
-        onclick="location.href='./#gallery'"
-      />
     </section>
     <section id="gallery">
       <h1 class="title">Gallery</h1>
       <div class="gallery-container">
         <div class="gallery-slide">
           <img src="./assets/leaving cert.jpg" alt="LC Project" />
-          <p class="description">
-            Leaving Certificate Construction Project - H1
-          </p>
+          <p class="description">Leaving Certificate Construction Project - H1</p>
         </div>
         <div class="gallery-slide">
           <img src="./assets/agency work.jpg" alt="Agency Picture" />
@@ -542,9 +520,7 @@
         </div>
         <div class="gallery-slide">
           <img src="./assets/lib desk.jpg" alt="Library Desk" />
-          <p class="description">
-            Peer Advisor desk at the University of Limerick
-          </p>
+          <p class="description">Peer Advisor desk at the University of Limerick</p>
         </div>
         <div class="gallery-slide">
           <img src="./assets/pc build.jpg" alt="PC Build" />
@@ -568,9 +544,7 @@
         </div>
         <div class="gallery-slide">
           <img src="./assets/vines in bg.jpg" alt="Vines" />
-          <p class="description">
-            Vines in Northern Bulgaria with the Danube in the background
-          </p>
+          <p class="description">Vines in Northern Bulgaria with the Danube in the background</p>
         </div>
         <div class="gallery-slide">
           <img src="./assets/waitering.jpg" alt="Waiter" />
@@ -592,8 +566,15 @@
           </ul>
         </div>
       </nav>
-      <p>Copyright © 2024 Todor Aleksandrov. All rights reserved.</p>
+      <p>Copyright © <span id="currentYear"></span> Todor Aleksandrov. All rights reserved.</p>
     </footer>
+    <div class="floating-arrow" onclick="location.href='#profile'">
+      <img
+        src="./assets/arrow.jpg"
+        alt="Arrow up"
+        class="icon"
+      />
+    </div>
     <script src="script.js"></script>
   </body>
 </html>
