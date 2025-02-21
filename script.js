@@ -1,32 +1,55 @@
-function toggleMenu() {
+function closeMenu() {
   const menu = document.querySelector(".menu-links");
   const icon = document.querySelector(".hamburger-icon");
   const overlay = document.querySelector(".menu-overlay");
   const body = document.body;
 
-  menu.classList.toggle("open");
-  icon.classList.toggle("open");
-  overlay.classList.toggle("open");
-  
-  // Toggle body scroll
+  menu.classList.remove("open");
+  icon.innerHTML = "☰";
+  overlay.classList.remove("open");
+  body.style.overflow = "auto";
+}
+
+function openMenu() {
+  const menu = document.querySelector(".menu-links");
+  const icon = document.querySelector(".hamburger-icon");
+  const overlay = document.querySelector(".menu-overlay");
+  const body = document.body;
+
+  menu.classList.add("open");
+  icon.innerHTML = "×";
+  overlay.classList.add("open");
+  body.style.overflow = "hidden";
+}
+
+function toggleMenu() {
+  const menu = document.querySelector(".menu-links");
+
   if (menu.classList.contains("open")) {
-    body.style.overflow = "hidden";
+    closeMenu();
   } else {
-    body.style.overflow = "auto";
+    openMenu();
   }
 }
 
 // Close menu when clicking overlay
-document.querySelector(".menu-overlay")?.addEventListener("click", toggleMenu);
+document.querySelector(".menu-overlay")?.addEventListener("click", closeMenu);
 
 // Close menu when clicking any link or heading
 document.querySelectorAll(".menu-links a, .title, .experience-sub-title").forEach(element => {
   element.addEventListener("click", () => {
     const menu = document.querySelector(".menu-links");
     if (menu.classList.contains("open")) {
-      toggleMenu();
+      closeMenu();
     }
   });
+});
+
+// Close menu when screen is resized to desktop size
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 768) {
+    closeMenu();
+  }
 });
 
 let currentSlide = 0;
@@ -71,32 +94,137 @@ function handleTouchEnd() {
 
 function changeSlide(direction) {
   const slides = document.querySelectorAll(".gallery-slide");
+  if (!slides.length) return;
+  
+  // Update current slide index
   currentSlide = (currentSlide + direction + slides.length) % slides.length;
+  
+  // Calculate the offset for transform
   const offset = -currentSlide * 100;
-  document.querySelector(
-    ".gallery-container"
-  ).style.transform = `translateX(${offset}%)`;
+  
+  // Update transform with GPU acceleration
+  const container = document.querySelector(".gallery-container");
+  if (container) {
+    container.style.transform = `translate3d(${offset}%, 0, 0)`;
+    
+    // Force browser reflow to ensure transform is applied
+    container.offsetHeight;
+    
+    // Ensure all slides are visible
+    slides.forEach((slide, index) => {
+      slide.style.opacity = '1';
+      slide.style.visibility = 'visible';
+      slide.style.transform = 'none';
+    });
+  }
+  
+  // Adjust gallery height for the new slide
   adjustGalleryHeight();
 }
 
 function adjustGalleryHeight() {
   const galleryContainer = document.querySelector(".gallery-container");
-  const activeSlide = document.querySelectorAll(".gallery-slide")[currentSlide];
-  const activeImage = activeSlide.querySelector("img");
-  const activeDescription = activeSlide.querySelector(".description");
+  const slides = document.querySelectorAll(".gallery-slide");
+  if (!galleryContainer || !slides.length) return;
 
-  if (
-    activeImage &&
-    activeDescription &&
-    window.matchMedia("(min-width: 600px)").matches
-  ) {
-    galleryContainer.style.height = activeImage.clientHeight + "px";
+  // Reset any previously set heights
+  galleryContainer.style.height = '';
+  slides.forEach(slide => {
+    slide.style.height = '';
+  });
+
+  // Find the maximum image height across all slides
+  let maxImageHeight = 0;
+  let maxDescriptionHeight = 0;
+
+  slides.forEach(slide => {
+    const img = slide.querySelector("img");
+    const description = slide.querySelector(".description");
+    
+    if (img) {
+      // Get the natural image dimensions
+      const imgAspectRatio = img.naturalWidth / img.naturalHeight;
+      const containerWidth = slide.clientWidth;
+      const calculatedHeight = containerWidth / imgAspectRatio;
+      
+      // Limit the height to a reasonable maximum
+      const maxAllowedHeight = window.innerHeight * 0.6; // 60% of viewport height
+      const finalHeight = Math.min(calculatedHeight, maxAllowedHeight);
+      
+      maxImageHeight = Math.max(maxImageHeight, finalHeight);
+    }
+    
+    if (description) {
+      maxDescriptionHeight = Math.max(maxDescriptionHeight, description.offsetHeight);
+    }
+  });
+
+  // Apply the consistent heights
+  if (window.matchMedia("(min-width: 600px)").matches) {
+    // Desktop view
+    const totalHeight = maxImageHeight + maxDescriptionHeight + 40; // Adding padding
+    galleryContainer.style.height = `${totalHeight}px`;
+    
+    slides.forEach(slide => {
+      const img = slide.querySelector("img");
+      if (img) {
+        img.style.maxHeight = `${maxImageHeight}px`;
+      }
+    });
   } else {
-    const totalHeight =
-      activeImage.clientHeight + activeDescription.clientHeight + 20;
-    galleryContainer.style.height = totalHeight + "px";
+    // Mobile view
+    const totalHeight = maxImageHeight + maxDescriptionHeight + 20; // Less padding for mobile
+    galleryContainer.style.height = `${totalHeight}px`;
+    
+    slides.forEach(slide => {
+      const img = slide.querySelector("img");
+      if (img) {
+        img.style.maxHeight = `${maxImageHeight}px`;
+      }
+    });
   }
 }
+
+// Initialize gallery on load
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.querySelector(".gallery-container");
+  const slides = document.querySelectorAll(".gallery-slide");
+  
+  if (container && slides.length) {
+    // Set initial transform
+    container.style.transform = 'translate3d(0%, 0, 0)';
+    
+    // Ensure all slides are initially visible
+    slides.forEach(slide => {
+      slide.style.opacity = '1';
+      slide.style.visibility = 'visible';
+      slide.style.transform = 'none';
+    });
+    
+    // Wait for all images to load before adjusting height
+    const images = container.querySelectorAll('img');
+    let loadedImages = 0;
+    
+    images.forEach(img => {
+      if (img.complete) {
+        loadedImages++;
+        if (loadedImages === images.length) {
+          adjustGalleryHeight();
+        }
+      } else {
+        img.onload = () => {
+          loadedImages++;
+          if (loadedImages === images.length) {
+            adjustGalleryHeight();
+          }
+        };
+      }
+    });
+  }
+});
+
+// Adjust gallery height on window resize
+window.addEventListener('resize', adjustGalleryHeight);
 
 // Show/hide floating arrow based on scroll position
 window.addEventListener('scroll', () => {
@@ -134,4 +262,108 @@ window.addEventListener('load', () => {
   setTimeout(() => {
     loaderWrapper.style.display = 'none';
   }, 500);
+});
+
+// Theme toggle functionality
+function toggleTheme(event) {
+  // Prevent the menu from closing when clicking the theme toggle
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  
+  // Update the theme
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  
+  // Update theme toggle buttons
+  const themeToggles = document.querySelectorAll('.theme-toggle');
+  themeToggles.forEach(toggle => {
+    toggle.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
+    toggle.setAttribute('aria-label', newTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+  });
+}
+
+// Initialize theme
+document.addEventListener('DOMContentLoaded', () => {
+  // Check for saved theme preference or system preference
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+  
+  // Set initial theme
+  document.documentElement.setAttribute('data-theme', theme);
+  
+  // Update theme toggle buttons
+  const themeToggles = document.querySelectorAll('.theme-toggle');
+  themeToggles.forEach(toggle => {
+    toggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
+    toggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    
+    // Remove any existing event listeners
+    toggle.removeEventListener('click', toggleTheme);
+    // Add new event listener
+    toggle.addEventListener('click', toggleTheme);
+  });
+});
+
+// Update scroll detection for nav
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('#desktop-nav');
+  const hamburgerNav = document.querySelector('#hamburger-nav');
+  const scrolled = window.scrollY > 20;
+  
+  // Add/remove scrolled class smoothly
+  if (scrolled) {
+    nav?.classList.add('scrolled');
+    hamburgerNav?.classList.add('scrolled');
+  } else {
+    nav?.classList.remove('scrolled');
+    hamburgerNav?.classList.remove('scrolled');
+  }
+});
+
+// Project filtering
+function filterProjects(category) {
+  const projects = document.querySelectorAll('.project-card');
+  const buttons = document.querySelectorAll('.filter-btn');
+  
+  // Update active button
+  buttons.forEach(btn => {
+    btn.classList.remove('active');
+    if(btn.dataset.category === category) {
+      btn.classList.add('active');
+    }
+  });
+  
+  // Filter projects
+  projects.forEach(project => {
+    const tags = project.dataset.tags.split(',');
+    if(category === 'all' || tags.includes(category)) {
+      project.classList.remove('hidden');
+      setTimeout(() => {
+        project.style.opacity = '1';
+        project.style.transform = 'scale(1)';
+      }, 0);
+    } else {
+      project.style.opacity = '0';
+      project.style.transform = 'scale(0.8)';
+      setTimeout(() => {
+        project.classList.add('hidden');
+      }, 300);
+    }
+  });
+}
+
+// Initialize project filters
+document.addEventListener('DOMContentLoaded', () => {
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      filterProjects(button.dataset.category);
+    });
+  });
 });

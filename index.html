@@ -21,7 +21,7 @@
       <div class="loader"></div>
     </div>
     <nav id="desktop-nav">
-      <div class="logo">Todor Aleksandrov</div>
+      <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Todor Aleksandrov</div>
       <div>
         <ul class="nav-links">
           <li><a href="#about">About</a></li>
@@ -29,11 +29,12 @@
           <li><a href="#projects">Projects</a></li>
           <li><a href="#contact">Contact</a></li>
           <li><a href="#gallery">Gallery</a></li>
+          <li><button class="theme-toggle" aria-label="Toggle dark mode">🌙</button></li>
         </ul>
       </div>
     </nav>
     <nav id="hamburger-nav">
-      <div class="logo">Todor Aleksandrov</div>
+      <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Todor Aleksandrov</div>
       <div class="hamburger-menu">
         <div class="hamburger-icon" onclick="toggleMenu()">
           ☰
@@ -44,6 +45,7 @@
           <li><a href="#projects" onclick="toggleMenu()">Projects</a></li>
           <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
           <li><a href="#gallery" onclick="toggleMenu()">Gallery</a></li>
+          <li><button class="theme-toggle" aria-label="Toggle dark mode">🌙</button></li>
         </div>
       </div>
       <div class="menu-overlay"></div>
@@ -223,27 +225,45 @@
             <h2 class="experience-sub-title">University of Limerick</h2>
             <div class="article-container">
               <article>
-                <a href="https://www.ul.ie/" target="_blank">
-                  <img src="./assets/ul.png" alt="UL Icon" class="icon"
-                /></a>
+                <a href="https://ictlc.ul.ie/web/" target="_blank">
+                  <img src="./assets/ul.png" alt="UL Icon" class="icon" />
+                </a>
                 <div>
-                  <h3>Peer Advisor</h3>
-                  <p>UL, 08.2023 - 05.2025</p>
+                  <h3>ICT Learning Centre Tutor</h3>
+                  <p>ICTLC, 02.2025 - Present</p>
                 </div>
               </article>
               <article>
-                <a href="https://www.ul.ie/" target="_blank">
-                  <img src="./assets/ul.png" alt="UL Icon" class="icon"
-                /></a>
+                <a href="https://www.ul.ie/library" target="_blank">
+                  <img src="./assets/ul.png" alt="UL Icon" class="icon" />
+                </a>
+                <div>
+                  <h3>Peer Advisor</h3>
+                  <p>Glucksman Library, 01.2025 - Present</p>
+                </div>
+              </article>
+              <article>
+                <a href="https://www.ul.ie/library" target="_blank">
+                  <img src="./assets/ul.png" alt="UL Icon" class="icon" />
+                </a>
+                <div>
+                  <h3>Peer Advisor</h3>
+                  <p>Glucksman Library, 08.2023 - 05.2025</p>
+                </div>
+              </article>
+              <article>
+                <a href="https://ictlc.ul.ie/web/" target="_blank">
+                  <img src="./assets/ul.png" alt="UL Icon" class="icon" />
+                </a>
                 <div>
                   <h3>PSLG Tutor</h3>
-                  <p>UL, 08.2023 - 05.2025</p>
+                  <p>ICTLC, 08.2023 - 05.2025</p>
                 </div>
               </article>
               <article>
                 <a href="https://ulstudentlife.ie/" target="_blank">
-                  <img src="./assets/ulsl.jpg" alt="ULSL Icon" class="icon"
-                /></a>
+                  <img src="./assets/ulsl.jpg" alt="ULSL Icon" class="icon" />
+                </a>
                 <div>
                   <h3>Creative Crew</h3>
                   <p>ULSL, 08.2023 - 05.2025</p>
@@ -434,31 +454,58 @@
     <section id="projects">
       <p class="section__text__p1">Browse My</p>
       <h1 class="title">Projects</h1>
-      <div class="experience-details-container">
-        <div class="about-containers">
-          <div class="details-container color-container">
-            <div class="article-container">
-              <img
-                src="./assets/project-1.png"
-                alt="Project 1"
-                class="project-img"
-              />
+      
+      <div class="project-filters">
+        <button class="filter-btn active" data-category="all">All</button>
+        <button class="filter-btn" data-category="javascript">JavaScript</button>
+        <button class="filter-btn" data-category="python">Python</button>
+        <button class="filter-btn" data-category="java">Java</button>
+        <button class="filter-btn" data-category="cpp">C++</button>
+        <button class="filter-btn" data-category="csharp">C#</button>
+      </div>
+
+      <div class="projects-grid">
+        <!-- Monkey Rescue Project -->
+        <div class="project-card" data-tags="html,css">
+          <div class="project-img-container">
+            <img src="./assets/project-1.png" alt="Monkey Rescue Project" class="project-img">
+          </div>
+          <div class="project-content">
+            <div class="project-tags">
+              <span class="project-tag">HTML5</span>
+              <span class="project-tag">CSS3</span>
             </div>
-            <h2 class="experience-sub-title project-title">
-              Monkey Rescue - College Project
-            </h2>
-            <div class="btn-container">
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="window.open('https://github.com/todor147/monkey-rescue', '_blank')"
-              >
+            <h3 class="project-title">Monkey Rescue Game</h3>
+            <p class="project-description">A fun and interactive game built using HTML5 and CSS3, featuring responsive design and engaging animations.</p>
+            <div class="project-links">
+              <button class="btn btn-color-2 project-btn" onclick="window.open('https://github.com/todor147/monkey-rescue', '_blank')">
                 GitHub
               </button>
+              <button class="btn btn-color-2 project-btn" onclick="window.open('https://monkey-rescue.netlify.app/', '_blank')">
+                Live Demo
+              </button>
+            </div>
+          </div>
+        </div>
 
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="window.open('https://monkey-rescue.netlify.app/', '_blank')"
-              >
+        <!-- Portfolio Website Project -->
+        <div class="project-card" data-tags="javascript,html,css">
+          <div class="project-img-container">
+            <img src="./assets/portfolio.png" alt="Portfolio Website" class="project-img">
+          </div>
+          <div class="project-content">
+            <div class="project-tags">
+              <span class="project-tag">JavaScript</span>
+              <span class="project-tag">HTML5</span>
+              <span class="project-tag">CSS3</span>
+            </div>
+            <h3 class="project-title">Personal Portfolio Website</h3>
+            <p class="project-description">A responsive portfolio website with dark mode, project filtering, and smooth animations.</p>
+            <div class="project-links">
+              <button class="btn btn-color-2 project-btn" onclick="window.open('https://github.com/todor147/html-css-js-portfolio', '_blank')">
+                GitHub
+              </button>
+              <button class="btn btn-color-2 project-btn" onclick="window.open('https://todors-portfolio.netlify.app/', '_blank')">
                 Live Demo
               </button>
             </div>
@@ -555,17 +602,6 @@
       <button class="next" onclick="changeSlide(1)">❯</button>
     </section>
     <footer>
-      <nav>
-        <div class="nav-links-container">
-          <ul class="nav-links">
-            <li><a href="#about">About</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li><a href="#gallery">Gallery</a></li>
-          </ul>
-        </div>
-      </nav>
       <p>Copyright © <span id="currentYear"></span> Todor Aleksandrov. All rights reserved.</p>
     </footer>
     <div class="floating-arrow" onclick="location.href='#profile'">
