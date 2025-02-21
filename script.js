@@ -285,6 +285,14 @@ function toggleTheme(event) {
     toggle.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
     toggle.setAttribute('aria-label', newTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
   });
+
+  // Close the mobile menu after theme change
+  const menu = document.querySelector(".menu-links");
+  if (menu && menu.classList.contains("open") && window.innerWidth <= 768) {
+    setTimeout(() => {
+      closeMenu();
+    }, 200); // Small delay to ensure the theme change is visible
+  }
 }
 
 // Initialize theme
