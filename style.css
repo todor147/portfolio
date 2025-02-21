@@ -158,7 +158,7 @@ a:hover {
 
 .hamburger-icon {
   position: relative;
-  padding: 0.5rem;
+  padding: 0.75rem;
   z-index: 1001;
   background: transparent;
   color: var(--text-color);
@@ -168,6 +168,7 @@ a:hover {
   user-select: none;
   transition: all 0.3s ease;
   margin-left: auto;
+  margin-right: 0.5rem;
 }
 
 .menu-links {
@@ -248,7 +249,7 @@ a:hover {
   width: 100%;
   padding: 0.75rem 0;
   background: transparent;
-  border-bottom: 1px solid var(--border-color);
+  border: none;
   border-radius: 0;
   cursor: pointer;
   font-size: 1.1rem;
@@ -266,11 +267,13 @@ a:hover {
   color: var(--secondary-text-color);
   transform: translateX(5px);
   background: transparent;
+  border: none;
 }
 
 .menu-links .theme-toggle::before {
   content: 'Theme';
   font-size: 1rem;
+  opacity: 0.9;
 }
 
 @media screen and (max-width: 768px) {
@@ -281,6 +284,7 @@ a:hover {
   #hamburger-nav {
     display: flex;
     height: 10vh;
+    padding: 0.5rem 1.5rem;
   }
 
   .menu-links {
@@ -303,6 +307,16 @@ a:hover {
   .section__text {
     text-align: center;
   }
+
+  .hamburger-icon {
+    margin-right: 0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .menu-links .theme-toggle {
+    border: none;
+    padding: 0.75rem 0;
+  }
 }
 
 @media screen and (max-width: 600px) {
@@ -312,6 +326,8 @@ a:hover {
   }
 
   .hamburger-icon {
+    margin-right: 0.5rem;
+    padding: 0.5rem;
     font-size: 1.25rem;
   }
 
@@ -332,6 +348,12 @@ a:hover {
   .section__text__p2,
   .section__text {
     text-align: center;
+  }
+
+  .menu-links .theme-toggle {
+    border: none;
+    padding: 0.5rem 0;
+    font-size: 1rem;
   }
 }
 
@@ -766,8 +788,10 @@ article p {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  height: 70vh;
+  height: auto;
+  min-height: 50vh;
   position: relative;
+  padding-bottom: 2rem;
 }
 
 .contact-info-upper-container {
@@ -775,7 +799,6 @@ article p {
   justify-content: center;
   border-radius: 2rem;
   border: var(--border-color) 0.1rem solid;
-  border-color: var(--border-color);
   background: var(--card-bg);
   margin: 2rem auto;
   padding: 0.5rem;
@@ -818,7 +841,7 @@ footer p {
   color: var(--secondary-text-color);
   font-size: 0.85rem;
   margin: 0;
-  padding: 0;
+  padding: 0.5rem 0;
 }
 
 @media screen and (max-width: 768px) {
@@ -828,12 +851,17 @@ footer p {
   
   footer p {
     font-size: 0.8rem;
+    padding: 0.25rem 0;
   }
 
   #contact {
-    height: auto;
-    min-height: 50vh;
-    padding-bottom: 2rem;
+    min-height: 40vh;
+    padding-bottom: 1.5rem;
+  }
+
+  .description {
+    margin: 0.5rem auto;
+    padding: 10px 20px;
   }
 }
 
@@ -844,12 +872,18 @@ footer p {
   
   footer p {
     font-size: 0.75rem;
+    padding: 0.25rem 0;
   }
 
   #contact {
-    height: auto;
-    min-height: 40vh;
-    padding-bottom: 1.5rem;
+    min-height: 30vh;
+    padding-bottom: 1rem;
+  }
+
+  .description {
+    width: 90%;
+    margin: 0.5rem auto;
+    padding: 10px 15px;
   }
 }
 
@@ -912,6 +946,7 @@ footer p {
   border-radius: 8px;
   box-shadow: 0 2px 10px var(--card-shadow);
   z-index: 2;
+  border: 1px solid var(--border-color);
 }
 
 button.prev,
