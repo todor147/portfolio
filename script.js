@@ -297,8 +297,10 @@ function toggleTheme(event) {
 
 // Initialize theme
 document.addEventListener('DOMContentLoaded', () => {
-  // Check for saved theme preference or system preference
+  // Check for saved theme preference
   const savedTheme = localStorage.getItem('theme');
+  
+  // Detect system preference
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const theme = savedTheme || (prefersDark ? 'dark' : 'light');
   
@@ -315,6 +317,19 @@ document.addEventListener('DOMContentLoaded', () => {
     toggle.removeEventListener('click', toggleTheme);
     // Add new event listener
     toggle.addEventListener('click', toggleTheme);
+  });
+
+  // Listen for changes in system theme preference
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+    if (!savedTheme) { // Only change if no theme is saved
+      const newTheme = event.matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      themeToggles.forEach(toggle => {
+        toggle.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
+        toggle.setAttribute('aria-label', newTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      });
+    }
   });
 });
 

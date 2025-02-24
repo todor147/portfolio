@@ -1014,11 +1014,11 @@ button.next:hover {
     transform: translate3d(0, 0, 0);
     will-change: transform;
   }
-
+  
   .gallery-slide {
     padding: 0.5rem;
   }
-
+  
   .gallery-slide img {
     width: 100%;
     height: auto;
