@@ -43,6 +43,18 @@
   }
 }
 
+@media screen and (max-width: 920px) {
+  .experience-details-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #experience .details-container {
+    width: 90%;
+    max-width: 600px;
+  }
+}
+
 @media screen and (max-width: 600px) {
   #contact,
   footer {
@@ -101,6 +113,14 @@
   }
   #experience {
     margin-top: -5vh;
+  }
+  #experience .details-container {
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .article-container {
+    gap: 1.5rem;
   }
   #gallery {
     position: relative;

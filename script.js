@@ -229,10 +229,25 @@ window.addEventListener('resize', adjustGalleryHeight);
 // Show/hide floating arrow based on scroll position
 window.addEventListener('scroll', () => {
   const floatingArrow = document.querySelector('.floating-arrow');
-  if (window.scrollY > 500) { // Show arrow after scrolling 500px
+  if (!floatingArrow) return; // Safety check
+  
+  if (window.scrollY > 300) { // Show arrow after scrolling 300px (reduced from 500px)
     floatingArrow.classList.add('visible');
   } else {
     floatingArrow.classList.remove('visible');
+  }
+});
+
+// Add click handler for the floating arrow
+document.addEventListener('DOMContentLoaded', () => {
+  const floatingArrow = document.querySelector('.floating-arrow');
+  if (floatingArrow) {
+    floatingArrow.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
   }
 });
 
@@ -272,19 +287,32 @@ function toggleTheme(event) {
     event.stopPropagation();
   }
 
-  const currentTheme = document.documentElement.getAttribute('data-theme');
-  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  const currentTheme = localStorage.getItem('theme') || 'auto';
+  let newTheme;
   
-  // Update the theme
-  document.documentElement.setAttribute('data-theme', newTheme);
+  // Cycle through themes: light -> dark -> auto
+  if (currentTheme === 'light') {
+    newTheme = 'dark';
+  } else if (currentTheme === 'dark') {
+    newTheme = 'auto';
+  } else {
+    newTheme = 'light';
+  }
+  
+  // Apply the new theme
+  if (newTheme === 'auto') {
+    // For auto, use system preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  } else {
+    document.documentElement.setAttribute('data-theme', newTheme);
+  }
+  
+  // Save theme preference
   localStorage.setItem('theme', newTheme);
   
   // Update theme toggle buttons
-  const themeToggles = document.querySelectorAll('.theme-toggle');
-  themeToggles.forEach(toggle => {
-    toggle.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
-    toggle.setAttribute('aria-label', newTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
-  });
+  updateThemeIcons();
 
   // Close the mobile menu after theme change
   const menu = document.querySelector(".menu-links");
@@ -295,24 +323,45 @@ function toggleTheme(event) {
   }
 }
 
+// Function to update theme toggle icons based on current theme
+function updateThemeIcons() {
+  const currentTheme = localStorage.getItem('theme') || 'auto';
+  const themeToggles = document.querySelectorAll('.theme-toggle');
+  
+  themeToggles.forEach(toggle => {
+    if (currentTheme === 'light') {
+      toggle.innerHTML = '☀️'; // Sun for light theme
+      toggle.setAttribute('aria-label', 'Currently on light theme, click to switch to dark');
+    } else if (currentTheme === 'dark') {
+      toggle.innerHTML = '🌙'; // Moon for dark theme
+      toggle.setAttribute('aria-label', 'Currently on dark theme, click to switch to auto');
+    } else { // auto
+      toggle.innerHTML = '🔄'; // Auto symbol for auto theme
+      toggle.setAttribute('aria-label', 'Currently on auto theme, click to switch to light');
+    }
+  });
+}
+
 // Initialize theme
 document.addEventListener('DOMContentLoaded', () => {
-  // Check for saved theme preference
-  const savedTheme = localStorage.getItem('theme');
+  // Check for saved theme preference or use auto as default
+  const savedTheme = localStorage.getItem('theme') || 'auto';
   
-  // Detect system preference
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+  // Apply the theme
+  if (savedTheme === 'auto') {
+    // Use system preference for auto mode
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  } else {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }
   
-  // Set initial theme
-  document.documentElement.setAttribute('data-theme', theme);
+  // Update theme toggle icons
+  updateThemeIcons();
   
-  // Update theme toggle buttons
+  // Add click event listeners
   const themeToggles = document.querySelectorAll('.theme-toggle');
   themeToggles.forEach(toggle => {
-    toggle.innerHTML = theme === 'dark' ? '☀️' : '🌙';
-    toggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
-    
     // Remove any existing event listeners
     toggle.removeEventListener('click', toggleTheme);
     // Add new event listener
@@ -321,14 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Listen for changes in system theme preference
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-    if (!savedTheme) { // Only change if no theme is saved
-      const newTheme = event.matches ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      themeToggles.forEach(toggle => {
-        toggle.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
-        toggle.setAttribute('aria-label', newTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
-      });
+    // Only apply system theme if in auto mode
+    if (localStorage.getItem('theme') === 'auto') {
+      document.documentElement.setAttribute('data-theme', event.matches ? 'dark' : 'light');
     }
   });
 });
@@ -389,4 +433,196 @@ document.addEventListener('DOMContentLoaded', () => {
       filterProjects(button.dataset.category);
     });
   });
+});
+
+// Project card hover effects
+document.addEventListener('DOMContentLoaded', () => {
+  const projectCards = document.querySelectorAll('.project-card');
+  
+  projectCards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      const img = card.querySelector('.project-img');
+      if (img) {
+        img.style.transform = 'scale(1.05)';
+      }
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      const img = card.querySelector('.project-img');
+      if (img) {
+        img.style.transform = 'scale(1)';
+      }
+    });
+  });
+});
+
+// Skill bar animation
+document.addEventListener('DOMContentLoaded', () => {
+  // Get all skill level elements
+  const skillLevels = document.querySelectorAll('.skill-level');
+  
+  // Set initial width to 0
+  skillLevels.forEach(skill => {
+    skill.style.width = '0';
+  });
+  
+  // Create a new IntersectionObserver for skill bars
+  const skillObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // When a skill bar is visible, animate to its target width
+        const targetWidth = entry.target.style.width;
+        // Reset to 0 first
+        entry.target.style.width = '0';
+        // Add small delay then animate to target
+        setTimeout(() => {
+          entry.target.style.width = targetWidth;
+        }, 100);
+        
+        // Stop observing after animation
+        skillObserver.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.2
+  });
+  
+  // Start observing all skill levels
+  skillLevels.forEach(skill => {
+    skillObserver.observe(skill);
+  });
+});
+
+// Timeline animations
+document.addEventListener('DOMContentLoaded', () => {
+  const timelineItems = document.querySelectorAll('.timeline-item');
+  
+  // Create a new IntersectionObserver for timeline items
+  const timelineObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        
+        // Stop observing after animation
+        timelineObserver.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px'
+  });
+  
+  // Initialize styles and start observing
+  timelineItems.forEach((item, index) => {
+    // Set initial styles - alternate left/right animation
+    const isEven = index % 2 === 0;
+    item.style.opacity = '0';
+    item.style.transform = isEven ? 'translateX(-50px)' : 'translateX(50px)';
+    item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    
+    // Add a slight delay for each item to create a cascade effect
+    item.style.transitionDelay = `${index * 0.15}s`;
+    
+    // Start observing
+    timelineObserver.observe(item);
+  });
+});
+
+// Timeline filtering functionality
+document.addEventListener('DOMContentLoaded', () => {
+  // Timeline tab filtering
+  const timelineTabs = document.querySelectorAll('.timeline-tab');
+  const timelineItems = document.querySelectorAll('.timeline-item');
+  
+  function filterTimeline(targetCategory) {
+    // Get the corresponding tab and activate it
+    timelineTabs.forEach(tab => {
+      const tabTarget = tab.getAttribute('data-target');
+      if (tabTarget === targetCategory) {
+        tab.click(); // Trigger the click event on the tab
+      }
+    });
+  }
+  
+  timelineTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Update active tab
+      timelineTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      
+      const targetCategory = tab.getAttribute('data-target');
+      
+      // Filter timeline items
+      timelineItems.forEach(item => {
+        if (targetCategory === 'timeline-all') {
+          // Show all items
+          item.style.display = 'flex';
+          setTimeout(() => {
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
+          }, 10);
+        } else {
+          // Only show items of the selected category
+          const itemCategory = item.getAttribute('data-category');
+          if (targetCategory.includes(itemCategory)) {
+            item.style.display = 'flex';
+            setTimeout(() => {
+              item.style.opacity = '1';
+              item.style.transform = 'translateY(0)';
+            }, 10);
+          } else {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+              item.style.display = 'none';
+            }, 300);
+          }
+        }
+      });
+    });
+  });
+
+  // Handle timeline dropdown links
+  const timelineDropdownLinks = document.querySelectorAll('.dropdown-content a, .dropdown-content-mobile a');
+  timelineDropdownLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      // Extract the target category from the href
+      const href = link.getAttribute('href');
+      const targetId = href.substring(1); // Remove the # from the href
+      
+      // Scroll to the timeline section
+      const timelineSection = document.getElementById('timeline');
+      if (timelineSection) {
+        e.preventDefault(); // Prevent default anchor behavior
+        
+        // Scroll to timeline section with offset for header
+        const headerHeight = document.getElementById('desktop-nav').offsetHeight;
+        const timelineTop = timelineSection.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+        
+        window.scrollTo({
+          top: timelineTop,
+          behavior: 'smooth'
+        });
+        
+        // Apply the filter after scrolling completes
+        setTimeout(() => {
+          filterTimeline(targetId);
+        }, 700); // Allow time for the scroll to complete
+      }
+    });
+  });
+
+  // Mobile timeline dropdown functionality
+  const mobileTimelineDropdown = document.querySelector('.timeline-dropdown-mobile');
+  if (mobileTimelineDropdown) {
+    const dropdownLink = mobileTimelineDropdown.querySelector('a');
+    dropdownLink.addEventListener('click', (e) => {
+      // Prevent the link from navigating immediately
+      if (window.innerWidth <= 768) {
+        e.preventDefault();
+        mobileTimelineDropdown.classList.toggle('active');
+      }
+    });
+  }
 });

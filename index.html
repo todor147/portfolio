@@ -25,10 +25,19 @@
       <div>
         <ul class="nav-links">
           <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
           <li><a href="#experience">Experience</a></li>
           <li><a href="#projects">Projects</a></li>
           <li><a href="#contact">Contact</a></li>
           <li><a href="#gallery">Gallery</a></li>
+          <li class="timeline-dropdown">
+            <a href="#timeline">Timeline</a>
+            <div class="dropdown-content">
+              <a href="#timeline-education">Education</a>
+              <a href="#timeline-work">Work Experience</a>
+              <a href="#timeline-certificates">Certificates</a>
+            </div>
+          </li>
           <li><button class="theme-toggle" aria-label="Toggle dark mode">🌙</button></li>
         </ul>
       </div>
@@ -41,10 +50,19 @@
         </div>
         <div class="menu-links">
           <li><a href="#about" onclick="toggleMenu()">About</a></li>
+          <li><a href="#skills" onclick="toggleMenu()">Skills</a></li>
           <li><a href="#experience" onclick="toggleMenu()">Experience</a></li>
           <li><a href="#projects" onclick="toggleMenu()">Projects</a></li>
           <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
           <li><a href="#gallery" onclick="toggleMenu()">Gallery</a></li>
+          <li class="timeline-dropdown-mobile">
+            <a href="#timeline" onclick="toggleMenu()">Timeline</a>
+            <div class="dropdown-content-mobile">
+              <a href="#timeline-education" onclick="toggleMenu()">Education</a>
+              <a href="#timeline-work" onclick="toggleMenu()">Work Experience</a>
+              <a href="#timeline-certificates" onclick="toggleMenu()">Certificates</a>
+            </div>
+          </li>
           <li><button class="theme-toggle" aria-label="Toggle dark mode">🌙</button></li>
         </div>
       </div>
@@ -101,51 +119,152 @@
         </div>
         <div class="about-details-container">
           <div class="about-containers">
-            <div class="details-container">
-              <img
-                src="./assets/experience.jpg"
-                alt="Experience icon"
-                class="icon"
-                onclick="location.href='#experience'"
-                style="cursor: pointer;"
-              />
-              <h3>Experience</h3>
-              <p>
-                1.5 years hospitality<br /><br />9 months software development
-              </p>
-            </div>
-            <div class="details-container">
-              <img
-                src="./assets/education.png"
-                alt="Education icon"
-                class="icon-default"
-              />
-              <h3>Education</h3>
-              <p>
-                B.Sc. Computer Systems<br /><br />Cumulative QCA: 3.04<br /><br />Leaving
-                Cert.: 578 p.
-              </p>
+            <div class="about-card-grid">
+              <div class="details-container">
+                <img
+                  src="./assets/experience.jpg"
+                  alt="Experience icon"
+                  class="icon"
+                  onclick="location.href='#experience'"
+                  style="cursor: pointer;"
+                />
+                <h3>Experience</h3>
+                <p class="about-card-text">
+                  <span class="highlight">1.5</span> years hospitality
+                  <br/><br/>
+                  <span class="highlight">9</span> months software development
+                </p>
+              </div>
+              <div class="details-container">
+                <img
+                  src="./assets/education.png"
+                  alt="Education icon"
+                  class="icon-default"
+                />
+                <h3>Education</h3>
+                <p class="about-card-text">
+                  <span class="highlight">B.Sc.</span> Computer Systems
+                  <br/><br/>
+                  <span>Cumulative QCA: </span><span class="highlight">3.04</span>
+                  <br/><br/>
+                  <span>Leaving Cert.: </span><span class="highlight">578 p.</span>
+                </p>
+              </div>
             </div>
             <div class="text-container">
               <p>
-                With a diverse background in software development, hospitality,
-                language interpretation, and education, I bring a unique mix of
-                skills and experiences. Currently a Software Development student
-                at AMCS Group, I focus on QA testing, building on my Computer
-                Science degree from the University of Limerick, where I was
-                involved in leadership roles. My hospitality experience includes
-                roles at Adare Manor and The Carriage House, where I honed my
-                expertise in wine tasting and customer service. I also freelance
-                as a Bulgarian-English interpreter and have a passion for
-                education, having served as a Peer Advisor and tutor. My career
-                is defined by strong organizational, communication, and
-                problem-solving skills.
+                With a diverse background in <span class="highlight">software development</span>, <span class="highlight">hospitality</span>,
+                <span class="highlight">language interpretation</span>, and <span class="highlight">education</span>, I bring a unique mix of
+                skills and experiences.
+              </p>
+              <p>
+                Currently a Software Development student at AMCS Group, I focus on QA testing, building on my Computer
+                Science degree from the University of Limerick, where I was involved in leadership roles.
+              </p>
+              <p>
+                My hospitality experience includes roles at Adare Manor and The Carriage House, where I honed my
+                expertise in wine tasting and customer service. I also freelance as a Bulgarian-English interpreter and have a passion for
+                education, having served as a Peer Advisor and tutor.
+              </p>
+              <p>
+                My career is defined by strong <span class="highlight">organizational</span>, <span class="highlight">communication</span>, and
+                <span class="highlight">problem-solving</span> skills.
               </p>
             </div>
           </div>
         </div>
       </div>
     </section>
+    
+    <!-- Skills Section -->
+    <section id="skills">
+      <p class="section__text__p1">Check Out My</p>
+      <h1 class="title">Technical Skills</h1>
+      <div class="skills-container">
+        <div class="skills-category">
+          <h2>Programming Languages</h2>
+          <div class="skill-item">
+            <span class="skill-name">JavaScript</span>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 85%"></div>
+            </div>
+            <span class="skill-percentage">85%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">Python</span>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 80%"></div>
+            </div>
+            <span class="skill-percentage">80%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">Java</span>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 75%"></div>
+            </div>
+            <span class="skill-percentage">75%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">C++</span>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 70%"></div>
+            </div>
+            <span class="skill-percentage">70%</span>
+          </div>
+        </div>
+        
+        <div class="skills-category">
+          <h2>Web Development</h2>
+          <div class="skill-item">
+            <span class="skill-name">HTML/CSS</span>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 90%"></div>
+            </div>
+            <span class="skill-percentage">90%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">React</span>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 65%"></div>
+            </div>
+            <span class="skill-percentage">65%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">Node.js</span>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 60%"></div>
+            </div>
+            <span class="skill-percentage">60%</span>
+          </div>
+        </div>
+        
+        <div class="skills-category">
+          <h2>Tools & Technologies</h2>
+          <div class="skill-item">
+            <span class="skill-name">Git/GitHub</span>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 85%"></div>
+            </div>
+            <span class="skill-percentage">85%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">Docker</span>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 55%"></div>
+            </div>
+            <span class="skill-percentage">55%</span>
+          </div>
+          <div class="skill-item">
+            <span class="skill-name">Database Management</span>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 75%"></div>
+            </div>
+            <span class="skill-percentage">75%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="experience">
       <p class="section__text__p1">Explore my</p>
       <h1 class="title">Experience</h1>
@@ -615,10 +734,141 @@
       <button class="prev" onclick="changeSlide(-1)">❮</button>
       <button class="next" onclick="changeSlide(1)">❯</button>
     </section>
+    
+    <!-- Timeline Section -->
+    <section id="timeline">
+      <p class="section__text__p1">My Journey</p>
+      <h1 class="title">Education & Career Timeline</h1>
+      
+      <div class="timeline-tabs">
+        <button class="timeline-tab active" data-target="timeline-all">All</button>
+        <button class="timeline-tab" data-target="timeline-education">Education</button>
+        <button class="timeline-tab" data-target="timeline-work">Work Experience</button>
+        <button class="timeline-tab" data-target="timeline-certificates">Certificates</button>
+      </div>
+      
+      <div class="timeline-container" id="timeline-all">
+        <!-- 2024 - Present -->
+        <div class="timeline-item" data-category="work" id="timeline-work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2024 - Present</div>
+          <div class="timeline-content">
+            <h3>Junior Sommelier at Adare Manor</h3>
+            <p>Enhancing wine knowledge and service expertise at Ireland's leading 5-star hotel.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2024 - Present</div>
+          <div class="timeline-content">
+            <h3>ICT Learning Center Tutor at University of Limerick</h3>
+            <p>Supporting students with programming and IT concepts through both scheduled sessions and drop-in hours.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2024 - Present</div>
+          <div class="timeline-content">
+            <h3>PSLG Tutor at University of Limerick</h3>
+            <p>Guiding students in developing problem-solving skills and providing curriculum support.</p>
+          </div>
+        </div>
+        
+        <!-- 2024 -->
+        <div class="timeline-item" data-category="certificates" id="timeline-certificates">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2024</div>
+          <div class="timeline-content">
+            <h3>WSET Level 2 Award in Wines</h3>
+            <p>Achieved certification in wine knowledge, covering regions, grape varieties, and service.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="certificates">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2024</div>
+          <div class="timeline-content">
+            <h3>Introductory Sommelier - Court of Master Sommeliers</h3>
+            <p>Gained fundamental knowledge of wine regions, viticulture, and professional service techniques.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2024</div>
+          <div class="timeline-content">
+            <h3>Software Development Student at AMCS Group</h3>
+            <p>Applying computer science knowledge in a real-world software development environment, focusing on QA testing and development.</p>
+          </div>
+        </div>
+        
+        <!-- 2023 - Present -->
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2023 - Present</div>
+          <div class="timeline-content">
+            <h3>Bulgarian-English Interpreter at Translit</h3>
+            <p>Providing professional language interpretation services, bridging communication gaps in various contexts.</p>
+          </div>
+        </div>
+        
+        <!-- 2023 - 2024 -->
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2023 - 2024</div>
+          <div class="timeline-content">
+            <h3>Senior F&B Assistant at Adare Manor</h3>
+            <p>Developed leadership skills while providing 5-star service in an internationally renowned hotel.</p>
+          </div>
+        </div>
+        
+        <!-- 2023 -->
+        <div class="timeline-item" data-category="certificates">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2023</div>
+          <div class="timeline-content">
+            <h3>EF SET English Certificate (C2 Proficient)</h3>
+            <p>Certified at the highest level of English language proficiency.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2023</div>
+          <div class="timeline-content">
+            <h3>Waiter at Devon Inn Hotel</h3>
+            <p>Provided quality customer service and contributed to an efficient dining experience.</p>
+          </div>
+        </div>
+        
+        <!-- 2022 - Present -->
+        <div class="timeline-item" data-category="education" id="timeline-education">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2022 - Present</div>
+          <div class="timeline-content">
+            <h3>B.Sc. Computer Systems at University of Limerick</h3>
+            <p>Gaining comprehensive knowledge in software development, algorithms, data structures, and computer architecture. Expected graduation: 2026.</p>
+          </div>
+        </div>
+        
+        <!-- 2022 - 2023 -->
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2022 - 2023</div>
+          <div class="timeline-content">
+            <h3>Waiter at The Mustard Seed</h3>
+            <p>Delivered exceptional dining service at this acclaimed restaurant while developing hospitality skills.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
     <footer>
       <p>Copyright © <span id="currentYear"></span> Todor Aleksandrov. All rights reserved.</p>
     </footer>
-    <div class="floating-arrow" onclick="location.href='#profile'">
+    <div class="floating-arrow">
       <img
         src="./assets/arrow.jpg"
         alt="Arrow up"
