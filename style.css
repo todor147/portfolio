@@ -1571,8 +1571,8 @@ button.next:hover {
   height: 100%;
   background: linear-gradient(90deg, #7843e9, #ab88ff);
   border-radius: 5px;
-  transition: width 1.5s ease-in-out;
-  width: 0;
+  transition: width 1.2s cubic-bezier(0.1, 0.8, 0.2, 1);
+  width: 0; /* Start at 0 width */
 }
 
 .skill-percentage {
@@ -1583,12 +1583,12 @@ button.next:hover {
 
 /* Animation for skill bars */
 .show .skill-level {
-  animation: fillBar 1.5s forwards;
+  /* animation: fillBar 1.5s forwards; */
 }
 
 @keyframes fillBar {
   from { width: 0; }
-  to { width: attr(data-level); }
+  to { width: 100%; }
 }
 
 @media screen and (max-width: 768px) {
@@ -1631,6 +1631,7 @@ button.next:hover {
   width: 100%;
 }
 
+/* Commented out in favor of .timeline-left/.timeline-right classes */
 .timeline-item:nth-child(odd) {
   justify-content: flex-start;
 }
@@ -1661,6 +1662,7 @@ button.next:hover {
   text-align: center;
 }
 
+/* Commented out in favor of .timeline-left/.timeline-right classes */
 .timeline-item:nth-child(odd) .timeline-date {
   right: calc(50% + 40px);
 }
@@ -1696,6 +1698,15 @@ button.next:hover {
   margin-top: 0.5rem;
 }
 
+/* Commented out in favor of .timeline-left/.timeline-right classes */
+.timeline-item:nth-child(odd) .timeline-content::before {
+  right: -10px;
+}
+
+.timeline-item:nth-child(even) .timeline-content::before {
+  left: -10px;
+}
+
 .timeline-content::before {
   content: '';
   position: absolute;
@@ -1704,14 +1715,6 @@ button.next:hover {
   background-color: var(--card-bg);
   top: 15px;
   transform: rotate(45deg);
-}
-
-.timeline-item:nth-child(odd) .timeline-content::before {
-  right: -10px;
-}
-
-.timeline-item:nth-child(even) .timeline-content::before {
-  left: -10px;
 }
 
 @media screen and (max-width: 768px) {
@@ -1766,4 +1769,60 @@ button.next:hover {
   .timeline-content p {
     font-size: 0.9rem;
   }
+}
+
+/* Added classes for dynamically positioning timeline items */
+.timeline-left {
+  justify-content: flex-start;
+}
+
+.timeline-right {
+  justify-content: flex-end;
+}
+
+/* Commented out in favor of .timeline-left/.timeline-right classes */
+.timeline-left .timeline-date {
+  right: calc(50% + 40px);
+}
+
+.timeline-right .timeline-date {
+  left: calc(50% + 40px);
+}
+
+/* Commented out in favor of .timeline-left/.timeline-right classes */
+.timeline-left .timeline-content::before {
+  right: -10px;
+}
+
+.timeline-right .timeline-content::before {
+  left: -10px;
+}
+
+/* Dynamic timeline positioning with higher specificity to override nth-child */
+.timeline-container .timeline-left {
+  justify-content: flex-start !important;
+}
+
+.timeline-container .timeline-right {
+  justify-content: flex-end !important;
+}
+
+.timeline-container .timeline-left .timeline-date {
+  right: calc(50% + 40px) !important;
+  left: auto !important;
+}
+
+.timeline-container .timeline-right .timeline-date {
+  left: calc(50% + 40px) !important;
+  right: auto !important;
+}
+
+.timeline-container .timeline-left .timeline-content::before {
+  right: -10px !important;
+  left: auto !important;
+}
+
+.timeline-container .timeline-right .timeline-content::before {
+  left: -10px !important;
+  right: auto !important;
 }

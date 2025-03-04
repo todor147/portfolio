@@ -458,39 +458,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Skill bar animation
 document.addEventListener('DOMContentLoaded', () => {
-  // Get all skill level elements
-  const skillLevels = document.querySelectorAll('.skill-level');
-  
-  // Set initial width to 0
-  skillLevels.forEach(skill => {
-    skill.style.width = '0';
-  });
-  
-  // Create a new IntersectionObserver for skill bars
-  const skillObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        // When a skill bar is visible, animate to its target width
-        const targetWidth = entry.target.style.width;
-        // Reset to 0 first
-        entry.target.style.width = '0';
-        // Add small delay then animate to target
-        setTimeout(() => {
-          entry.target.style.width = targetWidth;
-        }, 100);
+  // Function to animate skill bars
+  function animateSkillBars() {
+    const skillItems = document.querySelectorAll('.skill-item');
+    
+    skillItems.forEach(item => {
+      // Get the percentage from the text
+      const percentText = item.querySelector('.skill-percentage').textContent;
+      const percentage = parseInt(percentText);
+      
+      // Get the skill level bar
+      const skillLevel = item.querySelector('.skill-level');
+      
+      if (skillLevel && !isNaN(percentage)) {
+        // Reset to 0 first (only on initial animation)
+        skillLevel.style.width = '0';
         
-        // Stop observing after animation
-        skillObserver.unobserve(entry.target);
+        // Force reflow to ensure animation works
+        void skillLevel.offsetWidth;
+        
+        // Set the width to match the percentage
+        setTimeout(() => {
+          skillLevel.style.width = percentage + '%';
+        }, 50);
       }
     });
-  }, {
-    threshold: 0.2
-  });
+  }
   
-  // Start observing all skill levels
-  skillLevels.forEach(skill => {
-    skillObserver.observe(skill);
-  });
+  // Call immediately to ensure bars are filled when page loads
+  animateSkillBars();
+  
+  // Also use IntersectionObserver to re-trigger animation when scrolling into view
+  const skillObserver = new IntersectionObserver((entries) => {
+    if (entries.some(entry => entry.isIntersecting)) {
+      // Re-animate skill bars when they come into view
+      animateSkillBars();
+    }
+  }, { threshold: 0.1 });
+  
+  // Start observing the skills section
+  const skillsSection = document.getElementById('skills');
+  if (skillsSection) {
+    skillObserver.observe(skillsSection);
+  }
 });
 
 // Timeline animations
@@ -515,14 +525,23 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Initialize styles and start observing
   timelineItems.forEach((item, index) => {
+    // Apply left/right positioning classes based on index
+    if (index % 2 === 0) {
+      item.classList.add('timeline-left');
+    } else {
+      item.classList.add('timeline-right');
+    }
+    
     // Set initial styles - alternate left/right animation
     const isEven = index % 2 === 0;
     item.style.opacity = '0';
     item.style.transform = isEven ? 'translateX(-50px)' : 'translateX(50px)';
-    item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    // Reduced transition duration from 0.6s to 0.5s for faster animations
+    item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     
     // Add a slight delay for each item to create a cascade effect
-    item.style.transitionDelay = `${index * 0.15}s`;
+    // Reduced from 0.15s to 0.08s to make items appear faster
+    item.style.transitionDelay = `${index * 0.08}s`;
     
     // Start observing
     timelineObserver.observe(item);
@@ -534,6 +553,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // Timeline tab filtering
   const timelineTabs = document.querySelectorAll('.timeline-tab');
   const timelineItems = document.querySelectorAll('.timeline-item');
+  
+  // Apply initial left/right classes based on index
+  timelineItems.forEach((item, index) => {
+    if (index % 2 === 0) {
+      item.classList.add('timeline-left');
+    } else {
+      item.classList.add('timeline-right');
+    }
+  });
   
   function filterTimeline(targetCategory) {
     // Get the corresponding tab and activate it
@@ -553,7 +581,18 @@ document.addEventListener('DOMContentLoaded', () => {
       
       const targetCategory = tab.getAttribute('data-target');
       
-      // Filter timeline items
+      // Track visible items for repositioning
+      const visibleItems = [];
+      
+      // First pass - identify which items will be visible
+      timelineItems.forEach(item => {
+        if (targetCategory === 'timeline-all' || 
+            targetCategory.includes(item.getAttribute('data-category'))) {
+          visibleItems.push(item);
+        }
+      });
+      
+      // Second pass - apply filtering and positioning
       timelineItems.forEach(item => {
         if (targetCategory === 'timeline-all') {
           // Show all items
@@ -578,6 +617,19 @@ document.addEventListener('DOMContentLoaded', () => {
               item.style.display = 'none';
             }, 300);
           }
+        }
+      });
+      
+      // Apply alternating left/right positioning based on order of visible items
+      visibleItems.forEach((item, index) => {
+        // Remove any previous positioning classes
+        item.classList.remove('timeline-left', 'timeline-right');
+        
+        // Apply positioning based on visible index
+        if (index % 2 === 0) {
+          item.classList.add('timeline-left');
+        } else {
+          item.classList.add('timeline-right');
         }
       });
     });
