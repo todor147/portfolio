@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thanks for your message - Todor's Portfolio</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="mediaqueries.css" />
+    <link rel="icon" href="./assets/favcon.png" type="image/jpeg" />
+    <style>
+      .thanks-container {
+        min-height: 70vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 2rem;
+      }
+      .thanks-icon {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 2rem;
+        padding: 15px 0;
+        position: relative;
+        animation: bounce 2s ease infinite;
+      }
+      .thanks-message {
+        max-width: 600px;
+        margin-bottom: 2rem;
+      }
+      .return-btn {
+        margin-top: 2rem;
+      }
+      @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+        40% {transform: translateY(-20px);}
+        60% {transform: translateY(-10px);}
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav id="desktop-nav">
+      <div class="logo" onclick="window.location.href='index.html'">Todor Aleksandrov</div>
+      <div>
+        <ul class="nav-links">
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#skills">Skills</a></li>
+          <li><a href="index.html#experience">Experience</a></li>
+          <li><a href="index.html#projects">Projects</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+          <li><a href="index.html#gallery">Gallery</a></li>
+          <li><a href="index.html#timeline">Timeline</a></li>
+          <li><button class="theme-toggle" aria-label="Toggle dark mode">🌙</button></li>
+        </ul>
+      </div>
+    </nav>
+    <nav id="hamburger-nav">
+      <div class="logo" onclick="window.location.href='index.html'">Todor Aleksandrov</div>
+      <div class="hamburger-menu">
+        <div class="hamburger-icon" onclick="toggleMenu()">
+          ☰
+        </div>
+        <div class="menu-links">
+          <li><a href="index.html#about" onclick="toggleMenu()">About</a></li>
+          <li><a href="index.html#skills" onclick="toggleMenu()">Skills</a></li>
+          <li><a href="index.html#experience" onclick="toggleMenu()">Experience</a></li>
+          <li><a href="index.html#projects" onclick="toggleMenu()">Projects</a></li>
+          <li><a href="index.html#contact" onclick="toggleMenu()">Contact</a></li>
+          <li><a href="index.html#gallery" onclick="toggleMenu()">Gallery</a></li>
+          <li><a href="index.html#timeline" onclick="toggleMenu()">Timeline</a></li>
+          <li><button class="theme-toggle" aria-label="Toggle dark mode">🌙</button></li>
+        </div>
+      </div>
+      <div class="menu-overlay"></div>
+    </nav>
+
+    <div class="thanks-container">
+      <img src="./assets/email.jpg" alt="Email Icon" class="thanks-icon" />
+      <div class="thanks-message">
+        <h1>Thanks for your message!</h1>
+        <p>I appreciate you taking the time to reach out. I'll get back to you as soon as possible at the email address you provided.</p>
+      </div>
+      <a href="index.html" class="btn btn-color-1 return-btn">Return to Portfolio</a>
+    </div>
+
+    <footer>
+      <p>Copyright © <span id="currentYear"></span> Todor Aleksandrov. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+      // Set current year in footer
+      document.getElementById('currentYear').textContent = new Date().getFullYear();
+      
+      // For theme toggle
+      function toggleMenu() {
+        const menu = document.querySelector(".menu-links");
+        const icon = document.querySelector(".hamburger-icon");
+        const overlay = document.querySelector(".menu-overlay");
+        menu.classList.toggle("open");
+        overlay.classList.toggle("open");
+      }
+      
+      // Theme toggle functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        const themeToggleBtns = document.querySelectorAll('.theme-toggle');
+        
+        // Check for saved theme preference or use device preference
+        const savedTheme = localStorage.getItem('theme') || 
+                           (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        
+        // Apply saved theme
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcons();
+        
+        // Add click event to theme toggle buttons
+        themeToggleBtns.forEach(btn => {
+          btn.addEventListener('click', function() {
+            toggleTheme();
+          });
+        });
+        
+        function toggleTheme() {
+          const currentTheme = document.documentElement.getAttribute('data-theme');
+          const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+          
+          document.documentElement.setAttribute('data-theme', newTheme);
+          localStorage.setItem('theme', newTheme);
+          
+          updateThemeIcons();
+        }
+        
+        function updateThemeIcons() {
+          const currentTheme = document.documentElement.getAttribute('data-theme');
+          
+          themeToggleBtns.forEach(btn => {
+            btn.textContent = currentTheme === 'light' ? '🌙' : '☀️';
+            btn.setAttribute('aria-label', 
+              currentTheme === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
+          });
+        }
+      });
+    </script>
+  </body>
+</html> 

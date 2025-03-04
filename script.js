@@ -678,3 +678,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// Contact form functionality
+document.addEventListener('DOMContentLoaded', () => {
+  // Form handling now done by FormSubmit
+  // No JavaScript needed for the contact form
+});
