@@ -52,18 +52,29 @@ window.addEventListener("resize", () => {
   }
 });
 
+// Initialize variables
 let currentSlide = 0;
 let touchStartX = 0;
 let touchEndX = 0;
 
-// Add touch event listeners to the gallery container
-const galleryContainer = document.querySelector(".gallery-container");
-if (galleryContainer) {
-  galleryContainer.addEventListener('touchstart', handleTouchStart, false);
-  galleryContainer.addEventListener('touchmove', handleTouchMove, false);
-  galleryContainer.addEventListener('touchend', handleTouchEnd, false);
-}
+// Initialize gallery on page load
+document.addEventListener('DOMContentLoaded', () => {
+  // Show first slide by default
+  const slides = document.querySelectorAll(".gallery-slide");
+  if (slides.length > 0) {
+    slides[0].classList.add('active');
+  }
+  
+  // Add touch event listeners to the gallery container
+  const galleryContainer = document.querySelector(".gallery-container");
+  if (galleryContainer) {
+    galleryContainer.addEventListener('touchstart', handleTouchStart, false);
+    galleryContainer.addEventListener('touchmove', handleTouchMove, false);
+    galleryContainer.addEventListener('touchend', handleTouchEnd, false);
+  }
+});
 
+// Gallery touch event handlers
 function handleTouchStart(event) {
   touchStartX = event.touches[0].clientX;
 }
@@ -96,135 +107,15 @@ function changeSlide(direction) {
   const slides = document.querySelectorAll(".gallery-slide");
   if (!slides.length) return;
   
+  // Hide current slide
+  slides[currentSlide].classList.remove('active');
+  
   // Update current slide index
   currentSlide = (currentSlide + direction + slides.length) % slides.length;
   
-  // Calculate the offset for transform
-  const offset = -currentSlide * 100;
-  
-  // Update transform with GPU acceleration
-  const container = document.querySelector(".gallery-container");
-  if (container) {
-    container.style.transform = `translate3d(${offset}%, 0, 0)`;
-    
-    // Force browser reflow to ensure transform is applied
-    container.offsetHeight;
-    
-    // Ensure all slides are visible
-    slides.forEach((slide, index) => {
-      slide.style.opacity = '1';
-      slide.style.visibility = 'visible';
-      slide.style.transform = 'none';
-    });
-  }
-  
-  // Adjust gallery height for the new slide
-  adjustGalleryHeight();
+  // Show new slide
+  slides[currentSlide].classList.add('active');
 }
-
-function adjustGalleryHeight() {
-  const galleryContainer = document.querySelector(".gallery-container");
-  const slides = document.querySelectorAll(".gallery-slide");
-  if (!galleryContainer || !slides.length) return;
-
-  // Reset any previously set heights
-  galleryContainer.style.height = '';
-  slides.forEach(slide => {
-    slide.style.height = '';
-  });
-
-  // Find the maximum image height across all slides
-  let maxImageHeight = 0;
-  let maxDescriptionHeight = 0;
-
-  slides.forEach(slide => {
-    const img = slide.querySelector("img");
-    const description = slide.querySelector(".description");
-    
-    if (img) {
-      // Get the natural image dimensions
-      const imgAspectRatio = img.naturalWidth / img.naturalHeight;
-      const containerWidth = slide.clientWidth;
-      const calculatedHeight = containerWidth / imgAspectRatio;
-      
-      // Limit the height to a reasonable maximum
-      const maxAllowedHeight = window.innerHeight * 0.6; // 60% of viewport height
-      const finalHeight = Math.min(calculatedHeight, maxAllowedHeight);
-      
-      maxImageHeight = Math.max(maxImageHeight, finalHeight);
-    }
-    
-    if (description) {
-      maxDescriptionHeight = Math.max(maxDescriptionHeight, description.offsetHeight);
-    }
-  });
-
-  // Apply the consistent heights
-  if (window.matchMedia("(min-width: 600px)").matches) {
-    // Desktop view
-    const totalHeight = maxImageHeight + maxDescriptionHeight + 40; // Adding padding
-    galleryContainer.style.height = `${totalHeight}px`;
-    
-    slides.forEach(slide => {
-      const img = slide.querySelector("img");
-      if (img) {
-        img.style.maxHeight = `${maxImageHeight}px`;
-      }
-    });
-  } else {
-    // Mobile view
-    const totalHeight = maxImageHeight + maxDescriptionHeight + 20; // Less padding for mobile
-    galleryContainer.style.height = `${totalHeight}px`;
-    
-    slides.forEach(slide => {
-      const img = slide.querySelector("img");
-      if (img) {
-        img.style.maxHeight = `${maxImageHeight}px`;
-      }
-    });
-  }
-}
-
-// Initialize gallery on load
-document.addEventListener('DOMContentLoaded', () => {
-  const container = document.querySelector(".gallery-container");
-  const slides = document.querySelectorAll(".gallery-slide");
-  
-  if (container && slides.length) {
-    // Set initial transform
-    container.style.transform = 'translate3d(0%, 0, 0)';
-    
-    // Ensure all slides are initially visible
-    slides.forEach(slide => {
-      slide.style.opacity = '1';
-      slide.style.visibility = 'visible';
-      slide.style.transform = 'none';
-    });
-    
-    // Wait for all images to load before adjusting height
-    const images = container.querySelectorAll('img');
-    let loadedImages = 0;
-    
-    images.forEach(img => {
-      if (img.complete) {
-        loadedImages++;
-        if (loadedImages === images.length) {
-          adjustGalleryHeight();
-        }
-      } else {
-        img.onload = () => {
-          loadedImages++;
-          if (loadedImages === images.length) {
-            adjustGalleryHeight();
-          }
-        };
-      }
-    });
-  }
-});
-
-// Adjust gallery height on window resize
-window.addEventListener('resize', adjustGalleryHeight);
 
 // Show/hide floating arrow based on scroll position
 window.addEventListener('scroll', () => {
@@ -406,21 +297,25 @@ function filterProjects(category) {
     }
   });
   
-  // Filter projects
+  // Filter projects with improved transition
   projects.forEach(project => {
     const tags = project.dataset.tags.split(',');
     if(category === 'all' || tags.includes(category)) {
+      // Show matching projects
       project.classList.remove('hidden');
+      // Use setTimeout to ensure the display change takes effect before changing opacity
       setTimeout(() => {
         project.style.opacity = '1';
         project.style.transform = 'scale(1)';
-      }, 0);
+      }, 10);
     } else {
+      // Hide non-matching projects
       project.style.opacity = '0';
       project.style.transform = 'scale(0.8)';
+      // Wait for the transition to complete before removing from flow
       setTimeout(() => {
         project.classList.add('hidden');
-      }, 300);
+      }, 300); // Match this to your CSS transition time
     }
   });
 }
