@@ -456,56 +456,53 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Skill bar animation
-document.addEventListener('DOMContentLoaded', () => {
-  // Function to animate skill bars
-  function animateSkillBars() {
-    const skillItems = document.querySelectorAll('.skill-item');
-    
-    skillItems.forEach(item => {
-      // Get the percentage from the text
-      const percentText = item.querySelector('.skill-percentage').textContent;
-      const percentage = parseInt(percentText);
-      
-      // Get the skill level bar
-      const skillLevel = item.querySelector('.skill-level');
-      
-      if (skillLevel && !isNaN(percentage)) {
-        // Reset to 0 first (only on initial animation)
-        skillLevel.style.width = '0';
-        
-        // Force reflow to ensure animation works
-        void skillLevel.offsetWidth;
-        
-        // Set the width to match the percentage
-        setTimeout(() => {
-          skillLevel.style.width = percentage + '%';
-        }, 50);
-      }
-    });
-  }
-  
-  // Call immediately to ensure bars are filled when page loads
-  animateSkillBars();
-  
-  // Also use IntersectionObserver to re-trigger animation when scrolling into view
-  const skillObserver = new IntersectionObserver((entries) => {
-    if (entries.some(entry => entry.isIntersecting)) {
-      // Re-animate skill bars when they come into view
-      animateSkillBars();
-    }
-  }, { threshold: 0.1 });
-  
-  // Start observing the skills section
+// Animate skill bars when they come into view
+document.addEventListener("DOMContentLoaded", function() {
   const skillsSection = document.getElementById('skills');
-  if (skillsSection) {
-    skillObserver.observe(skillsSection);
+  const skillLevels = document.querySelectorAll('.skill-level');
+  let animated = false;
+
+  function animateSkillBars() {
+    if (animated) return;
+    
+    const sectionTop = skillsSection.getBoundingClientRect().top;
+    const windowHeight = window.innerHeight;
+    
+    if (sectionTop < windowHeight * 0.9) { // Trigger animation earlier
+      skillsSection.classList.add('skills-animated');
+      
+      // Animate each skill level to its target width
+      skillLevels.forEach(skillLevel => {
+        const targetWidth = skillLevel.getAttribute('data-width');
+        setTimeout(() => {
+          skillLevel.style.width = targetWidth;
+        }, 50); // Shorter delay for quicker animation start
+      });
+      
+      animated = true;
+    }
   }
+
+  // Set initial widths to 0
+  skillLevels.forEach(skillLevel => {
+    const width = skillLevel.getAttribute('data-width') || skillLevel.style.width;
+    skillLevel.setAttribute('data-width', width);
+    skillLevel.style.width = "0";
+  });
+
+  // Check on scroll
+  window.addEventListener('scroll', animateSkillBars);
+  
+  // Check on page load
+  animateSkillBars();
 });
 
 // Timeline animations
 document.addEventListener('DOMContentLoaded', () => {
+  const timelineContainer = document.querySelector('.timeline-container');
   const timelineItems = document.querySelectorAll('.timeline-item');
+  
+  if (!timelineContainer || timelineItems.length === 0) return;
   
   // Create a new IntersectionObserver for timeline items
   const timelineObserver = new IntersectionObserver((entries) => {
@@ -532,16 +529,9 @@ document.addEventListener('DOMContentLoaded', () => {
       item.classList.add('timeline-right');
     }
     
-    // Set initial styles - alternate left/right animation
-    const isEven = index % 2 === 0;
+    // Set initial styles for animation
     item.style.opacity = '0';
-    item.style.transform = isEven ? 'translateX(-50px)' : 'translateX(50px)';
-    // Reduced transition duration from 0.6s to 0.5s for faster animations
-    item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    
-    // Add a slight delay for each item to create a cascade effect
-    // Reduced from 0.15s to 0.08s to make items appear faster
-    item.style.transitionDelay = `${index * 0.08}s`;
+    item.style.transform = 'translateY(30px)';
     
     // Start observing
     timelineObserver.observe(item);
@@ -554,23 +544,143 @@ document.addEventListener('DOMContentLoaded', () => {
   const timelineTabs = document.querySelectorAll('.timeline-tab');
   const timelineItems = document.querySelectorAll('.timeline-item');
   
-  // Apply initial left/right classes based on index
-  timelineItems.forEach((item, index) => {
-    if (index % 2 === 0) {
-      item.classList.add('timeline-left');
-    } else {
-      item.classList.add('timeline-right');
-    }
-  });
+  if (!timelineTabs.length || !timelineItems.length) return;
   
-  function filterTimeline(targetCategory) {
-    // Get the corresponding tab and activate it
-    timelineTabs.forEach(tab => {
-      const tabTarget = tab.getAttribute('data-target');
-      if (tabTarget === targetCategory) {
-        tab.click(); // Trigger the click event on the tab
-      }
+  // Initial state - limit visible items based on category
+  const ITEMS_TO_SHOW_INITIALLY = 8;
+  let currentCategory = 'timeline-all';
+  let moreButtonAdded = false;
+  let scrollObserver = null;
+  
+  // Create Intersection Observer for scroll animations
+  function createScrollObserver() {
+    // Disconnect any existing observer
+    if (scrollObserver) {
+      scrollObserver.disconnect();
+    }
+    
+    // Create new observer for scroll animations
+    scrollObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const item = entry.target;
+          
+          // Animate the item
+          setTimeout(() => {
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
+          }, 100);
+          
+          // Stop observing after animation
+          scrollObserver.unobserve(item);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
     });
+  }
+  
+  // Function to add "View More" button
+  function addViewMoreButton() {
+    if (moreButtonAdded) return;
+    
+    const timelineContainer = document.querySelector('.timeline-container');
+    if (!timelineContainer) return;
+    
+    const viewMoreButton = document.createElement('div');
+    viewMoreButton.className = 'timeline-view-more';
+    viewMoreButton.innerHTML = '<button class="btn btn-color-2">View More</button>';
+    timelineContainer.after(viewMoreButton);
+    
+    viewMoreButton.querySelector('button').addEventListener('click', function() {
+      const hiddenItems = document.querySelectorAll('.timeline-item.initially-hidden');
+      
+      // Hide the "View More" button
+      this.parentElement.style.opacity = '0';
+      setTimeout(() => {
+        this.parentElement.style.display = 'none';
+      }, 300);
+      
+      // Reveal items with staggered animation
+      hiddenItems.forEach((item, index) => {
+        // Set initial state but keep hidden
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(30px)';
+        item.style.display = 'block';
+        item.classList.remove('initially-hidden');
+        
+        // Animate with staggered delay
+        setTimeout(() => {
+          // Apply positioning based on visible index and current visible items
+          const visibleItems = document.querySelectorAll('.timeline-item:not(.initially-hidden)');
+          const visibleIndex = Array.from(visibleItems).indexOf(item);
+          
+          item.classList.remove('timeline-left', 'timeline-right');
+          if (visibleIndex % 2 === 0) {
+            item.classList.add('timeline-left');
+          } else {
+            item.classList.add('timeline-right');
+          }
+          
+          // Start the reveal animation
+          item.style.opacity = '1';
+          item.style.transform = 'translateY(0)';
+        }, 100 + (index * 150)); // Staggered delay - each item appears 150ms after the previous one
+      });
+    });
+    
+    moreButtonAdded = true;
+  }
+  
+  // Function to limit visible items and show "View More" button if needed
+  function limitVisibleItems(visibleItems, targetCategory) {
+    // Create a new scroll observer for the current set of items
+    createScrollObserver();
+    
+    // If we have more than the limit, we need to limit them
+    if (visibleItems.length > ITEMS_TO_SHOW_INITIALLY) {
+      // Add view more button
+      addViewMoreButton();
+      
+      // Now, handle items based on their position
+      visibleItems.forEach((item, index) => {
+        // Reset styles
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(30px)';
+        
+        if (index >= ITEMS_TO_SHOW_INITIALLY) {
+          // Hide items beyond the initial limit
+          item.classList.add('initially-hidden');
+          setTimeout(() => {
+            item.style.display = 'none';
+          }, 50);
+        } else {
+          // Show items within the limit and observe for scroll animation
+          item.style.display = 'block';
+          scrollObserver.observe(item);
+        }
+      });
+      
+      // Display the view more button
+      document.querySelector('.timeline-view-more').style.display = 'flex';
+    } else {
+      // When there are fewer items than the limit
+      visibleItems.forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(30px)';
+        item.style.display = 'block';
+        
+        // Observe all items for scroll animation
+        scrollObserver.observe(item);
+      });
+      
+      // Hide the view more button if visible items are less than the limit
+      const viewMoreBtn = document.querySelector('.timeline-view-more');
+      if (viewMoreBtn) {
+        viewMoreBtn.style.display = 'none';
+      }
+    }
   }
   
   timelineTabs.forEach(tab => {
@@ -579,48 +689,43 @@ document.addEventListener('DOMContentLoaded', () => {
       timelineTabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       
-      const targetCategory = tab.getAttribute('data-target');
+      currentCategory = tab.getAttribute('data-target');
       
       // Track visible items for repositioning
       const visibleItems = [];
       
       // First pass - identify which items will be visible
       timelineItems.forEach(item => {
-        if (targetCategory === 'timeline-all' || 
-            targetCategory.includes(item.getAttribute('data-category'))) {
+        const itemCategory = item.getAttribute('data-category');
+        if (currentCategory === 'timeline-all' || 
+            currentCategory.includes(itemCategory)) {
           visibleItems.push(item);
+          item.classList.remove('initially-hidden');
         }
       });
       
       // Second pass - apply filtering and positioning
       timelineItems.forEach(item => {
-        if (targetCategory === 'timeline-all') {
-          // Show all items
-          item.style.display = 'flex';
+        const itemCategory = item.getAttribute('data-category');
+        
+        if (currentCategory === 'timeline-all' || currentCategory.includes(itemCategory)) {
+          // Show this item
+          item.style.display = 'block';
           setTimeout(() => {
             item.style.opacity = '1';
             item.style.transform = 'translateY(0)';
-          }, 10);
+          }, 50);
         } else {
-          // Only show items of the selected category
-          const itemCategory = item.getAttribute('data-category');
-          if (targetCategory.includes(itemCategory)) {
-            item.style.display = 'flex';
-            setTimeout(() => {
-              item.style.opacity = '1';
-              item.style.transform = 'translateY(0)';
-            }, 10);
-          } else {
-            item.style.opacity = '0';
-            item.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-              item.style.display = 'none';
-            }, 300);
-          }
+          // Hide this item
+          item.style.opacity = '0';
+          item.style.transform = 'translateY(20px)';
+          setTimeout(() => {
+            item.style.display = 'none';
+          }, 400);
         }
       });
       
-      // Apply alternating left/right positioning based on order of visible items
+      // Apply alternating left/right positioning based on visible items
       visibleItems.forEach((item, index) => {
         // Remove any previous positioning classes
         item.classList.remove('timeline-left', 'timeline-right');
@@ -632,55 +737,118 @@ document.addEventListener('DOMContentLoaded', () => {
           item.classList.add('timeline-right');
         }
       });
-    });
-  });
-
-  // Handle timeline dropdown links
-  const timelineDropdownLinks = document.querySelectorAll('.dropdown-content a, .dropdown-content-mobile a');
-  timelineDropdownLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      // Extract the target category from the href
-      const href = link.getAttribute('href');
-      const targetId = href.substring(1); // Remove the # from the href
       
-      // Scroll to the timeline section
-      const timelineSection = document.getElementById('timeline');
-      if (timelineSection) {
-        e.preventDefault(); // Prevent default anchor behavior
-        
-        // Scroll to timeline section with offset for header
-        const headerHeight = document.getElementById('desktop-nav').offsetHeight;
-        const timelineTop = timelineSection.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-        
-        window.scrollTo({
-          top: timelineTop,
-          behavior: 'smooth'
-        });
-        
-        // Apply the filter after scrolling completes
-        setTimeout(() => {
-          filterTimeline(targetId);
-        }, 700); // Allow time for the scroll to complete
-      }
+      // Limit visible items if there are too many
+      limitVisibleItems(visibleItems, currentCategory);
     });
   });
-
-  // Mobile timeline dropdown functionality
-  const mobileTimelineDropdown = document.querySelector('.timeline-dropdown-mobile');
-  if (mobileTimelineDropdown) {
-    const dropdownLink = mobileTimelineDropdown.querySelector('a');
-    dropdownLink.addEventListener('click', (e) => {
-      // Prevent the link from navigating immediately
-      if (window.innerWidth <= 768) {
-        e.preventDefault();
-        mobileTimelineDropdown.classList.toggle('active');
-      }
-    });
+  
+  // Initialize the timeline on first load
+  const defaultTab = document.querySelector('.timeline-tab.active');
+  if (defaultTab) {
+    setTimeout(() => {
+      defaultTab.click();
+    }, 100);
   }
+  
+  // Handle direct anchor links to specific timeline categories
+  function handleTimelineLinks() {
+    const hash = window.location.hash;
+    if (hash && hash.includes('timeline-')) {
+      const targetCategory = hash.replace('#', '');
+      const matchingTab = document.querySelector(`.timeline-tab[data-target="${targetCategory}"]`);
+      
+      if (matchingTab) {
+        setTimeout(() => {
+          matchingTab.click();
+          
+          // Scroll to the timeline section with a slight offset
+          const timelineSection = document.getElementById('timeline');
+          if (timelineSection) {
+            const offset = -100; // Adjust as needed
+            const top = timelineSection.getBoundingClientRect().top + window.pageYOffset + offset;
+            window.scrollTo({ top, behavior: 'smooth' });
+          }
+        }, 300);
+      }
+    }
+  }
+  
+  // Run on page load
+  handleTimelineLinks();
+  
+  // Also handle navigation changes
+  window.addEventListener('hashchange', handleTimelineLinks);
 });
 
 // Contact form functionality
 document.addEventListener('DOMContentLoaded', () => {
   // Form handling now done by FormSubmit
   // No JavaScript needed for the contact form
+});
+
+// Add event listener to scroll indicator
+document.addEventListener('DOMContentLoaded', function() {
+  const scrollIndicator = document.querySelector('.scroll-indicator');
+  if (scrollIndicator) {
+    scrollIndicator.addEventListener('click', function() {
+      const aboutSection = document.getElementById('about');
+      if (aboutSection) {
+        aboutSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
+});
+
+// Typewriter animation
+document.addEventListener("DOMContentLoaded", function() {
+  const phrases = [
+    "Computer Science Student",
+    "Web Developer",
+    "Problem Solver",
+    "Software Engineer",
+    "UI/UX Enthusiast"
+  ];
+  
+  const dynamicText = document.querySelector('.dynamic-text');
+  let currentIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  let typingSpeed = 100;
+  let delayAfterPhrase = 1500;
+  let delayBeforeTyping = 500;
+  
+  function typeWriter() {
+    const currentPhrase = phrases[currentIndex];
+    
+    if (isDeleting) {
+      // Removing letters
+      dynamicText.textContent = currentPhrase.substring(0, charIndex - 1);
+      charIndex--;
+      typingSpeed = 50; // Faster deletion
+      
+      // When done deleting, move to next phrase
+      if (charIndex === 0) {
+        isDeleting = false;
+        currentIndex = (currentIndex + 1) % phrases.length;
+        typingSpeed = delayBeforeTyping; // Pause before typing next phrase
+      }
+    } else {
+      // Adding letters
+      dynamicText.textContent = currentPhrase.substring(0, charIndex + 1);
+      charIndex++;
+      typingSpeed = 100; // Normal typing speed
+      
+      // When phrase is completely typed
+      if (charIndex === currentPhrase.length) {
+        isDeleting = true;
+        typingSpeed = delayAfterPhrase; // Pause before deleting
+      }
+    }
+    
+    setTimeout(typeWriter, typingSpeed);
+  }
+  
+  // Start the animation
+  typeWriter();
 });

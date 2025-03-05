@@ -37,6 +37,7 @@
               <a href="#timeline-education">Education</a>
               <a href="#timeline-work">Work Experience</a>
               <a href="#timeline-certificates">Certificates</a>
+              <a href="#timeline-volunteering">Volunteering</a>
             </div>
           </li>
           <li><button class="theme-toggle" aria-label="Toggle dark mode">🌙</button></li>
@@ -62,6 +63,7 @@
               <a href="#timeline-education" onclick="toggleMenu()">Education</a>
               <a href="#timeline-work" onclick="toggleMenu()">Work Experience</a>
               <a href="#timeline-certificates" onclick="toggleMenu()">Certificates</a>
+              <a href="#timeline-volunteering" onclick="toggleMenu()">Volunteering</a>
             </div>
           </li>
           <li><button class="theme-toggle" aria-label="Toggle dark mode">🌙</button></li>
@@ -70,16 +72,16 @@
       <div class="menu-overlay"></div>
     </nav>
     <section id="profile">
-      <div class="section__pic-container">
-        <img
-          src="./assets/profile pic.jpg"
-          alt="Todor Aleksandrov Profile Picture"
-        />
-      </div>
       <div class="section__text">
         <p class="section__text__p1">Hello, I'm</p>
         <h1 class="title">Todor Aleksandrov</h1>
-        <p class="section__text__p2">Computer Science Student</p>
+        <div class="text-animation-container">
+          <p class="section__text__p2">
+            <span class="static-text">I am a </span>
+            <span class="dynamic-text">Computer Science Student</span>
+          </p>
+        </div>
+        <p class="profile-description">A passionate computer science student focused on creating modern, user-friendly web experiences.</p>
         <div class="btn-container">
           <button
             class="btn btn-color-2"
@@ -88,7 +90,7 @@
             View CV
           </button>
           <button class="btn btn-color-1" onclick="location.href='#contact'">
-            Contact Info
+            Contact Me
           </button>
         </div>
         <div id="socials-container">
@@ -105,6 +107,18 @@
             onclick="window.open('https://github.com/todor147', '_blank')"
           />
         </div>
+      </div>
+      <div class="section__pic-container">
+        <img
+          src="./assets/profile pic.jpg"
+          alt="Todor Aleksandrov Profile Picture"
+        />
+      </div>
+      <div class="scroll-indicator">
+        <p>Scroll Down</p>
+        <svg class="arrow-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
     </section>
     <section id="about">
@@ -185,96 +199,96 @@
         <div class="skills-category">
           <h2>Programming Languages</h2>
           <div class="skill-item">
-            <span class="skill-name">Java</span>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 85%"></div>
-            </div>
+            <div class="skill-name">Java</div>
             <span class="skill-percentage">85%</span>
+            <div class="skill-bar">
+              <div class="skill-level" data-width="85%"></div>
+            </div>
           </div>
           <div class="skill-item">
-            <span class="skill-name">JavaScript/TypeScript</span>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 80%"></div>
-            </div>
+            <div class="skill-name">JavaScript/TypeScript</div>
             <span class="skill-percentage">80%</span>
+            <div class="skill-bar">
+              <div class="skill-level" data-width="80%"></div>
+            </div>
           </div>
           <div class="skill-item">
-            <span class="skill-name">Python</span>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 70%"></div>
-            </div>
+            <div class="skill-name">Python</div>
             <span class="skill-percentage">70%</span>
+            <div class="skill-bar">
+              <div class="skill-level" data-width="70%"></div>
+            </div>
           </div>
           <div class="skill-item">
-            <span class="skill-name">C++</span>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 60%"></div>
-            </div>
+            <div class="skill-name">C++</div>
             <span class="skill-percentage">60%</span>
+            <div class="skill-bar">
+              <div class="skill-level" data-width="60%"></div>
+            </div>
           </div>
         </div>
         
         <div class="skills-category">
           <h2>Web Development</h2>
           <div class="skill-item">
-            <span class="skill-name">HTML/CSS</span>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 90%"></div>
-            </div>
+            <div class="skill-name">HTML/CSS</div>
             <span class="skill-percentage">90%</span>
+            <div class="skill-bar">
+              <div class="skill-level" data-width="90%"></div>
+            </div>
           </div>
           <div class="skill-item">
-            <span class="skill-name">Bootstrap</span>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 70%"></div>
-            </div>
+            <div class="skill-name">Bootstrap</div>
             <span class="skill-percentage">70%</span>
+            <div class="skill-bar">
+              <div class="skill-level" data-width="70%"></div>
+            </div>
           </div>
           <div class="skill-item">
-            <span class="skill-name">Tailwind</span>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 70%"></div>
-            </div>
+            <div class="skill-name">Tailwind</div>
             <span class="skill-percentage">70%</span>
+            <div class="skill-bar">
+              <div class="skill-level" data-width="70%"></div>
+            </div>
           </div>
           <div class="skill-item">
-            <span class="skill-name">SQL</span>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 70%"></div>
-            </div>
+            <div class="skill-name">SQL</div>
             <span class="skill-percentage">70%</span>
+            <div class="skill-bar">
+              <div class="skill-level" data-width="70%"></div>
+            </div>
           </div>
         </div>
         
         <div class="skills-category">
           <h2>Tools & Technologies</h2>
           <div class="skill-item">
-            <span class="skill-name">Git/GitHub</span>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 85%"></div>
-            </div>
+            <div class="skill-name">Git/GitHub</div>
             <span class="skill-percentage">85%</span>
+            <div class="skill-bar">
+              <div class="skill-level" data-width="85%"></div>
+            </div>
           </div>
           <div class="skill-item">
-            <span class="skill-name">Azure DevOps</span>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 80%"></div>
-            </div>
+            <div class="skill-name">Azure DevOps</div>
             <span class="skill-percentage">80%</span>
+            <div class="skill-bar">
+              <div class="skill-level" data-width="80%"></div>
+            </div>
           </div>
           <div class="skill-item">
-            <span class="skill-name">Database Management</span>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 70%"></div>
-            </div>
+            <div class="skill-name">Database Management</div>
             <span class="skill-percentage">70%</span>
+            <div class="skill-bar">
+              <div class="skill-level" data-width="70%"></div>
+            </div>
           </div>
           <div class="skill-item">
-            <span class="skill-name">SolidWorks</span>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 60%"></div>
-            </div>
+            <div class="skill-name">SolidWorks</div>
             <span class="skill-percentage">60%</span>
+            <div class="skill-bar">
+              <div class="skill-level" data-width="60%"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -456,7 +470,8 @@
                 </a>
                 <div>
                   <h3>Automated External Defibrillation (AED)</h3>
-                  <p>RLSS UK, 02.2025</p>
+                  <p>RLSS UK, Feb 2025 - Feb 2027</p>
+                  <p class="credential-id">Credential ID: 2ALEK0A393623343</p>
                 </div>
               </article>
               <article>
@@ -465,7 +480,8 @@
                 </a>
                 <div>
                   <h3>Pool Lifeguarding</h3>
-                  <p>RLSS UK, 02.2025</p>
+                  <p>RLSS UK, Jan 2025 - Feb 2027</p>
+                  <p class="credential-id">Credential ID: ALEK0A3094675660</p>
                 </div>
               </article>
               <article>
@@ -476,7 +492,7 @@
                 </a>
                 <div>
                   <h3>Introductory Sommelier</h3>
-                  <p>CMS, 08.2024</p>
+                  <p>Court of Master Sommeliers Europe, Aug 2024</p>
                 </div>
               </article>
               <article>
@@ -484,8 +500,8 @@
                   ><img src="./assets/wset.jpg" alt="WSET Icon" class="icon" />
                 </a>
                 <div>
-                  <h3>WSET Level 2 Award in Wines</h3>
-                  <p>WSET, 05.2024</p>
+                  <h3>WSET Level 2 Award in Wines - 82% Merit</h3>
+                  <p>Wine & Spirit Education Trust, May 2024</p>
                 </div>
               </article>
               <article>
@@ -493,8 +509,8 @@
                   <img src="./assets/ef set.jpg" alt="EF SET Icon" class="icon" />
                 </a>
                 <div>
-                  <h3>EFSET English Certificate (C2 Proficient)</h3>
-                  <p>EF SET, 02.2023</p>
+                  <h3>EFSET English Certificate 76/100 (C2 Proficient)</h3>
+                  <p>EF SET, Feb 2023</p>
                 </div>
               </article>
             </div>
@@ -623,7 +639,7 @@
               <span class="project-tag">HTML5</span>
               <span class="project-tag">CSS3</span>
             </div>
-            <h3 class="project-title">Monkey Rescue Game</h3>
+            <h3 class="project-title">Monkey Rescue</h3>
             <p class="project-description">An imaginary charity site built using HTML5 and CSS3, featuring responsive design and engaging animations.</p>
             <div class="project-links">
               <button class="btn btn-color-2 project-btn" onclick="window.open('https://github.com/todor147/monkey-rescue', '_blank')">
@@ -647,7 +663,7 @@
               <span class="project-tag">HTML5</span>
               <span class="project-tag">CSS3</span>
             </div>
-            <h3 class="project-title">Personal Portfolio Website</h3>
+            <h3 class="project-title">Personal Portfolio</h3>
             <p class="project-description">A responsive portfolio website with dark mode, project filtering, and smooth animations.</p>
             <div class="project-links">
               <button class="btn btn-color-2 project-btn" onclick="window.open('https://github.com/todor147/html-css-js-portfolio', '_blank')">
@@ -692,8 +708,8 @@
               <label for="message">Message</label>
               <textarea id="message" name="message" rows="5" placeholder="Enter your message" required></textarea>
             </div>
-            <button type="submit" class="btn btn-color-1">Send Message</button>
-            <p class="form-note">Messages will be sent directly to todor_147@abv.bg</p>
+            <button type="submit" class="btn btn-color-2">Send Message</button>
+            <p class="form-note">Messages will be sent directly to my email address</p>
           </form>
         </div>
         
@@ -819,121 +835,288 @@
         <button class="timeline-tab" data-target="timeline-education">Education</button>
         <button class="timeline-tab" data-target="timeline-work">Work Experience</button>
         <button class="timeline-tab" data-target="timeline-certificates">Certificates</button>
+        <button class="timeline-tab" data-target="timeline-volunteering">Volunteering</button>
       </div>
       
       <div class="timeline-container" id="timeline-all">
-        <!-- 2024 - Present -->
-        <div class="timeline-item" data-category="work" id="timeline-work">
+        <!-- Present Positions -->
+        <div class="timeline-item" data-category="work">
           <div class="timeline-dot"></div>
-          <div class="timeline-date">2024 - Present</div>
+          <div class="timeline-date">Feb 2025 - Present</div>
           <div class="timeline-content">
-            <h3>Junior Sommelier at Adare Manor</h3>
-            <p>Enhancing wine knowledge and service expertise at Ireland's leading 5-star hotel.</p>
+            <h3>Tutor</h3>
+            <span class="employer">ICT Learning Centre, University of Limerick</span>
+            <p>Guide first-year students in Java programming fundamentals through interactive labs. Provide support through drop-in hours and personalized assistance.</p>
           </div>
         </div>
         
         <div class="timeline-item" data-category="work">
           <div class="timeline-dot"></div>
-          <div class="timeline-date">2024 - Present</div>
+          <div class="timeline-date">Jan 2025 - Present</div>
           <div class="timeline-content">
-            <h3>ICT Learning Center Tutor at University of Limerick</h3>
-            <p>Supporting students with programming and IT concepts through both scheduled sessions and drop-in hours.</p>
-          </div>
-        </div>
-        
-        <div class="timeline-item" data-category="work">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">2024 - Present</div>
-          <div class="timeline-content">
-            <h3>PSLG Tutor at University of Limerick</h3>
-            <p>Guiding students in developing problem-solving skills and providing curriculum support.</p>
-          </div>
-        </div>
-        
-        <!-- 2024 -->
-        <div class="timeline-item" data-category="certificates" id="timeline-certificates">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">2024</div>
-          <div class="timeline-content">
-            <h3>WSET Level 2 Award in Wines</h3>
-            <p>Achieved certification in wine knowledge, covering regions, grape varieties, and service.</p>
+            <h3>Peer Advisor</h3>
+            <span class="employer">Glucksman Library, University of Limerick</span>
+            <p>Assist library users with inquiries, conduct tours, and support the Every Seat Counts program. Create a welcoming environment for visitors.</p>
           </div>
         </div>
         
         <div class="timeline-item" data-category="certificates">
           <div class="timeline-dot"></div>
-          <div class="timeline-date">2024</div>
+          <div class="timeline-date">Feb 2025 - Feb 2027</div>
           <div class="timeline-content">
-            <h3>Introductory Sommelier - Court of Master Sommeliers</h3>
-            <p>Gained fundamental knowledge of wine regions, viticulture, and professional service techniques.</p>
+            <h3>Automated External Defibrillation (AED)</h3>
+            <span class="employer">Royal Life Saving Society UK - RLSS UK</span>
+            <p>Credential ID: 2ALEK0A393623343<br>Skills: CPR, AED operation, First Aid</p>
           </div>
         </div>
         
-        <div class="timeline-item" data-category="work">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">2024</div>
-          <div class="timeline-content">
-            <h3>Software Development Student at AMCS Group</h3>
-            <p>Applying computer science knowledge in a real-world software development environment, focusing on QA testing and development.</p>
-          </div>
-        </div>
-        
-        <!-- 2023 - Present -->
-        <div class="timeline-item" data-category="work">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">2023 - Present</div>
-          <div class="timeline-content">
-            <h3>Bulgarian-English Interpreter at Translit</h3>
-            <p>Providing professional language interpretation services, bridging communication gaps in various contexts.</p>
-          </div>
-        </div>
-        
-        <!-- 2023 - 2024 -->
-        <div class="timeline-item" data-category="work">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">2023 - 2024</div>
-          <div class="timeline-content">
-            <h3>Senior F&B Assistant at Adare Manor</h3>
-            <p>Developed leadership skills while providing 5-star service in an internationally renowned hotel.</p>
-          </div>
-        </div>
-        
-        <!-- 2023 -->
         <div class="timeline-item" data-category="certificates">
           <div class="timeline-dot"></div>
-          <div class="timeline-date">2023</div>
+          <div class="timeline-date">Jan 2025 - Feb 2027</div>
           <div class="timeline-content">
-            <h3>EF SET English Certificate (C2 Proficient)</h3>
+            <h3>Pool Lifeguarding</h3>
+            <span class="employer">Royal Life Saving Society UK - RLSS UK</span>
+            <p>Credential ID: ALEK0A3094675660<br>Skills: Lifeguarding, First Aid</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Mar 2024 - Present</div>
+          <div class="timeline-content">
+            <h3>Junior Sommelier</h3>
+            <span class="employer">Adare Manor</span>
+            <p>Provide personalized wine recommendations and pairings for guests. Support strategic wine planning for events and create memorable experiences for international clientele.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="certificates">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Aug 2024</div>
+          <div class="timeline-content">
+            <h3>Introductory Sommelier</h3>
+            <span class="employer">Court of Master Sommeliers Europe</span>
+            <p>Gained knowledge of wine regions, viticulture, and professional service techniques.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="certificates">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">May 2024</div>
+          <div class="timeline-content">
+            <h3>WSET Level 2 Award in Wines - 82% Merit</h3>
+            <span class="employer">Wine & Spirit Education Trust</span>
+            <p>Skills: Winemaking, Wine Tasting, Hospitality Management</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Jun 2024 - Jan 2025</div>
+          <div class="timeline-content">
+            <h3>Software Development Student</h3>
+            <span class="employer">AMCS Group</span>
+            <p>Automated test cases using Cypress. Enhanced environment health check processes and supported CI/CD deployment with Azure DevOps.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="volunteering">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Sep 2023 - May 2024</div>
+          <div class="timeline-content">
+            <h3>Events Chairperson</h3>
+            <span class="employer">UL Student Life</span>
+            <p>Led decision-making for student events as part of the Executive team. Managed charity partnerships and optimized operations for major events including Student Election Day.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="volunteering">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Sep 2023 - May 2024</div>
+          <div class="timeline-content">
+            <h3>Student Council Vice-Chairperson</h3>
+            <span class="employer">UL Student Life</span>
+            <p>Facilitated meetings and supported the Chairperson. Ensured adherence to constitutional regulations and fostered an inclusive environment.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Aug 2023 - May 2024</div>
+          <div class="timeline-content">
+            <h3>PSLG Tutor</h3>
+            <span class="employer">University of Limerick</span>
+            <p>Supported 1st-year Computer Science students. Created interactive materials and engaged with students during sessions to reinforce course concepts.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Aug 2023 - May 2024</div>
+          <div class="timeline-content">
+            <h3>Peer Advisor</h3>
+            <span class="employer">Glucksman Library, University of Limerick</span>
+            <p>Provided information services to library users. Conducted tours and supported the Every Seat Counts program.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Aug 2023 - May 2024</div>
+          <div class="timeline-content">
+            <h3>Creative Crew</h3>
+            <span class="employer">UL Student Life</span>
+            <p>Organized student events including fundraisers and musical gigs. Managed event logistics during Freshers and Charity weeks.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Oct 2023 - Jan 2024</div>
+          <div class="timeline-content">
+            <h3>Delivery Driver</h3>
+            <span class="employer">Uber Eats</span>
+            <p>Ensured timely and safe delivery of food orders in Limerick. Maintained high service standards and efficient delivery logistics.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">May 2023 - Mar 2024</div>
+          <div class="timeline-content">
+            <h3>Senior Food and Beverage Assistant</h3>
+            <span class="employer">Adare Manor</span>
+            <p>Delivered exceptional dining experiences for VIP guests at The Carriage House. Coordinated service flow and provided detailed menu insights.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Apr 2023 - May 2023</div>
+          <div class="timeline-content">
+            <h3>Food and Beverage Assistant</h3>
+            <span class="employer">Devon Inn Hotel</span>
+            <p>Served guests in a fast-paced environment. Focused on teamwork and efficient hospitality service delivery.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Feb 2023 - May 2023</div>
+          <div class="timeline-content">
+            <h3>Waiter</h3>
+            <span class="employer">WrkWrk</span>
+            <p>Worked at upscale establishments across Munster, including Limerick Racecourse and Adare Manor. Provided service at high-profile events including the Irish Hotels Federation Annual Conference.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="volunteering">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Feb 2023 - May 2023</div>
+          <div class="timeline-content">
+            <h3>Class Representative</h3>
+            <span class="employer">UL Student Life</span>
+            <p>Served as liaison between students and academic staff. Gathered feedback and facilitated communication to resolve academic issues.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="volunteering">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Jan 2023 - May 2023</div>
+          <div class="timeline-content">
+            <h3>International Buddy</h3>
+            <span class="employer">UL Global</span>
+            <p>Supported international students during their transition to UL. Organized events including coffee mornings and cultural visits to help them integrate.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="volunteering">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Jan 2023 - May 2023</div>
+          <div class="timeline-content">
+            <h3>SparkED Team Member</h3>
+            <span class="employer">Enactus Ireland</span>
+            <p>Mentored Transition Year students on college preparations. Provided CV feedback and spoke at a DEIS school about educational pathways and opportunities.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="certificates">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Feb 2023</div>
+          <div class="timeline-content">
+            <h3>EFSET English Certificate 76/100 (C2 Proficient)</h3>
+            <span class="employer">EF SET</span>
             <p>Certified at the highest level of English language proficiency.</p>
           </div>
         </div>
         
-        <div class="timeline-item" data-category="work">
+        <div class="timeline-item" data-category="volunteering">
           <div class="timeline-dot"></div>
-          <div class="timeline-date">2023</div>
+          <div class="timeline-date">Mar 2023</div>
           <div class="timeline-content">
-            <h3>Waiter at Devon Inn Hotel</h3>
-            <p>Provided quality customer service and contributed to an efficient dining experience.</p>
+            <h3>Charity Week Volunteer</h3>
+            <span class="employer">UL Student Life</span>
+            <p>Assisted with event operations during UL Charity Week. Distributed wristbands, helped run concerts, and achieved the highest fundraising total among volunteers.</p>
           </div>
         </div>
         
-        <!-- 2022 - Present -->
+        <div class="timeline-item" data-category="volunteering">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Feb 2023</div>
+          <div class="timeline-content">
+            <h3>Volunteer Marshal</h3>
+            <span class="employer">Milford Care Centre</span>
+            <p>Guided runners during the annual 10K fundraising event. Ensured a safe, organized experience for participants while supporting hospice services.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Feb 2023 - Present</div>
+          <div class="timeline-content">
+            <h3>Bulgarian-English Interpreter</h3>
+            <span class="employer">Translit</span>
+            <p>Provide accurate interpretation in medical and social service settings. Ensure effective communication between Bulgarian and English speakers.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="work">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Sep 2022 - May 2023</div>
+          <div class="timeline-content">
+            <h3>Food and Beverage Assistant</h3>
+            <span class="employer">The Mustard Seed</span>
+            <p>Managed client orders and delivered exceptional dining service. Developed hospitality skills in an acclaimed restaurant setting.</p>
+          </div>
+        </div>
+        
         <div class="timeline-item" data-category="education" id="timeline-education">
           <div class="timeline-dot"></div>
-          <div class="timeline-date">2022 - Present</div>
+          <div class="timeline-date">Sep 2022 - Aug 2026 (Expected)</div>
           <div class="timeline-content">
-            <h3>B.Sc. Computer Systems at University of Limerick</h3>
-            <p>Gaining comprehensive knowledge in software development, algorithms, data structures, and computer architecture. Expected graduation: 2026.</p>
+            <h3>Bachelor of Science - BS, Computer Science</h3>
+            <span class="employer">University of Limerick</span>
+            <p>Key involvement: Enactus (22/23), Class Representative (22/23), President's Gold Volunteer Award, Student Executive Events Chairperson (23/24), Student Council Vice-Chair (23/24)</p>
           </div>
         </div>
         
-        <!-- 2022 - 2023 -->
-        <div class="timeline-item" data-category="work">
+        <div class="timeline-item" data-category="volunteering">
           <div class="timeline-dot"></div>
-          <div class="timeline-date">2022 - 2023</div>
+          <div class="timeline-date">Sep 2020 - May 2021</div>
           <div class="timeline-content">
-            <h3>Waiter at The Mustard Seed</h3>
-            <p>Delivered exceptional dining service at this acclaimed restaurant while developing hospitality skills.</p>
+            <h3>Student Council Member</h3>
+            <span class="employer">Coláiste na Tróicaire</span>
+            <p>Represented peers on the student council. Contributed to initiatives that enhanced student experience and created a supportive school environment.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item" data-category="education">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Sep 2016 - Jun 2022</div>
+          <div class="timeline-content">
+            <h3>Leaving Certificate</h3>
+            <span class="employer">Coláiste na Trocaire</span>
+            <p>Grade: 578 Points. Achievements: School Spirit award (1st year) and multiple academic awards throughout secondary education.</p>
           </div>
         </div>
       </div>
@@ -952,3 +1135,4 @@
     <script src="script.js"></script>
   </body>
 </html>
+
