@@ -38,6 +38,55 @@
         40% {transform: translateY(-20px);}
         60% {transform: translateY(-10px);}
       }
+      
+      /* Custom styles for thanks page to reduce header/footer size */
+      #desktop-nav, #hamburger-nav {
+        padding: 0.5rem 2rem;
+        height: auto;
+        min-height: unset;
+      }
+      
+      .nav-links {
+        gap: 1rem;
+      }
+      
+      .nav-links a {
+        padding: 0.2rem 0.5rem;
+      }
+      
+      .logo {
+        font-size: 1.5rem;
+      }
+      
+      footer {
+        padding: 1rem;
+        margin-top: 2rem;
+      }
+      
+      footer p {
+        font-size: 0.9rem;
+      }
+      
+      /* Adjust thanks container padding */
+      .thanks-container {
+        padding-top: 0;
+        padding-bottom: 0;
+        margin: 2rem auto;
+      }
+      
+      /* Make sure the content is centered vertically */
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      
+      main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
     </style>
   </head>
 
@@ -77,14 +126,16 @@
       <div class="menu-overlay"></div>
     </nav>
 
-    <div class="thanks-container">
-      <img src="./assets/email.jpg" alt="Email Icon" class="thanks-icon" />
-      <div class="thanks-message">
-        <h1>Thanks for your message!</h1>
-        <p>I appreciate you taking the time to reach out. I'll get back to you as soon as possible at the email address you provided.</p>
+    <main>
+      <div class="thanks-container">
+        <img src="./assets/email.jpg" alt="Email Icon" class="thanks-icon" />
+        <div class="thanks-message">
+          <h1>Thanks for your message!</h1>
+          <p>I appreciate you taking the time to reach out. I'll get back to you as soon as possible at the email address you provided.</p>
+        </div>
+        <a href="index.html" class="btn btn-color-1 return-btn">Return to Portfolio</a>
       </div>
-      <a href="index.html" class="btn btn-color-1 return-btn">Return to Portfolio</a>
-    </div>
+    </main>
 
     <footer>
       <p>Copyright © <span id="currentYear"></span> Todor Aleksandrov. All rights reserved.</p>
@@ -100,48 +151,104 @@
         const menu = document.querySelector(".menu-links");
         const icon = document.querySelector(".hamburger-icon");
         const overlay = document.querySelector(".menu-overlay");
+        const body = document.body;
+
         menu.classList.toggle("open");
-        overlay.classList.toggle("open");
+        if (menu.classList.contains("open")) {
+          icon.innerHTML = "×";
+          overlay.classList.add("open");
+          body.style.overflow = "hidden";
+        } else {
+          icon.innerHTML = "☰";
+          overlay.classList.remove("open");
+          body.style.overflow = "auto";
+        }
       }
       
       // Theme toggle functionality
       document.addEventListener('DOMContentLoaded', function() {
         const themeToggleBtns = document.querySelectorAll('.theme-toggle');
         
-        // Check for saved theme preference or use device preference
-        const savedTheme = localStorage.getItem('theme') || 
-                           (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        // Check for saved theme preference or use auto as default
+        const savedTheme = localStorage.getItem('theme') || 'auto';
         
-        // Apply saved theme
-        document.documentElement.setAttribute('data-theme', savedTheme);
+        // Apply the theme
+        if (savedTheme === 'auto') {
+          // Use system preference for auto mode
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+        } else {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        
+        // Update theme toggle icons
         updateThemeIcons();
         
         // Add click event to theme toggle buttons
         themeToggleBtns.forEach(btn => {
-          btn.addEventListener('click', function() {
+          btn.addEventListener('click', function(event) {
+            // Prevent the menu from closing when clicking the theme toggle
+            if (event) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
             toggleTheme();
           });
         });
         
         function toggleTheme() {
-          const currentTheme = document.documentElement.getAttribute('data-theme');
-          const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+          const currentTheme = localStorage.getItem('theme') || 'auto';
+          let newTheme;
           
-          document.documentElement.setAttribute('data-theme', newTheme);
+          // Cycle through themes: light -> dark -> auto
+          if (currentTheme === 'light') {
+            newTheme = 'dark';
+          } else if (currentTheme === 'dark') {
+            newTheme = 'auto';
+          } else {
+            newTheme = 'light';
+          }
+          
+          // Apply the new theme
+          if (newTheme === 'auto') {
+            // For auto, use system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+          } else {
+            document.documentElement.setAttribute('data-theme', newTheme);
+          }
+          
+          // Save theme preference
           localStorage.setItem('theme', newTheme);
           
+          // Update theme toggle buttons
           updateThemeIcons();
         }
         
         function updateThemeIcons() {
-          const currentTheme = document.documentElement.getAttribute('data-theme');
+          const currentTheme = localStorage.getItem('theme') || 'auto';
           
           themeToggleBtns.forEach(btn => {
-            btn.textContent = currentTheme === 'light' ? '🌙' : '☀️';
-            btn.setAttribute('aria-label', 
-              currentTheme === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
+            if (currentTheme === 'light') {
+              btn.innerHTML = '☀️'; // Sun for light theme
+              btn.setAttribute('aria-label', 'Currently on light theme, click to switch to dark');
+            } else if (currentTheme === 'dark') {
+              btn.innerHTML = '🌙'; // Moon for dark theme
+              btn.setAttribute('aria-label', 'Currently on dark theme, click to switch to auto');
+            } else { // auto
+              btn.innerHTML = '🔄'; // Auto symbol for auto theme
+              btn.setAttribute('aria-label', 'Currently on auto theme, click to switch to light');
+            }
           });
         }
+        
+        // Listen for changes in system theme preference
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+          // Only apply system theme if in auto mode
+          if (localStorage.getItem('theme') === 'auto') {
+            document.documentElement.setAttribute('data-theme', event.matches ? 'dark' : 'light');
+          }
+        });
       });
     </script>
   </body>
