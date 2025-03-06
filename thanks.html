@@ -17,6 +17,9 @@
         align-items: center;
         text-align: center;
         padding: 2rem;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 100%;
       }
       .thanks-icon {
         width: 100px;
@@ -29,6 +32,9 @@
       .thanks-message {
         max-width: 600px;
         margin-bottom: 2rem;
+        padding: 0 1rem;
+        box-sizing: border-box;
+        width: 100%;
       }
       .return-btn {
         margin-top: 2rem;
@@ -79,6 +85,8 @@
         display: flex;
         flex-direction: column;
         min-height: 100vh;
+        overflow-x: hidden;
+        width: 100%;
       }
       
       main {
@@ -86,6 +94,65 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      
+      /* Mobile styles */
+      @media screen and (max-width: 768px) {
+        .thanks-container {
+          padding: 1.5rem;
+          margin: 1rem auto;
+        }
+        
+        .thanks-icon {
+          width: 80px;
+          height: 80px;
+          margin-bottom: 1.5rem;
+        }
+        
+        .thanks-message h1 {
+          font-size: 1.8rem;
+          margin-bottom: 1rem;
+        }
+        
+        .thanks-message p {
+          font-size: 1rem;
+          line-height: 1.5;
+        }
+        
+        #desktop-nav, #hamburger-nav {
+          padding: 0.5rem 1.25rem;
+        }
+      }
+      
+      @media screen and (max-width: 480px) {
+        .thanks-container {
+          padding: 1rem;
+        }
+        
+        .thanks-icon {
+          width: 70px;
+          height: 70px;
+          margin-bottom: 1.25rem;
+        }
+        
+        .thanks-message h1 {
+          font-size: 1.5rem;
+        }
+        
+        .thanks-message p {
+          font-size: 0.95rem;
+        }
+        
+        .return-btn {
+          padding: 0.6rem 1.8rem;
+          font-size: 0.95rem;
+        }
+        
+        #desktop-nav, #hamburger-nav {
+          padding: 0.5rem 1rem;
+        }
       }
     </style>
   </head>
@@ -164,6 +231,16 @@
           body.style.overflow = "auto";
         }
       }
+      
+      // Close menu when clicking overlay
+      document.querySelector(".menu-overlay")?.addEventListener("click", function() {
+        const menu = document.querySelector(".menu-links");
+        const icon = document.querySelector(".hamburger-icon");
+        menu.classList.remove("open");
+        icon.innerHTML = "☰";
+        this.classList.remove("open");
+        document.body.style.overflow = "auto";
+      });
       
       // Theme toggle functionality
       document.addEventListener('DOMContentLoaded', function() {
