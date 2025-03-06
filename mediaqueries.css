@@ -1,7 +1,8 @@
 @media screen and (max-width: 1400px) {
   #profile {
-    height: 83vh;
-    margin-bottom: 6rem;
+    min-height: 90vh;
+    padding-top: 17vh;
+    margin-bottom: 2rem;
   }
   .about-containers {
     flex-wrap: wrap;
@@ -19,9 +20,11 @@
   .experience-details-container {
     margin-top: 2rem;
   }
-  #profile,
-  .section-container {
-    display: block;
+  #profile {
+    display: flex;
+    flex-direction: column;
+    padding-top: 15vh;
+    text-align: center;
   }
   .arrow {
     display: none;
@@ -34,8 +37,12 @@
     margin: 0 5%;
   }
   .section__pic-container {
-    width: 275px;
-    height: 275px;
+    width: 275px !important;
+    height: 275px !important;
+    min-width: 275px !important;
+    min-height: 275px !important;
+    max-width: 275px !important;
+    max-height: 275px !important;
     margin: 0 auto 2rem;
   }
   .about-containers {
@@ -61,7 +68,8 @@
     height: 40vh;
   }
   #profile {
-    height: 83vh;
+    min-height: 85vh;
+    padding-top: 12vh;
     margin-bottom: 0;
   }
   article {
@@ -95,9 +103,13 @@
     text-align: center;
   }
   .section__pic-container {
-    width: auto;
-    height: 46vw;
-    justify-content: center;
+    width: 250px !important;
+    height: 250px !important;
+    min-width: 250px !important;
+    min-height: 250px !important;
+    max-width: 250px !important;
+    max-height: 250px !important;
+    margin: 1rem auto;
   }
   .section__text__p2 {
     font-size: 1.25rem;
@@ -147,5 +159,42 @@
     text-align: center; /* Center the text */
     width: 100%; /* Make the description take the full width of the slide */
     box-sizing: border-box; /* Include padding in the element's total width and height */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #profile {
+    padding-top: 10vh;
+    min-height: 80vh;
+  }
+  
+  .section__pic-container {
+    width: 200px !important;
+    height: 200px !important;
+    min-width: 200px !important;
+    min-height: 200px !important;
+    max-width: 200px !important;
+    max-height: 200px !important;
+  }
+  
+  .section__text__p1 {
+    font-size: 1rem;
+  }
+  
+  .section__text__p2 {
+    font-size: 1.1rem;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+  }
+  
+  .btn-container {
+    gap: 0.5rem;
+  }
+  
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
   }
 }

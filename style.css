@@ -527,8 +527,8 @@ section {
   justify-content: center;
   align-items: center;
   gap: 2rem;
-  height: calc(100vh - 100px);
-  padding: 4rem 8% 0;
+  min-height: 100vh;
+  padding: 17vh 8% 2rem;
   max-width: 1400px;
   margin: 0 auto;
   position: relative;
@@ -536,23 +536,29 @@ section {
 }
 
 .section__pic-container {
-  display: flex;
-  height: 450px;
-  width: 450px;
-  margin: auto 0;
-  border-radius: 50%;
+  position: relative !important;
+  width: 400px !important;
+  height: 400px !important;
+  min-width: 400px !important;
+  min-height: 400px !important;
+  max-width: 400px !important;
+  max-height: 400px !important;
+  border-radius: 50% !important;
   border: 3px solid var(--primary-color);
   box-shadow: 0 0 15px var(--primary-color);
   overflow: hidden;
-  aspect-ratio: 1/1; /* Ensure container is perfectly square */
+  margin: auto 0;
+  display: block !important;
 }
 
 .section__pic-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  border-radius: 50%;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
 }
 
 .section__text {
