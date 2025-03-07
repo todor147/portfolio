@@ -2,14 +2,10 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Create direct menu elements to avoid any conflicts
   createMobileMenu();
-  
-  console.log("Direct menu setup complete");
 });
 
 // Function to create a completely new mobile menu
 function createMobileMenu() {
-  console.log("Creating new mobile menu elements");
-  
   // First, remove any existing menu elements that might be conflicting
   const existingMenus = document.querySelectorAll('.menu-links, .menu-overlay, .mobile-menu-links, .mobile-menu-overlay');
   existingMenus.forEach(el => {
@@ -172,19 +168,15 @@ function createMobileMenu() {
     icon.style.alignItems = 'center';
     icon.style.justifyContent = 'center';
   });
-  
-  console.log("Mobile menu created with direct styles");
 }
 
 // Very simple toggle function
 function toggleMobileMenu() {
-  console.log("Direct toggle mobile menu");
   const menu = document.querySelector('.mobile-menu-links');
   const overlay = document.querySelector('.mobile-menu-overlay');
   const hamburgerIcon = document.querySelector('.hamburger-icon');
   
   if (!menu || !overlay) {
-    console.error("Menu elements not found");
     return;
   }
   
@@ -198,7 +190,6 @@ function toggleMobileMenu() {
 }
 
 function openMobileMenu() {
-  console.log("Direct open mobile menu");
   const menu = document.querySelector('.mobile-menu-links');
   const overlay = document.querySelector('.mobile-menu-overlay');
   const hamburgerIcon = document.querySelector('.hamburger-icon');
@@ -215,7 +206,6 @@ function openMobileMenu() {
 }
 
 function closeMobileMenu() {
-  console.log("Direct close mobile menu");
   const menu = document.querySelector('.mobile-menu-links');
   const overlay = document.querySelector('.mobile-menu-overlay');
   const hamburgerIcon = document.querySelector('.hamburger-icon');
@@ -232,16 +222,12 @@ function closeMobileMenu() {
 }
 
 function closeMenu() {
-  console.log("closeMenu called");
-  
   try {
     // Get all elements directly to avoid any selector issues
     const menu = document.querySelector(".menu-links");
     const icon = document.querySelector(".hamburger-icon");
     const overlay = document.querySelector(".menu-overlay");
     const body = document.body;
-    
-    console.log("Menu state before closing:", menu ? menu.classList.contains("open") : "menu not found");
     
     // 1. Force remove open class from menu
     if (menu) {
@@ -250,274 +236,189 @@ function closeMenu() {
       menu.style.right = "-100%";
       menu.style.opacity = "0";
       menu.style.visibility = "hidden";
-      console.log("Removed open class from menu");
-    } else {
-      console.error("Menu element not found");
     }
     
     // 2. Update hamburger icon
     if (icon) {
       icon.innerHTML = "☰";
-      console.log("Updated hamburger icon");
+      icon.classList.remove("open");
     }
     
-    // 3. Hide overlay - force it to be invisible
+    // 3. Hide overlay
     if (overlay) {
       overlay.classList.remove("open");
+      // Force inline styles to ensure overlay is hidden
       overlay.style.opacity = "0";
       overlay.style.visibility = "hidden";
-      console.log("Hidden overlay");
     }
     
-    // 4. Re-enable scrolling with direct style resets
+    // 4. Reset body styles
     if (body) {
       body.classList.remove("menu-open");
       body.style.overflow = "";
       body.style.position = "";
-      body.style.height = "";
       body.style.width = "";
-      body.style.top = "";
-      console.log("Reset body styles");
-    }
-    
-    // 5. Restore scroll position with a slight delay to ensure styles are applied
-    if (body && body.dataset.scrollY) {
-      const scrollY = parseInt(body.dataset.scrollY);
-      console.log("Restoring scroll to:", scrollY);
+      body.style.height = "";
       
-      // Use setTimeout to ensure the scroll happens after style changes
-      setTimeout(() => {
-        window.scrollTo(0, scrollY);
-        body.dataset.scrollY = '';
-      }, 10);
+      // Restore scroll position
+      const scrollY = body.style.top;
+      body.style.top = "";
+      window.scrollTo(0, parseInt(scrollY || "0") * -1);
     }
     
-    // 6. Restore original z-index values
-    const elementsWithOriginalZIndex = document.querySelectorAll('[data-original-z-index]');
-    elementsWithOriginalZIndex.forEach(el => {
-      el.style.zIndex = el.dataset.originalZIndex;
-      delete el.dataset.originalZIndex;
+    // 5. Restore original z-index values
+    const elementsWithZIndex = document.querySelectorAll('[data-original-z-index]');
+    elementsWithZIndex.forEach(el => {
+      el.style.zIndex = el.getAttribute('data-original-z-index');
+      el.removeAttribute('data-original-z-index');
     });
     
-    console.log("Menu state after closing function:", menu ? menu.classList.contains("open") : "menu not found");
-    
-    // 7. Double-check after a short delay that the menu is actually closed
+    // 6. Double check menu is closed after a delay (sometimes classList changes don't take effect immediately)
     setTimeout(() => {
-      const menuCheck = document.querySelector(".menu-links");
-      if (menuCheck && menuCheck.classList.contains("open")) {
-        console.log("Menu still has open class after timeout - forcing removal");
-        menuCheck.classList.remove("open");
-        menuCheck.style.right = "-100%";
-        menuCheck.style.opacity = "0";
-        menuCheck.style.visibility = "hidden";
+      if (menu && menu.classList.contains("open")) {
+        menu.classList.remove("open");
       }
-    }, 50);
-    
+    }, 100);
   } catch (error) {
-    console.error("Error in closeMenu:", error);
+    // Silently handle any errors
   }
 }
 
 // Ensure the click handlers are properly set up for menu links
 // Add this function to be called during the document ready event
 function setupMenuLinkHandlers() {
-  try {
-    const menuLinks = document.querySelectorAll('.menu-links a');
-    console.log(`Setting up ${menuLinks.length} menu link handlers`);
-    
-    menuLinks.forEach((link, index) => {
-      // Remove any existing click handlers first to avoid duplicates
-      link.removeEventListener('click', handleMenuLinkClick);
-      // Add new click handler
-      link.addEventListener('click', handleMenuLinkClick);
-      console.log(`Added click handler to menu link ${index + 1}`);
-    });
-  } catch (error) {
-    console.error("Error setting up menu link handlers:", error);
-  }
+  const menuLinks = document.querySelectorAll(".menu-links a");
+  
+  menuLinks.forEach((link, index) => {
+    link.addEventListener("click", handleMenuLinkClick);
+  });
 }
 
 // Separate function to handle menu link clicks
 function handleMenuLinkClick(e) {
-  console.log("Menu link clicked - forcing menu close");
-  
-  // Get the target href to navigate to
-  const href = this.getAttribute('href');
-  
-  // Close the menu first
-  closeMenu();
-  
-  // Add a slight delay before navigation to ensure menu closes visually
-  if (href && href.startsWith('#')) {
-    e.preventDefault();
-    setTimeout(() => {
-      const targetElement = document.querySelector(href);
-      if (targetElement) {
-        targetElement.scrollIntoView({ behavior: 'smooth' });
-      }
-      window.location.hash = href;
-    }, 100);
-  }
-}
-
-function openMenu() {
-  console.log("openMenu called");
+  // Force menu to close when links are clicked
   const menu = document.querySelector(".menu-links");
   const icon = document.querySelector(".hamburger-icon");
   const overlay = document.querySelector(".menu-overlay");
-  const body = document.body;
+  
+  if (menu) menu.classList.remove("open");
+  if (icon) icon.innerHTML = "☰";
+  if (overlay) overlay.classList.remove("open");
+  
+  closeMenu(); // Call the close function to ensure all side effects happen
+}
 
-  // Safety check
-  if (!menu) {
-    console.log("Menu element not found");
-    return;
+function openMenu() {
+  try {
+    const menu = document.querySelector(".menu-links");
+    const icon = document.querySelector(".hamburger-icon");
+    const overlay = document.querySelector(".menu-overlay");
+    const body = document.body;
+    
+    if (!menu) {
+      return;
+    }
+    
+    // 1. Toggle menu visibility
+    menu.classList.add("open");
+    body.classList.add("menu-open");
+    
+    // 2. Update hamburger icon
+    if (icon) {
+      icon.innerHTML = "✕";
+      icon.classList.add("open");
+    }
+    
+    // 3. Show overlay
+    if (overlay) {
+      overlay.classList.add("open");
+    }
+    
+    // 4. Prevent background scrolling
+    const scrollY = window.scrollY;
+    body.style.top = `-${scrollY}px`;
+    body.style.position = 'fixed';
+    body.style.width = '100%';
+    body.style.height = '100%';
+    
+    // 5. Force menu to appear in front (z-index issues)
+    forceMenuZIndex();
+    
+  } catch (error) {
+    // Silently handle any errors
   }
-  
-  // 1. Save scroll position
-  body.dataset.scrollY = window.scrollY;
-  
-  // 2. Update hamburger icon
-  if (icon) icon.innerHTML = "×";
-  
-  // 3. Show overlay
-  if (overlay) overlay.classList.add("open");
-  
-  // 4. Show menu
-  menu.classList.add("open");
-  
-  // 5. Disable scrolling
-  body.classList.add("menu-open");
-  body.style.overflow = "hidden";
-  body.style.position = "fixed";
-  body.style.width = "100%";
-  body.style.height = "100%";
-  body.style.top = `-${window.scrollY}px`;
-  
-  // 6. Force z-index
-  forceMenuZIndex();
 }
 
 // Fix toggle menu function to be more direct
 function toggleMenu() {
-  console.log("toggleMenu called");
-  
-  const menu = document.querySelector(".menu-links");
-  const icon = document.querySelector(".hamburger-icon");
-  const overlay = document.querySelector(".menu-overlay");
-  
-  console.log("Menu exists:", !!menu);
-  console.log("Current menu state:", menu ? menu.classList.contains("open") : "menu not found");
-  
-  if (menu) {
-    if (menu.classList.contains("open")) {
-      // Close the menu
-      console.log("Closing menu");
-      menu.classList.remove("open");
-      if (icon) icon.innerHTML = "☰";
-      if (overlay) overlay.classList.remove("open");
-      document.body.classList.remove("menu-open");
-    } else {
-      // Open the menu
-      console.log("Opening menu");
-      menu.classList.add("open");
-      if (icon) icon.innerHTML = "×";
-      if (overlay) overlay.classList.add("open");
-      document.body.classList.add("menu-open");
+  try {
+    const menu = document.querySelector(".menu-links");
+    
+    if (!menu) {
+      return;
     }
-  } else {
-    console.error("Menu element not found");
+    
+    if (menu.classList.contains("open")) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  } catch (error) {
+    // Silently handle any errors
   }
 }
 
 // Simplified direct click handler for hamburger icon
 function setupHamburgerClickHandler() {
-  const hamburgerIcon = document.querySelector('.hamburger-icon');
-  if (hamburgerIcon) {
-    console.log("Setting up direct click handler on hamburger icon");
-    
-    // Remove any existing listeners to avoid duplicates
-    hamburgerIcon.removeEventListener('click', handleHamburgerClick);
-    
-    // Add fresh click handler
-    hamburgerIcon.addEventListener('click', handleHamburgerClick);
-  } else {
-    console.error("Hamburger icon not found");
+  const hamburger = document.querySelector(".hamburger-icon");
+  
+  if (hamburger) {
+    hamburger.addEventListener("click", handleHamburgerClick);
   }
 }
 
 // Direct hamburger click handler
 function handleHamburgerClick(e) {
-  console.log("Hamburger icon clicked");
   e.preventDefault();
   e.stopPropagation();
   toggleMenu();
 }
 
-// Update the DOMContentLoaded event handler
-document.addEventListener('DOMContentLoaded', function() {
-  console.log("DOM loaded - initializing menu");
-
+// Initialize when DOM is fully loaded
+document.addEventListener("DOMContentLoaded", function() {
+  // Create the mobile menu first
+  createMobileMenu();
+  
   // Get menu elements
-  const menuLinks = document.querySelector('.menu-links');
-  const menuOverlay = document.querySelector('.menu-overlay');
+  const menuLinks = document.querySelector(".menu-links");
+  const menuOverlay = document.querySelector(".menu-overlay");
   
-  // Debug element existence
-  console.log("Menu links element found:", !!menuLinks);
-  console.log("Menu overlay element found:", !!menuOverlay);
-
-  // Move menu elements to body level for proper stacking and positioning
-  if (menuLinks && document.body) {
-    menuLinks.parentNode.removeChild(menuLinks);
+  // If menu elements exist, move them to body level for better stacking context
+  if (menuLinks && menuLinks.parentNode) {
     document.body.appendChild(menuLinks);
-    console.log("Moved menu to body level");
   }
   
-  if (menuOverlay && document.body) {
-    menuOverlay.parentNode.removeChild(menuOverlay);
+  if (menuOverlay && menuOverlay.parentNode) {
     document.body.appendChild(menuOverlay);
-    console.log("Moved overlay to body level");
   }
   
-  // Setup all event handlers with explicit functions
-  setupHamburgerClickHandler();
+  // Set up menu link handlers
   setupMenuLinkHandlers();
   
-  // Add click handler to overlay
+  // Set up overlay click handler if it exists
   if (menuOverlay) {
-    menuOverlay.removeEventListener('click', handleOverlayClick);
-    menuOverlay.addEventListener('click', handleOverlayClick);
-    console.log("Added overlay click handler");
+    menuOverlay.addEventListener("click", handleOverlayClick);
   }
   
-  // Add document click handler for clicking outside
-  document.removeEventListener('click', handleDocumentClick);
-  document.addEventListener('click', handleDocumentClick);
-  console.log("Added document click handler");
+  // Set up document click handler to close menu when clicking outside
+  document.addEventListener("click", handleDocumentClick);
   
-  // Add direct click test handler to hamburger
-  const hamburgerIcon = document.querySelector('.hamburger-icon');
-  if (hamburgerIcon) {
-    hamburgerIcon.addEventListener('click', function() {
-      console.log("Direct hamburger click detected");
-    });
-  }
-  
-  console.log("Menu initialization complete");
-  
-  // Test menu functionality after a short delay
-  setTimeout(function() {
-    console.log("Running menu test...");
-    const hamburger = document.querySelector('.hamburger-icon');
-    const menu = document.querySelector('.menu-links');
-    console.log("Hamburger exists:", !!hamburger);
-    console.log("Menu exists:", !!menu);
-    console.log("Menu is open:", menu ? menu.classList.contains("open") : "menu not found");
-    
-    // Test the hamburger click explicitly
-    if (hamburger) {
-      console.log("Click the hamburger now to test functionality");
-    }
-  }, 1000);
+  // Set up hamburger icon handler
+  setupHamburgerClickHandler();
+
+  // Initialize theme
+  const savedTheme = localStorage.getItem('theme') || 'auto';
+  setTheme(savedTheme);
 });
 
 // Close menu when clicking overlay
@@ -1547,64 +1448,79 @@ function forceMenuZIndex() {
 
 // Helper functions for event handling
 function toggleMenuWithPrevent(e) {
+  e.preventDefault();
   e.stopPropagation();
-  console.log("Hamburger clicked - toggling menu");
   toggleMenu();
 }
 
 function handleOverlayClick(e) {
   e.preventDefault();
   e.stopPropagation();
-  console.log("Overlay clicked - forcing menu close");
   closeMenu();
 }
 
 // Function to handle clicks outside the menu
 function handleDocumentClick(e) {
-  const openMenu = document.querySelector('.menu-links.open');
-  const hamburgerIcon = document.querySelector('.hamburger-icon');
+  const menu = document.querySelector(".menu-links, .mobile-menu-links");
+  const hamburger = document.querySelector(".hamburger-icon");
   
-  if (openMenu && !openMenu.contains(e.target) && 
-      hamburgerIcon && !hamburgerIcon.contains(e.target)) {
-    console.log("Clicked outside menu - forcing close");
-    
-    // Direct close without using closeMenu function
-    openMenu.classList.remove("open");
-    if (hamburgerIcon) hamburgerIcon.innerHTML = "☰";
-    
-    const overlay = document.querySelector('.menu-overlay');
-    if (overlay) overlay.classList.remove("open");
-    
-    document.body.classList.remove("menu-open");
+  // If menu is open and click is outside menu and hamburger, close it
+  if (menu && 
+      menu.classList.contains("open") && 
+      !menu.contains(e.target) && 
+      hamburger && 
+      !hamburger.contains(e.target)) {
+    closeMenu();
   }
 }
 
 // Add theme switching functionality
 function setTheme(theme) {
-  console.log("Setting theme to:", theme);
-  
-  // Save the theme preference
+  const root = document.documentElement;
+  const metaThemeColor = document.querySelector('meta[name="theme-color"]');
   localStorage.setItem('theme', theme);
   
-  const root = document.documentElement;
-  
-  if (theme === 'auto') {
-    // Check system preference
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  if (theme === 'light') {
+    root.classList.remove('dark-theme');
+    root.classList.add('light-theme');
+    if (metaThemeColor) metaThemeColor.setAttribute('content', '#ffffff');
+  } else if (theme === 'dark') {
+    root.classList.remove('light-theme');
+    root.classList.add('dark-theme');
+    if (metaThemeColor) metaThemeColor.setAttribute('content', '#191919');
   } else {
-    // Set theme directly
-    root.setAttribute('data-theme', theme);
-  }
-  
-  // Listen for system preference changes when in auto mode
-  if (theme === 'auto') {
+    // Auto theme based on system preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (prefersDark) {
+      root.classList.remove('light-theme');
+      root.classList.add('dark-theme');
+      if (metaThemeColor) metaThemeColor.setAttribute('content', '#191919');
+    } else {
+      root.classList.remove('dark-theme');
+      root.classList.add('light-theme');
+      if (metaThemeColor) metaThemeColor.setAttribute('content', '#ffffff');
+    }
+    
+    // Listen for system theme changes
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
       if (localStorage.getItem('theme') === 'auto') {
-        root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+        setTheme('auto');
       }
     });
   }
+  
+  // Update any active buttons in the theme toggle
+  const themeButtons = document.querySelectorAll('[data-theme]');
+  themeButtons.forEach(button => {
+    if (button.dataset.theme === theme) {
+      button.style.backgroundColor = 'var(--primary-color, #1D8A5E)';
+      button.style.color = 'white';
+    } else {
+      button.style.backgroundColor = 'var(--hover-color, #f8f8f8)';
+      button.style.color = 'var(--text-color, #2D2E32)';
+    }
+  });
 }
 
 // Initialize theme on page load

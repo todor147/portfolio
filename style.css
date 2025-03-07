@@ -629,7 +629,7 @@ section {
   align-items: center;
   gap: 2rem;
   min-height: 100vh;
-  padding: 17vh 8% 2rem;
+  padding: 10vh 8% 2rem;
   max-width: 1400px;
   margin: 0 auto;
   position: relative;
@@ -3611,9 +3611,26 @@ html, body {
   /* Adjust profile section spacing */
   #profile {
     min-height: auto;
+    padding-top: 5vh; /* Reduced from 10vh to 5vh to bring profile closer to top */
     padding-bottom: 80px; /* Increase bottom padding to prevent overlap */
     margin-bottom: 0;
     position: relative;
+    gap: 1rem; /* Reduced gap between elements */
+    flex-direction: column-reverse; /* Show text first, then image */
+  }
+  
+  /* Make the profile picture smaller but still prominent */
+  #profile .profile-pic-container {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    width: 220px;
+    height: 220px;
+  }
+
+  /* Adjust text positioning */
+  #profile .section__text {
+    text-align: center;
+    margin-top: 0;
   }
 
   /* Adjust scroll indicator position */
@@ -3636,8 +3653,26 @@ html, body {
 
 @media screen and (max-width: 480px) {
   #profile {
+    padding-top: 3vh; /* Even less padding for smaller screens */
     padding-bottom: 70px;
     margin-bottom: 10px;
+    gap: 0.5rem; /* Reduce gap further on very small screens */
+  }
+  
+  #profile .profile-pic-container {
+    width: 180px;
+    height: 180px;
+    margin-bottom: 0.5rem;
+  }
+  
+  #profile .section__text__p1 {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  #profile .title {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
   }
   
   .scroll-indicator {
