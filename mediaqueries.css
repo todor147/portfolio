@@ -1,3 +1,10 @@
+@media screen and (max-width: 100%) {
+  body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+}
+
 @media screen and (max-width: 1400px) {
   #profile {
     min-height: 90vh;
@@ -6,6 +13,15 @@
   }
   .about-containers {
     flex-wrap: wrap;
+  }
+  
+  /* Ensure content width is constrained */
+  .section-container,
+  .about-containers,
+  .experience-details-container,
+  .contact-container {
+    width: 100%;
+    max-width: 100%;
   }
 }
 
@@ -22,7 +38,7 @@
   }
   #profile {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     padding-top: 15vh;
     text-align: center;
   }
@@ -35,17 +51,46 @@
   }
   section {
     margin: 0 5%;
+    width: 90%; /* Control width to prevent overflow */
+    max-width: 100%;
+    box-sizing: border-box;
   }
+  
+  /* Remove fixed widths with !important */
   .section__pic-container {
-    width: 275px !important;
-    height: 275px !important;
-    min-width: 275px !important;
-    min-height: 275px !important;
-    max-width: 275px !important;
-    max-height: 275px !important;
     margin: 0 auto 2rem;
   }
   .about-containers {
+    margin-top: 0;
+  }
+  
+  /* Timeline adjustments */
+  .timeline-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  /* Project filters adjustments */
+  .project-filters {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  /* Fix gallery */
+  .gallery-container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  #profile .section__pic-container,
+  #profile .profile-pic-container {
+    margin-bottom: 2rem; /* Add space between picture and text */
+  }
+  
+  #profile .section__text {
     margin-top: 0;
   }
 }
@@ -60,17 +105,126 @@
     width: 90%;
     max-width: 600px;
   }
+  
+  /* Projects grid adjustment */
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  /* Contact section adjustment */
+  .contact-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  /* Make text more readable */
+  .text-container, 
+  .project-description,
+  .contact-info p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  
+  /* Timeline improvements */
+  .timeline-date {
+    font-size: 0.9rem;
+  }
+  
+  /* Improved tap targets */
+  .filter-btn, 
+  .timeline-tab {
+    padding: 0.6rem 1rem;
+    min-height: 44px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  /* Skills section improvement */
+  .skills-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .skills-category {
+    width: 100%;
+    max-width: none;
+  }
+  
+  /* Timeline tabs */
+  .timeline-tab {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.7rem;
+  }
+  
+  /* Improve menu spacing */
+  .menu-links li {
+    margin: 1rem 0;
+  }
+  
+  /* Improved dropdown readability */
+  .dropdown-content-mobile {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 5px;
+  }
+  
+  /* Ensure content is contained within viewport */
+  .menu-links {
+    width: 80%;
+    max-width: 300px;
+  }
+  
+  /* Fix for logo and navigation */
+  #hamburger-nav {
+    padding: 12px 20px;
+    height: auto;
+    display: flex;
+    align-items: center;
+  }
+
+  .logo {
+    font-size: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .hamburger-menu {
+    display: flex;
+    align-items: center;
+  }
+  
+  body {
+    padding-top: 60px; /* Add padding to body to account for fixed nav */
+  }
+  
+  #hamburger-nav {
+    height: auto;
+    min-height: 60px;
+  }
+  
+  /* Hide scroll indicator on mobile */
+  .scroll-indicator {
+    display: none !important; /* Use !important to override any other styles */
+  }
 }
 
 @media screen and (max-width: 600px) {
   #contact,
   footer {
-    height: 40vh;
+    height: auto;
+    padding: 2rem 0;
   }
   #profile {
-    min-height: 85vh;
-    padding-top: 12vh;
+    padding-bottom: 60px; /* Ensure enough room for scroll indicator */
     margin-bottom: 0;
+    position: relative;
+    overflow: visible;
   }
   article {
     font-size: 1rem;
@@ -121,10 +275,14 @@
     text-align: justify;
   }
   #about {
-    margin-top: -20vh;
+    margin-top: 0 !important; /* Override any negative margins */
+    padding-top: 30px;
+    position: relative;
+    z-index: 1;
   }
   #experience {
-    margin-top: -5vh;
+    margin-top: -2vh; /* Reduced from -5vh */
+    padding-top: 1rem; /* Added padding */
   }
   #experience .details-container {
     width: 100%;
@@ -134,38 +292,176 @@
   .article-container {
     gap: 1.5rem;
   }
+  
+  /* Enhanced gallery for mobile */
   #gallery {
+    padding-top: 80px; /* Increased padding to account for fixed nav */
+    margin-top: 0;
     position: relative;
-    height: auto !important;
     overflow: hidden;
   }
-  .gallery-slide {
-    min-width: 100%;
-    box-sizing: border-box;
-    position: relative;
-    display: flex;
-    flex-direction: column; /* Stack the image and description vertically */
-  }
-  .gallery-slide img {
+  
+  .gallery-container {
+    margin: 0 auto;
     width: 100%;
-    height: auto; /* Maintain aspect ratio */
-    display: block;
+    max-width: 500px;
+    position: relative;
+    overflow: visible;
   }
+  
+  .gallery-slide {
+    position: relative;
+    display: none;
+    margin-bottom: 20px;
+    min-height: 200px;
+  }
+  
+  .gallery-slide.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+  }
+  
+  .gallery-slide img {
+    border-radius: 12px 12px 0 0;
+  }
+  
+  /* Ensure navigation controls are visible */
+  button.prev, 
+  button.next {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    z-index: 10;
+    opacity: 0.95;
+    transform: translateY(-50%);
+  }
+  
+  /* Better description display */
   .description {
-    background-color: rgb(250, 250, 250); /* Set background color to white */
-    color: black; /* Set text color to black for contrast */
-    padding: 10px;
-    border-radius: 5px;
-    text-align: center; /* Center the text */
-    width: 100%; /* Make the description take the full width of the slide */
-    box-sizing: border-box; /* Include padding in the element's total width and height */
+    padding: 15px;
+    margin-top: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  
+  /* Navigation buttons */
+  button.prev, 
+  button.next {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+  
+  button.prev {
+    left: 8px;
+  }
+  
+  button.next {
+    right: 8px;
+  }
+  
+  /* Ensure all sections have proper width */
+  section, 
+  .section-container,
+  #contact, 
+  #about,
+  #experience,
+  #projects,
+  #skills,
+  #gallery,
+  #timeline {
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+    margin-left: 0;
+    margin-right: 0;
+    overflow-x: hidden;
+  }
+  
+  /* Project card improvements */
+  .project-card {
+    padding: 1rem;
+  }
+  
+  .project-title {
+    font-size: 1.3rem;
+  }
+  
+  .project-tag {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+  }
+  
+  /* Form improvements */
+  .form-group input,
+  .form-group textarea {
+    padding: 12px;
+    font-size: 1rem;
+  }
+  
+  /* Timeline improvements */
+  .timeline-content {
+    padding: 1rem;
+  }
+  
+  .timeline-content h3 {
+    font-size: 1.1rem;
+  }
+  
+  .employer {
+    font-size: 0.9rem;
+  }
+  
+  /* Fix table display if any */
+  table {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+  }
+  
+  /* Ensure scroll indicator is properly positioned */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 2;
+  }
+  
+  /* Adjust the About Me title spacing */
+  #about .title {
+    margin-top: 10px;
+    margin-bottom: 30px;
+  }
+  
+  /* Ensure profile pic doesn't overflow */
+  .profile-pic-container {
+    margin-bottom: 40px;
   }
 }
 
 @media screen and (max-width: 480px) {
   #profile {
-    padding-top: 10vh;
-    min-height: 80vh;
+    padding-bottom: 50px;
+  }
+  
+  .scroll-indicator {
+    bottom: 5px;
+  }
+  
+  /* Make scroll text smaller */
+  .scroll-indicator p {
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+  }
+  
+  /* Make arrow smaller */
+  .scroll-indicator .arrow-svg {
+    width: 20px;
+    height: 20px;
   }
   
   .section__pic-container {
@@ -187,14 +483,157 @@
   
   .title {
     font-size: 1.8rem;
+    margin-bottom: 1rem;
   }
   
   .btn-container {
     gap: 0.5rem;
+    flex-direction: column;
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto;
   }
   
   .btn {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
+    width: 100%;
+  }
+  
+  /* Optimize hamburger menu */
+  .hamburger-icon {
+    font-size: 1.8rem;
+    padding: 0.5rem;
+  }
+  
+  /* Make navigation more accessible */
+  .menu-links {
+    width: 80%;
+    padding: 1.5rem;
+  }
+  
+  /* Improve filter buttons */
+  .filter-btn, .timeline-tab {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.6rem;
+  }
+  
+  /* Improve form elements */
+  .contact-form-container form {
+    gap: 0.8rem;
+  }
+  
+  /* Improve timeline scrolling */
+  #timeline {
+    overflow-x: hidden;
+  }
+  
+  /* Smaller social icons with better tap targets */
+  .icon {
+    height: 1.8rem;
+    width: 1.8rem;
+    margin: 0 0.5rem;
+  }
+  
+  #socials-container {
+    margin: 1rem 0;
+  }
+  
+  /* Improve spacing */
+  section {
+    padding: 3rem 0 1rem;
+    margin: 0 1rem;
+  }
+  
+  /* Further refinements for smaller screens */
+  .logo {
+    font-size: 16px;
+    max-width: calc(100% - 60px);
+  }
+  
+  #gallery {
+    padding-top: 70px;
+  }
+  
+  .gallery-slide {
+    min-height: 180px;
+  }
+  
+  /* Smaller navigation buttons */
+  button.prev, 
+  button.next {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+  
+  button.prev {
+    left: 8px;
+  }
+  
+  button.next {
+    right: 8px;
+  }
+  
+  /* Improve spacing for the profile picture on smaller screens */
+  #profile .section__pic-container,
+  #profile .profile-pic-container {
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Adjust the "Hello, I'm" text to be closer to the name */
+  #profile .section__text__p1 {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Make the name stand out more */
+  #profile .title {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* Optimize for even smaller screens */
+@media screen and (max-width: 380px) {
+  .section__pic-container {
+    width: 180px !important;
+    height: 180px !important;
+    min-width: 180px !important;
+    min-height: 180px !important;
+    max-width: 180px !important;
+    max-height: 180px !important;
+  }
+  
+  .title {
+    font-size: 1.6rem;
+  }
+  
+  .hamburger-icon {
+    padding: 0.4rem;
+  }
+  
+  .logo {
+    font-size: 1.3rem;
+  }
+  
+  /* Further reduce elements */
+  .project-title {
+    font-size: 1.2rem;
+  }
+  
+  .timeline-content h3 {
+    font-size: 1rem;
+  }
+  
+  .experience-sub-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* Fix for tappable elements */
+@media (hover: none) and (pointer: coarse) {
+  .icon, button, a, .filter-btn, .timeline-tab, .hamburger-icon {
+    min-height: 44px;
+    min-width: 44px;
   }
 }

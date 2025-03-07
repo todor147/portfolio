@@ -1,36 +1,524 @@
-function closeMenu() {
-  const menu = document.querySelector(".menu-links");
-  const icon = document.querySelector(".hamburger-icon");
-  const overlay = document.querySelector(".menu-overlay");
-  const body = document.body;
+// Add this code at the beginning of the file to catch all events
+document.addEventListener('DOMContentLoaded', function() {
+  // Create direct menu elements to avoid any conflicts
+  createMobileMenu();
+  
+  console.log("Direct menu setup complete");
+});
 
-  menu.classList.remove("open");
-  icon.innerHTML = "☰";
-  overlay.classList.remove("open");
-  body.style.overflow = "auto";
+// Function to create a completely new mobile menu
+function createMobileMenu() {
+  console.log("Creating new mobile menu elements");
+  
+  // First, remove any existing menu elements that might be conflicting
+  const existingMenus = document.querySelectorAll('.menu-links, .menu-overlay, .mobile-menu-links, .mobile-menu-overlay');
+  existingMenus.forEach(el => {
+    if (el && el.parentNode) {
+      el.parentNode.removeChild(el);
+    }
+  });
+  
+  // Create new menu elements
+  const menuOverlay = document.createElement('div');
+  menuOverlay.className = 'mobile-menu-overlay';
+  menuOverlay.style.position = 'fixed';
+  menuOverlay.style.top = '0';
+  menuOverlay.style.left = '0';
+  menuOverlay.style.width = '100%';
+  menuOverlay.style.height = '100%';
+  menuOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+  menuOverlay.style.zIndex = '99998';
+  menuOverlay.style.display = 'none';
+  
+  const menuLinks = document.createElement('div');
+  menuLinks.className = 'mobile-menu-links';
+  menuLinks.style.position = 'fixed';
+  menuLinks.style.top = '0';
+  menuLinks.style.right = '-100%';
+  menuLinks.style.width = '280px';
+  menuLinks.style.maxWidth = '85%';
+  menuLinks.style.height = '100vh';
+  menuLinks.style.backgroundColor = 'var(--card-bg, #ffffff)';
+  menuLinks.style.color = 'var(--text-color, #2D2E32)';
+  menuLinks.style.boxShadow = '-5px 0 20px rgba(0, 0, 0, 0.3)';
+  menuLinks.style.zIndex = '99999';
+  menuLinks.style.padding = '80px 20px 30px';
+  menuLinks.style.display = 'flex';
+  menuLinks.style.flexDirection = 'column';
+  menuLinks.style.transition = 'right 0.3s ease';
+  menuLinks.style.overflowY = 'auto';
+  
+  // Define section links
+  const sections = [
+    { id: "about", name: "About" },
+    { id: "skills", name: "Skills" },
+    { id: "experience", name: "Experience" },
+    { id: "projects", name: "Projects" },
+    { id: "contact", name: "Contact" },
+    { id: "gallery", name: "Gallery" },
+    { id: "timeline", name: "Timeline" }
+  ];
+  
+  // Create links for each section
+  sections.forEach(section => {
+    const link = document.createElement('a');
+    link.href = `#${section.id}`;
+    link.textContent = section.name;
+    link.style.display = 'block';
+    link.style.padding = '15px 0';
+    link.style.borderBottom = '1px solid var(--border-color, #eee)';
+    link.style.textDecoration = 'none';
+    link.style.color = 'var(--text-color, #2D2E32)';
+    link.style.fontSize = '18px';
+    
+    // Add click handler to close menu when link is clicked
+    link.addEventListener('click', function(e) {
+      closeMobileMenu();
+    });
+    
+    menuLinks.appendChild(link);
+  });
+  
+  // Add theme toggle options
+  const themeToggleContainer = document.createElement('div');
+  themeToggleContainer.style.marginTop = '20px';
+  themeToggleContainer.style.borderTop = '0';
+  themeToggleContainer.style.paddingTop = '5px';
+  
+  const themeTitle = document.createElement('h3');
+  themeTitle.textContent = 'Theme';
+  themeTitle.style.fontSize = '18px';
+  themeTitle.style.marginBottom = '15px';
+  themeTitle.style.color = 'var(--text-color, #2D2E32)';
+  themeTitle.style.padding = '15px 0 5px';
+  themeTitle.style.borderBottom = '1px solid var(--border-color, #eee)';
+  
+  const themeOptions = document.createElement('div');
+  themeOptions.style.display = 'flex';
+  themeOptions.style.gap = '10px';
+  
+  const createThemeButton = (text, theme) => {
+    const button = document.createElement('button');
+    button.textContent = text;
+    button.dataset.theme = theme;
+    button.style.padding = '8px 12px';
+    button.style.borderRadius = '4px';
+    button.style.border = 'none';
+    button.style.backgroundColor = 'var(--hover-color, #f8f8f8)';
+    button.style.color = 'var(--text-color, #2D2E32)';
+    button.style.cursor = 'pointer';
+    button.style.fontSize = '14px';
+    
+    // Add active styles to the current theme
+    const currentTheme = localStorage.getItem('theme') || 'auto';
+    if (theme === currentTheme) {
+      button.style.backgroundColor = 'var(--primary-color, #1D8A5E)';
+      button.style.color = 'white';
+    }
+    
+    button.addEventListener('click', function() {
+      setTheme(theme);
+      
+      // Update active button styles
+      const buttons = themeOptions.querySelectorAll('button');
+      buttons.forEach(btn => {
+        btn.style.backgroundColor = 'var(--hover-color, #f8f8f8)';
+        btn.style.color = 'var(--text-color, #2D2E32)';
+      });
+      
+      button.style.backgroundColor = 'var(--primary-color, #1D8A5E)';
+      button.style.color = 'white';
+    });
+    
+    return button;
+  };
+  
+  const lightButton = createThemeButton('Light', 'light');
+  const darkButton = createThemeButton('Dark', 'dark');
+  const autoButton = createThemeButton('Auto', 'auto');
+  
+  themeOptions.appendChild(lightButton);
+  themeOptions.appendChild(darkButton);
+  themeOptions.appendChild(autoButton);
+  
+  themeToggleContainer.appendChild(themeTitle);
+  themeToggleContainer.appendChild(themeOptions);
+  
+  menuLinks.appendChild(themeToggleContainer);
+  
+  // Add elements to the document body
+  document.body.appendChild(menuOverlay);
+  document.body.appendChild(menuLinks);
+  
+  // Add click handler to overlay to close menu
+  menuOverlay.addEventListener('click', function() {
+    closeMobileMenu();
+  });
+  
+  // Add click handler to all hamburger icons
+  const hamburgerIcons = document.querySelectorAll('.hamburger-icon');
+  hamburgerIcons.forEach(icon => {
+    icon.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleMobileMenu();
+    });
+    
+    // Make sure the hamburger is visible and clickable
+    icon.style.position = 'relative';
+    icon.style.zIndex = '100000';
+    icon.style.cursor = 'pointer';
+    icon.style.display = 'flex';
+    icon.style.alignItems = 'center';
+    icon.style.justifyContent = 'center';
+  });
+  
+  console.log("Mobile menu created with direct styles");
+}
+
+// Very simple toggle function
+function toggleMobileMenu() {
+  console.log("Direct toggle mobile menu");
+  const menu = document.querySelector('.mobile-menu-links');
+  const overlay = document.querySelector('.mobile-menu-overlay');
+  const hamburgerIcon = document.querySelector('.hamburger-icon');
+  
+  if (!menu || !overlay) {
+    console.error("Menu elements not found");
+    return;
+  }
+  
+  if (menu.style.right === '0px') {
+    // Close menu
+    closeMobileMenu();
+  } else {
+    // Open menu
+    openMobileMenu();
+  }
+}
+
+function openMobileMenu() {
+  console.log("Direct open mobile menu");
+  const menu = document.querySelector('.mobile-menu-links');
+  const overlay = document.querySelector('.mobile-menu-overlay');
+  const hamburgerIcon = document.querySelector('.hamburger-icon');
+  
+  if (!menu || !overlay) return;
+  
+  menu.style.right = '0';
+  overlay.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  
+  if (hamburgerIcon) {
+    hamburgerIcon.innerHTML = '×';
+  }
+}
+
+function closeMobileMenu() {
+  console.log("Direct close mobile menu");
+  const menu = document.querySelector('.mobile-menu-links');
+  const overlay = document.querySelector('.mobile-menu-overlay');
+  const hamburgerIcon = document.querySelector('.hamburger-icon');
+  
+  if (!menu || !overlay) return;
+  
+  menu.style.right = '-100%';
+  overlay.style.display = 'none';
+  document.body.style.overflow = '';
+  
+  if (hamburgerIcon) {
+    hamburgerIcon.innerHTML = '☰';
+  }
+}
+
+function closeMenu() {
+  console.log("closeMenu called");
+  
+  try {
+    // Get all elements directly to avoid any selector issues
+    const menu = document.querySelector(".menu-links");
+    const icon = document.querySelector(".hamburger-icon");
+    const overlay = document.querySelector(".menu-overlay");
+    const body = document.body;
+    
+    console.log("Menu state before closing:", menu ? menu.classList.contains("open") : "menu not found");
+    
+    // 1. Force remove open class from menu
+    if (menu) {
+      menu.classList.remove("open");
+      // Force inline styles to ensure menu is hidden
+      menu.style.right = "-100%";
+      menu.style.opacity = "0";
+      menu.style.visibility = "hidden";
+      console.log("Removed open class from menu");
+    } else {
+      console.error("Menu element not found");
+    }
+    
+    // 2. Update hamburger icon
+    if (icon) {
+      icon.innerHTML = "☰";
+      console.log("Updated hamburger icon");
+    }
+    
+    // 3. Hide overlay - force it to be invisible
+    if (overlay) {
+      overlay.classList.remove("open");
+      overlay.style.opacity = "0";
+      overlay.style.visibility = "hidden";
+      console.log("Hidden overlay");
+    }
+    
+    // 4. Re-enable scrolling with direct style resets
+    if (body) {
+      body.classList.remove("menu-open");
+      body.style.overflow = "";
+      body.style.position = "";
+      body.style.height = "";
+      body.style.width = "";
+      body.style.top = "";
+      console.log("Reset body styles");
+    }
+    
+    // 5. Restore scroll position with a slight delay to ensure styles are applied
+    if (body && body.dataset.scrollY) {
+      const scrollY = parseInt(body.dataset.scrollY);
+      console.log("Restoring scroll to:", scrollY);
+      
+      // Use setTimeout to ensure the scroll happens after style changes
+      setTimeout(() => {
+        window.scrollTo(0, scrollY);
+        body.dataset.scrollY = '';
+      }, 10);
+    }
+    
+    // 6. Restore original z-index values
+    const elementsWithOriginalZIndex = document.querySelectorAll('[data-original-z-index]');
+    elementsWithOriginalZIndex.forEach(el => {
+      el.style.zIndex = el.dataset.originalZIndex;
+      delete el.dataset.originalZIndex;
+    });
+    
+    console.log("Menu state after closing function:", menu ? menu.classList.contains("open") : "menu not found");
+    
+    // 7. Double-check after a short delay that the menu is actually closed
+    setTimeout(() => {
+      const menuCheck = document.querySelector(".menu-links");
+      if (menuCheck && menuCheck.classList.contains("open")) {
+        console.log("Menu still has open class after timeout - forcing removal");
+        menuCheck.classList.remove("open");
+        menuCheck.style.right = "-100%";
+        menuCheck.style.opacity = "0";
+        menuCheck.style.visibility = "hidden";
+      }
+    }, 50);
+    
+  } catch (error) {
+    console.error("Error in closeMenu:", error);
+  }
+}
+
+// Ensure the click handlers are properly set up for menu links
+// Add this function to be called during the document ready event
+function setupMenuLinkHandlers() {
+  try {
+    const menuLinks = document.querySelectorAll('.menu-links a');
+    console.log(`Setting up ${menuLinks.length} menu link handlers`);
+    
+    menuLinks.forEach((link, index) => {
+      // Remove any existing click handlers first to avoid duplicates
+      link.removeEventListener('click', handleMenuLinkClick);
+      // Add new click handler
+      link.addEventListener('click', handleMenuLinkClick);
+      console.log(`Added click handler to menu link ${index + 1}`);
+    });
+  } catch (error) {
+    console.error("Error setting up menu link handlers:", error);
+  }
+}
+
+// Separate function to handle menu link clicks
+function handleMenuLinkClick(e) {
+  console.log("Menu link clicked - forcing menu close");
+  
+  // Get the target href to navigate to
+  const href = this.getAttribute('href');
+  
+  // Close the menu first
+  closeMenu();
+  
+  // Add a slight delay before navigation to ensure menu closes visually
+  if (href && href.startsWith('#')) {
+    e.preventDefault();
+    setTimeout(() => {
+      const targetElement = document.querySelector(href);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+      }
+      window.location.hash = href;
+    }, 100);
+  }
 }
 
 function openMenu() {
+  console.log("openMenu called");
   const menu = document.querySelector(".menu-links");
   const icon = document.querySelector(".hamburger-icon");
   const overlay = document.querySelector(".menu-overlay");
   const body = document.body;
 
+  // Safety check
+  if (!menu) {
+    console.log("Menu element not found");
+    return;
+  }
+  
+  // 1. Save scroll position
+  body.dataset.scrollY = window.scrollY;
+  
+  // 2. Update hamburger icon
+  if (icon) icon.innerHTML = "×";
+  
+  // 3. Show overlay
+  if (overlay) overlay.classList.add("open");
+  
+  // 4. Show menu
   menu.classList.add("open");
-  icon.innerHTML = "×";
-  overlay.classList.add("open");
+  
+  // 5. Disable scrolling
+  body.classList.add("menu-open");
   body.style.overflow = "hidden";
+  body.style.position = "fixed";
+  body.style.width = "100%";
+  body.style.height = "100%";
+  body.style.top = `-${window.scrollY}px`;
+  
+  // 6. Force z-index
+  forceMenuZIndex();
 }
 
+// Fix toggle menu function to be more direct
 function toggleMenu() {
+  console.log("toggleMenu called");
+  
   const menu = document.querySelector(".menu-links");
-
-  if (menu.classList.contains("open")) {
-    closeMenu();
+  const icon = document.querySelector(".hamburger-icon");
+  const overlay = document.querySelector(".menu-overlay");
+  
+  console.log("Menu exists:", !!menu);
+  console.log("Current menu state:", menu ? menu.classList.contains("open") : "menu not found");
+  
+  if (menu) {
+    if (menu.classList.contains("open")) {
+      // Close the menu
+      console.log("Closing menu");
+      menu.classList.remove("open");
+      if (icon) icon.innerHTML = "☰";
+      if (overlay) overlay.classList.remove("open");
+      document.body.classList.remove("menu-open");
+    } else {
+      // Open the menu
+      console.log("Opening menu");
+      menu.classList.add("open");
+      if (icon) icon.innerHTML = "×";
+      if (overlay) overlay.classList.add("open");
+      document.body.classList.add("menu-open");
+    }
   } else {
-    openMenu();
+    console.error("Menu element not found");
   }
 }
+
+// Simplified direct click handler for hamburger icon
+function setupHamburgerClickHandler() {
+  const hamburgerIcon = document.querySelector('.hamburger-icon');
+  if (hamburgerIcon) {
+    console.log("Setting up direct click handler on hamburger icon");
+    
+    // Remove any existing listeners to avoid duplicates
+    hamburgerIcon.removeEventListener('click', handleHamburgerClick);
+    
+    // Add fresh click handler
+    hamburgerIcon.addEventListener('click', handleHamburgerClick);
+  } else {
+    console.error("Hamburger icon not found");
+  }
+}
+
+// Direct hamburger click handler
+function handleHamburgerClick(e) {
+  console.log("Hamburger icon clicked");
+  e.preventDefault();
+  e.stopPropagation();
+  toggleMenu();
+}
+
+// Update the DOMContentLoaded event handler
+document.addEventListener('DOMContentLoaded', function() {
+  console.log("DOM loaded - initializing menu");
+
+  // Get menu elements
+  const menuLinks = document.querySelector('.menu-links');
+  const menuOverlay = document.querySelector('.menu-overlay');
+  
+  // Debug element existence
+  console.log("Menu links element found:", !!menuLinks);
+  console.log("Menu overlay element found:", !!menuOverlay);
+
+  // Move menu elements to body level for proper stacking and positioning
+  if (menuLinks && document.body) {
+    menuLinks.parentNode.removeChild(menuLinks);
+    document.body.appendChild(menuLinks);
+    console.log("Moved menu to body level");
+  }
+  
+  if (menuOverlay && document.body) {
+    menuOverlay.parentNode.removeChild(menuOverlay);
+    document.body.appendChild(menuOverlay);
+    console.log("Moved overlay to body level");
+  }
+  
+  // Setup all event handlers with explicit functions
+  setupHamburgerClickHandler();
+  setupMenuLinkHandlers();
+  
+  // Add click handler to overlay
+  if (menuOverlay) {
+    menuOverlay.removeEventListener('click', handleOverlayClick);
+    menuOverlay.addEventListener('click', handleOverlayClick);
+    console.log("Added overlay click handler");
+  }
+  
+  // Add document click handler for clicking outside
+  document.removeEventListener('click', handleDocumentClick);
+  document.addEventListener('click', handleDocumentClick);
+  console.log("Added document click handler");
+  
+  // Add direct click test handler to hamburger
+  const hamburgerIcon = document.querySelector('.hamburger-icon');
+  if (hamburgerIcon) {
+    hamburgerIcon.addEventListener('click', function() {
+      console.log("Direct hamburger click detected");
+    });
+  }
+  
+  console.log("Menu initialization complete");
+  
+  // Test menu functionality after a short delay
+  setTimeout(function() {
+    console.log("Running menu test...");
+    const hamburger = document.querySelector('.hamburger-icon');
+    const menu = document.querySelector('.menu-links');
+    console.log("Hamburger exists:", !!hamburger);
+    console.log("Menu exists:", !!menu);
+    console.log("Menu is open:", menu ? menu.classList.contains("open") : "menu not found");
+    
+    // Test the hamburger click explicitly
+    if (hamburger) {
+      console.log("Click the hamburger now to test functionality");
+    }
+  }, 1000);
+});
 
 // Close menu when clicking overlay
 document.querySelector(".menu-overlay")?.addEventListener("click", closeMenu);
@@ -56,6 +544,9 @@ window.addEventListener("resize", () => {
 let currentSlide = 0;
 let touchStartX = 0;
 let touchEndX = 0;
+let touchStartY = 0; // Add vertical tracking to avoid issues with scroll vs swipe
+let touchEndY = 0;
+let lastTap = 0; // For double-tap detection
 
 // Initialize gallery on page load
 document.addEventListener('DOMContentLoaded', () => {
@@ -72,22 +563,87 @@ document.addEventListener('DOMContentLoaded', () => {
     galleryContainer.addEventListener('touchmove', handleTouchMove, false);
     galleryContainer.addEventListener('touchend', handleTouchEnd, false);
   }
+  
+  // Improve mobile dropdown functionality
+  setupMobileDropdowns();
+  
+  // Set up floating arrow behavior
+  setupFloatingArrow();
+  
+  // Set up improved touch targets
+  improveTouchTargets();
+  
+  // Add enhanced events for mobile menu
+  enhanceMobileMenu();
+  
+  // Call the new function to set up the scroll indicator
+  setupScrollIndicator();
 });
+
+// Enhanced mobile menu functionality - simplified
+function enhanceMobileMenu() {
+  // Enhance mobile dropdowns
+  const mobileDropdown = document.querySelector('.timeline-dropdown-mobile');
+  if (mobileDropdown) {
+    const dropdownLink = mobileDropdown.querySelector('a');
+    
+    dropdownLink.addEventListener('click', function(event) {
+      event.preventDefault();
+      mobileDropdown.classList.toggle('active');
+      
+      // Prevent menu from closing when clicking the dropdown
+      event.stopPropagation();
+    });
+  }
+  
+  // Simple effect for hamburger icon
+  const hamburgerIcon = document.querySelector('.hamburger-icon');
+  if (hamburgerIcon) {
+    hamburgerIcon.addEventListener('mousedown', function() {
+      this.style.opacity = '0.8';
+    });
+    
+    hamburgerIcon.addEventListener('mouseup', function() {
+      this.style.opacity = '1';
+    });
+    
+    hamburgerIcon.addEventListener('mouseleave', function() {
+      this.style.opacity = '1';
+    });
+  }
+}
 
 // Gallery touch event handlers
 function handleTouchStart(event) {
   touchStartX = event.touches[0].clientX;
+  touchStartY = event.touches[0].clientY;
 }
 
 function handleTouchMove(event) {
   touchEndX = event.touches[0].clientX;
+  touchEndY = event.touches[0].clientY;
+  
+  // Prevent page scrolling when swiping in the gallery
+  const galleryContainer = document.querySelector(".gallery-container");
+  if (galleryContainer && galleryContainer.contains(event.target)) {
+    // Check if horizontal swipe is more significant than vertical
+    const xDiff = Math.abs(touchEndX - touchStartX);
+    const yDiff = Math.abs(touchEndY - touchStartY);
+    
+    if (xDiff > yDiff && xDiff > 30) {
+      event.preventDefault();
+    }
+  }
 }
 
 function handleTouchEnd() {
   const swipeThreshold = 50; // Minimum distance for a swipe
   const swipeDistance = touchEndX - touchStartX;
+  const verticalDistance = Math.abs(touchEndY - touchStartY);
   
-  if (Math.abs(swipeDistance) > swipeThreshold) {
+  // Only register as a swipe if horizontal movement is greater than vertical
+  // This prevents accidental swipes when scrolling
+  if (Math.abs(swipeDistance) > swipeThreshold && Math.abs(swipeDistance) > verticalDistance) {
     // If swipe distance is greater than threshold, change slide
     if (swipeDistance > 0) {
       // Swiped right - go to previous slide
@@ -98,49 +654,127 @@ function handleTouchEnd() {
     }
   }
   
-  // Reset touch coordinates
-  touchStartX = 0;
-  touchEndX = 0;
+  // Handle double tap to zoom (only on mobile)
+  const now = new Date().getTime();
+  const timeDiff = now - lastTap;
+  
+  if (timeDiff < 300 && timeDiff > 0) {
+    // Double tap detected
+    const target = document.elementFromPoint(touchEndX, touchEndY);
+    if (target && target.tagName === 'IMG') {
+      toggleImageZoom(target);
+    }
+  }
+  
+  lastTap = now;
+}
+
+// Toggle image zoom on double tap
+function toggleImageZoom(img) {
+  if (img.classList.contains('zoomed')) {
+    img.classList.remove('zoomed');
+    img.style.transform = 'scale(1)';
+    img.style.cursor = 'zoom-in';
+  } else {
+    img.classList.add('zoomed');
+    img.style.transform = 'scale(1.5)';
+    img.style.cursor = 'zoom-out';
+  }
 }
 
 function changeSlide(direction) {
   const slides = document.querySelectorAll(".gallery-slide");
-  if (!slides.length) return;
   
-  // Hide current slide
-  slides[currentSlide].classList.remove('active');
+  // Remove active class from current slide
+  slides[currentSlide].classList.remove("active");
   
-  // Update current slide index
+  // Calculate new slide index
   currentSlide = (currentSlide + direction + slides.length) % slides.length;
   
-  // Show new slide
-  slides[currentSlide].classList.add('active');
+  // Add active class to new slide
+  slides[currentSlide].classList.add("active");
+  
+  // Scroll to top of gallery container if needed
+  if (window.innerWidth <= 767) {
+    const gallerySection = document.getElementById('gallery');
+    const galleryTop = gallerySection.getBoundingClientRect().top + window.scrollY;
+    
+    // Only scroll if we're not already at the gallery
+    if (Math.abs(window.scrollY - galleryTop) > 200) {
+      window.scrollTo({
+        top: galleryTop - 100,
+        behavior: 'smooth'
+      });
+    }
+  }
 }
 
-// Show/hide floating arrow based on scroll position
-window.addEventListener('scroll', () => {
-  const floatingArrow = document.querySelector('.floating-arrow');
-  if (!floatingArrow) return; // Safety check
+// Setup mobile dropdowns
+function setupMobileDropdowns() {
+  const mobileDropdown = document.querySelector('.timeline-dropdown-mobile');
   
-  if (window.scrollY > 300) { // Show arrow after scrolling 300px (reduced from 500px)
-    floatingArrow.classList.add('visible');
-  } else {
-    floatingArrow.classList.remove('visible');
+  if (mobileDropdown) {
+    // Toggle dropdown on tap
+    mobileDropdown.addEventListener('click', function(event) {
+      // Only toggle if the direct link was clicked (not a dropdown item)
+      if (event.target.parentNode === this) {
+        this.classList.toggle('active');
+        event.preventDefault();
+      }
+    });
   }
-});
+}
 
-// Add click handler for the floating arrow
-document.addEventListener('DOMContentLoaded', () => {
+// Setup floating arrow for easier page navigation
+function setupFloatingArrow() {
   const floatingArrow = document.querySelector('.floating-arrow');
+  
   if (floatingArrow) {
-    floatingArrow.addEventListener('click', () => {
+    // Show arrow after scrolling
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 300) {
+        floatingArrow.classList.add('visible');
+      } else {
+        floatingArrow.classList.remove('visible');
+      }
+    });
+    
+    // Add smooth scroll to top
+    floatingArrow.addEventListener('click', function() {
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
       });
     });
   }
-});
+}
+
+// Improve touch targets for mobile
+function improveTouchTargets() {
+  // Add aria-label to buttons without text
+  document.querySelectorAll('button').forEach(button => {
+    if (!button.getAttribute('aria-label') && button.textContent.trim() === '') {
+      if (button.classList.contains('theme-toggle')) {
+        button.setAttribute('aria-label', 'Toggle dark mode');
+      } else if (button.classList.contains('prev')) {
+        button.setAttribute('aria-label', 'Previous slide');
+      } else if (button.classList.contains('next')) {
+        button.setAttribute('aria-label', 'Next slide');
+      }
+    }
+  });
+  
+  // Make small icons more tappable on mobile
+  if (window.innerWidth <= 768) {
+    document.querySelectorAll('.icon').forEach(icon => {
+      icon.style.minWidth = '44px';
+      icon.style.minHeight = '44px';
+      icon.style.display = 'flex';
+      icon.style.alignItems = 'center';
+      icon.style.justifyContent = 'center';
+    });
+  }
+}
 
 // Automatically update copyright year
 document.getElementById('currentYear').textContent = new Date().getFullYear();
@@ -746,4 +1380,238 @@ document.addEventListener("DOMContentLoaded", function() {
   
   // Start the animation
   typeWriter();
+});
+
+// Add scroll handling for hamburger menu
+window.addEventListener('scroll', function() {
+  // Get the hamburger nav
+  const hamburgerNav = document.querySelector('#hamburger-nav');
+  
+  if (hamburgerNav) {
+    // Add slight transparency when scrolled
+    if (window.scrollY > 50) {
+      hamburgerNav.style.backgroundColor = 'var(--nav-bg)';
+      hamburgerNav.style.boxShadow = '0 4px 10px var(--nav-shadow)';
+    } else {
+      hamburgerNav.style.backgroundColor = 'var(--nav-bg)';
+      hamburgerNav.style.boxShadow = '0 2px 10px var(--nav-shadow)';
+    }
+  }
+});
+
+// Function to handle scroll indicator with mobile check
+function setupScrollIndicator() {
+  // First check if we're on mobile - if so, we don't need to do anything
+  if (window.innerWidth <= 768) {
+    return; // Don't run the function on mobile
+  }
+  
+  const scrollIndicator = document.querySelector('.scroll-indicator');
+  const aboutSection = document.getElementById('about');
+  
+  if (scrollIndicator && aboutSection) {
+    // Make scroll indicator scroll to about section when clicked
+    scrollIndicator.addEventListener('click', function(e) {
+      e.preventDefault();
+      aboutSection.scrollIntoView({ behavior: 'smooth' });
+    });
+    
+    // Add pointer cursor to indicate it's clickable
+    scrollIndicator.style.cursor = 'pointer';
+  }
+}
+
+// Scroll-based navbar visibility
+let lastScrollTop = 0;
+const hamburgerNav = document.getElementById('hamburger-nav');
+const scrollThreshold = 50; // How many pixels to scroll before showing/hiding
+
+window.addEventListener('scroll', function() {
+  const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+  
+  // Show navbar at the very top of the page
+  if (currentScroll <= 10) {
+    hamburgerNav.classList.add('show-nav');
+    return;
+  }
+  
+  // Determine scroll direction
+  if (currentScroll > lastScrollTop && currentScroll > scrollThreshold) {
+    // Scrolling down
+    hamburgerNav.classList.remove('show-nav');
+  } else if (currentScroll < lastScrollTop) {
+    // Scrolling up
+    hamburgerNav.classList.add('show-nav');
+  }
+  
+  lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // For mobile or negative scrolling
+}, { passive: true });
+
+// Show navbar initially then hide after 2 seconds if no scrolling
+document.addEventListener('DOMContentLoaded', function() {
+  hamburgerNav.classList.add('show-nav');
+  
+  setTimeout(function() {
+    if (window.pageYOffset > scrollThreshold) {
+      hamburgerNav.classList.remove('show-nav');
+    }
+  }, 2000);
+});
+
+function handlePotentialObscuringElements() {
+  // Elements that might be obscuring the menu
+  const potentialObscuringSelectors = [
+    '.description', 
+    '.modal', 
+    '.zoom-container', 
+    '.gallery-slide',
+    '[style*="z-index"]',
+    '[class*="popup"]',
+    '[class*="overlay"]',
+    '[class*="modal"]'
+  ];
+  
+  // Find and adjust any potentially obscuring elements
+  potentialObscuringSelectors.forEach(selector => {
+    try {
+      const elements = document.querySelectorAll(selector);
+      
+      elements.forEach(el => {
+        if (el.classList.contains('menu-links') || el.classList.contains('hamburger-icon') || el.classList.contains('menu-overlay')) {
+          return; // Skip our menu elements
+        }
+        
+        const computedStyle = window.getComputedStyle(el);
+        const zIndex = parseInt(computedStyle.zIndex);
+        
+        // If element has a high z-index or is absolutely/fixed positioned
+        if (!isNaN(zIndex) && zIndex > 1000 || 
+            computedStyle.position === 'fixed' || 
+            computedStyle.position === 'absolute') {
+          
+          // Temporarily lower its z-index
+          el.dataset.originalZIndex = computedStyle.zIndex;
+          el.style.zIndex = "1";
+        }
+      });
+    } catch (err) {
+      // Silently handle any errors
+    }
+  });
+}
+
+function forceMenuZIndex() {
+  const menu = document.querySelector(".menu-links.open");
+  const icon = document.querySelector(".hamburger-icon");
+  const overlay = document.querySelector(".menu-overlay.open");
+  
+  // Check for obscuring elements first
+  handlePotentialObscuringElements();
+  
+  if (overlay) {
+    // Set overlay to appear behind the menu but above other content
+    overlay.style.zIndex = "99999";
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+    overlay.style.backdropFilter = "blur(3px)";
+  }
+  
+  if (menu) {
+    // Force inline styles with extremely high z-index and full height
+    // Important: menu z-index must be HIGHER than overlay z-index
+    menu.style.zIndex = "9999999";
+    menu.style.position = "fixed";
+    menu.style.top = "0";
+    menu.style.right = "0";
+    menu.style.height = "100vh";
+    menu.style.width = "280px";
+    menu.style.maxWidth = "85%";
+    menu.style.visibility = "visible";
+    menu.style.display = "flex";
+    menu.style.flexDirection = "column";
+    menu.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--card-bg').trim();
+    menu.style.overflowY = "auto";
+    menu.style.opacity = "1";
+    menu.style.boxShadow = "-5px 0 20px rgba(0, 0, 0, 0.3)";
+  }
+  
+  if (icon) {
+    // Icon should be above all - same as menu or higher
+    icon.style.zIndex = "9999999";
+  }
+}
+
+// Helper functions for event handling
+function toggleMenuWithPrevent(e) {
+  e.stopPropagation();
+  console.log("Hamburger clicked - toggling menu");
+  toggleMenu();
+}
+
+function handleOverlayClick(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  console.log("Overlay clicked - forcing menu close");
+  closeMenu();
+}
+
+// Function to handle clicks outside the menu
+function handleDocumentClick(e) {
+  const openMenu = document.querySelector('.menu-links.open');
+  const hamburgerIcon = document.querySelector('.hamburger-icon');
+  
+  if (openMenu && !openMenu.contains(e.target) && 
+      hamburgerIcon && !hamburgerIcon.contains(e.target)) {
+    console.log("Clicked outside menu - forcing close");
+    
+    // Direct close without using closeMenu function
+    openMenu.classList.remove("open");
+    if (hamburgerIcon) hamburgerIcon.innerHTML = "☰";
+    
+    const overlay = document.querySelector('.menu-overlay');
+    if (overlay) overlay.classList.remove("open");
+    
+    document.body.classList.remove("menu-open");
+  }
+}
+
+// Add theme switching functionality
+function setTheme(theme) {
+  console.log("Setting theme to:", theme);
+  
+  // Save the theme preference
+  localStorage.setItem('theme', theme);
+  
+  const root = document.documentElement;
+  
+  if (theme === 'auto') {
+    // Check system preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  } else {
+    // Set theme directly
+    root.setAttribute('data-theme', theme);
+  }
+  
+  // Listen for system preference changes when in auto mode
+  if (theme === 'auto') {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+      if (localStorage.getItem('theme') === 'auto') {
+        root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+      }
+    });
+  }
+}
+
+// Initialize theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+  // Apply the saved theme (or default to auto)
+  const savedTheme = localStorage.getItem('theme') || 'auto';
+  setTheme(savedTheme);
+  
+  // Rest of your initialization code...
 });
