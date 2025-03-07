@@ -751,6 +751,7 @@ section {
   height: 2.2rem;
   transition: all 0.3s ease;
   cursor: pointer;
+  object-fit: contain; /* Add this to maintain aspect ratio */
 }
 
 .icon:hover {
