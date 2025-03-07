@@ -113,6 +113,7 @@ function createMobileMenu() {
     }
     
     button.addEventListener('click', function() {
+      // Apply theme change immediately
       setTheme(theme);
       
       // Update active button styles
@@ -124,6 +125,13 @@ function createMobileMenu() {
       
       button.style.backgroundColor = 'var(--primary-color, #1D8A5E)';
       button.style.color = 'white';
+      
+      // Close menu after a short delay to show the theme change
+      setTimeout(() => {
+        if (window.innerWidth <= 768) {
+          closeMobileMenu();
+        }
+      }, 400);
     });
     
     return button;
@@ -415,9 +423,16 @@ document.addEventListener("DOMContentLoaded", function() {
   
   // Set up hamburger icon handler
   setupHamburgerClickHandler();
+  
+  // Update hospitality experience counter
+  updateExperienceCounter();
 
-  // Initialize theme
-  const savedTheme = localStorage.getItem('theme') || 'auto';
+  // Initialize theme - set to auto by default if no theme is saved
+  if (!localStorage.getItem('theme')) {
+    localStorage.setItem('theme', 'auto');
+  }
+  
+  const savedTheme = localStorage.getItem('theme');
   setTheme(savedTheme);
 });
 
@@ -1483,10 +1498,12 @@ function setTheme(theme) {
   if (theme === 'light') {
     root.classList.remove('dark-theme');
     root.classList.add('light-theme');
+    root.setAttribute('data-theme', 'light');
     if (metaThemeColor) metaThemeColor.setAttribute('content', '#ffffff');
   } else if (theme === 'dark') {
     root.classList.remove('light-theme');
     root.classList.add('dark-theme');
+    root.setAttribute('data-theme', 'dark');
     if (metaThemeColor) metaThemeColor.setAttribute('content', '#191919');
   } else {
     // Auto theme based on system preference
@@ -1495,10 +1512,12 @@ function setTheme(theme) {
     if (prefersDark) {
       root.classList.remove('light-theme');
       root.classList.add('dark-theme');
+      root.setAttribute('data-theme', 'dark');
       if (metaThemeColor) metaThemeColor.setAttribute('content', '#191919');
     } else {
       root.classList.remove('dark-theme');
       root.classList.add('light-theme');
+      root.setAttribute('data-theme', 'light');
       if (metaThemeColor) metaThemeColor.setAttribute('content', '#ffffff');
     }
     
@@ -1521,13 +1540,37 @@ function setTheme(theme) {
       button.style.color = 'var(--text-color, #2D2E32)';
     }
   });
+  
+  // Update desktop theme toggle buttons as well
+  updateThemeIcons();
 }
 
-// Initialize theme on page load
-document.addEventListener('DOMContentLoaded', function() {
-  // Apply the saved theme (or default to auto)
-  const savedTheme = localStorage.getItem('theme') || 'auto';
-  setTheme(savedTheme);
+// Function to calculate and update the hospitality experience counter
+function updateExperienceCounter() {
+  const hospitalityCounter = document.getElementById('hospitality-experience');
   
-  // Rest of your initialization code...
-});
+  if (hospitalityCounter) {
+    // Start date: September 2022
+    const startDate = new Date(2022, 8, 1); // Month is 0-indexed (8 = September)
+    const currentDate = new Date();
+    
+    // Calculate the difference in milliseconds
+    const timeDiff = currentDate - startDate;
+    
+    // Convert to years and months
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+    const daysDiff = Math.floor(timeDiff / millisecondsPerDay);
+    
+    const years = Math.floor(daysDiff / 365);
+    const months = Math.floor((daysDiff % 365) / 30);
+    
+    // Calculate total years with correct decimal (months/12)
+    const totalYears = years + (months / 12);
+    
+    // Format to 1 decimal place
+    hospitalityCounter.textContent = totalYears.toFixed(1);
+    
+    // Run the counter update every day
+    setTimeout(updateExperienceCounter, 24 * 60 * 60 * 1000);
+  }
+}

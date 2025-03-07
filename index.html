@@ -15,6 +15,19 @@
     <meta property="og:image" content="./assets/profile-pic.jpg">
     <meta property="og:url" content="https://your-website-url.com">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#ffffff">
+    <script>
+      // Apply theme immediately to prevent flash of wrong theme
+      (function() {
+        const savedTheme = localStorage.getItem('theme') || 'auto';
+        if (savedTheme === 'auto') {
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+        } else {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      })();
+    </script>
   </head>
 
   <body>
@@ -146,7 +159,7 @@
                 />
                 <h3>Experience</h3>
                 <p class="about-card-text">
-                  <span class="highlight">1.5</span> years hospitality
+                  <span class="highlight"><span id="hospitality-experience">1.5</span></span> years hospitality
                   <br/><br/>
                   <span class="highlight">9</span> months software development
                 </p>
