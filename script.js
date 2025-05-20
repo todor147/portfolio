@@ -232,14 +232,14 @@ function closeMobileMenu() {
 function closeMenu() {
   try {
     // Get all elements directly to avoid any selector issues
-    const menu = document.querySelector(".menu-links");
-    const icon = document.querySelector(".hamburger-icon");
-    const overlay = document.querySelector(".menu-overlay");
-    const body = document.body;
-    
+  const menu = document.querySelector(".menu-links");
+  const icon = document.querySelector(".hamburger-icon");
+  const overlay = document.querySelector(".menu-overlay");
+  const body = document.body;
+
     // 1. Force remove open class from menu
     if (menu) {
-      menu.classList.remove("open");
+  menu.classList.remove("open");
       // Force inline styles to ensure menu is hidden
       menu.style.right = "-100%";
       menu.style.opacity = "0";
@@ -248,13 +248,13 @@ function closeMenu() {
     
     // 2. Update hamburger icon
     if (icon) {
-      icon.innerHTML = "☰";
+  icon.innerHTML = "☰";
       icon.classList.remove("open");
     }
     
     // 3. Hide overlay
     if (overlay) {
-      overlay.classList.remove("open");
+  overlay.classList.remove("open");
       // Force inline styles to ensure overlay is hidden
       overlay.style.opacity = "0";
       overlay.style.visibility = "hidden";
@@ -300,8 +300,8 @@ function setupMenuLinkHandlers() {
   menuLinks.forEach((link, index) => {
     link.addEventListener("click", handleMenuLinkClick);
   });
-}
-
+  }
+  
 // Separate function to handle menu link clicks
 function handleMenuLinkClick(e) {
   // Force menu to close when links are clicked
@@ -318,17 +318,17 @@ function handleMenuLinkClick(e) {
 
 function openMenu() {
   try {
-    const menu = document.querySelector(".menu-links");
-    const icon = document.querySelector(".hamburger-icon");
-    const overlay = document.querySelector(".menu-overlay");
-    const body = document.body;
-    
+  const menu = document.querySelector(".menu-links");
+  const icon = document.querySelector(".hamburger-icon");
+  const overlay = document.querySelector(".menu-overlay");
+  const body = document.body;
+
     if (!menu) {
       return;
     }
     
     // 1. Toggle menu visibility
-    menu.classList.add("open");
+  menu.classList.add("open");
     body.classList.add("menu-open");
     
     // 2. Update hamburger icon
@@ -339,7 +339,7 @@ function openMenu() {
     
     // 3. Show overlay
     if (overlay) {
-      overlay.classList.add("open");
+  overlay.classList.add("open");
     }
     
     // 4. Prevent background scrolling
@@ -348,7 +348,7 @@ function openMenu() {
     body.style.position = 'fixed';
     body.style.width = '100%';
     body.style.height = '100%';
-    
+  
     // 5. Force menu to appear in front (z-index issues)
     forceMenuZIndex();
     
@@ -360,17 +360,17 @@ function openMenu() {
 // Fix toggle menu function to be more direct
 function toggleMenu() {
   try {
-    const menu = document.querySelector(".menu-links");
+  const menu = document.querySelector(".menu-links");
     
     if (!menu) {
       return;
     }
-    
-    if (menu.classList.contains("open")) {
-      closeMenu();
-    } else {
-      openMenu();
-    }
+
+  if (menu.classList.contains("open")) {
+    closeMenu();
+  } else {
+    openMenu();
+  }
   } catch (error) {
     // Silently handle any errors
   }
