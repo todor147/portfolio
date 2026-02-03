@@ -897,6 +897,12 @@ section {
   font-style: italic;
 }
 
+.provisional {
+  font-size: 0.85em;
+  font-style: italic;
+  opacity: 0.9;
+}
+
 .details-container img,
 .details-container .icon,
 .details-container .icon-default {

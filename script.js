@@ -988,9 +988,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Timeline tab filtering
   const timelineTabs = document.querySelectorAll('.timeline-tab');
   const timelineItems = document.querySelectorAll('.timeline-item');
-  
-  if (!timelineTabs.length || !timelineItems.length) return;
-  
+  const timelineContainer = document.querySelector('.timeline-container');
+  if (!timelineTabs.length || !timelineItems.length || !timelineContainer) return;
+
+  // Sort timeline items by date on load and when 'All' is selected
+  sortTimelineItemsByDate(timelineContainer);
+
   // Initial state - limit visible items based on category
   const ITEMS_TO_SHOW_INITIALLY = 8;
   let currentCategory = 'timeline-all';
@@ -1574,3 +1577,43 @@ function updateExperienceCounter() {
     setTimeout(updateExperienceCounter, 24 * 60 * 60 * 1000);
   }
 }
+
+// --- Timeline Sorting Utility ---
+function parseTimelineDate(dateStr) {
+  // Handles formats like 'Jun 2025', 'May 2025 - Jun 2025', 'Mar 2025 - Mar 2028', 'Mar 2024 - Present'
+  // Returns a comparable Date object (end date if range, otherwise the date itself)
+  if (!dateStr) return new Date(0);
+  dateStr = dateStr.trim();
+  let end = dateStr;
+  if (dateStr.includes('-')) {
+    end = dateStr.split('-')[1].trim();
+  }
+  if (/present/i.test(end)) {
+    return new Date(3000, 0, 1); // Far future for 'Present'
+  }
+  // Try to parse 'Mon YYYY' or 'YYYY'
+  const months = {
+    jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11
+  };
+  const parts = end.split(/\s+/);
+  if (parts.length === 2) {
+    const m = months[parts[0].toLowerCase().slice(0,3)];
+    const y = parseInt(parts[1], 10);
+    if (!isNaN(m) && !isNaN(y)) return new Date(y, m, 1);
+  }
+  if (parts.length === 1 && /^\d{4}$/.test(parts[0])) {
+    return new Date(parseInt(parts[0], 10), 0, 1);
+  }
+  return new Date(0); // fallback
+}
+
+function sortTimelineItemsByDate(container) {
+  const items = Array.from(container.querySelectorAll('.timeline-item'));
+  items.sort((a, b) => {
+    const aDate = parseTimelineDate(a.querySelector('.timeline-date')?.textContent);
+    const bDate = parseTimelineDate(b.querySelector('.timeline-date')?.textContent);
+    return bDate - aDate; // Descending (most recent first)
+  });
+  items.forEach(item => container.appendChild(item));
+}
+// --- End Timeline Sorting Utility ---
