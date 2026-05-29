@@ -4,6 +4,14 @@ import Container from "../components/Container.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import Card from "../components/Card.astro";
 import Button from "../components/Button.astro";
+
+const siteUrl = Astro.site ?? new URL("https://todors-portfolio.netlify.app");
+const successUrl = new URL("/contact/success", siteUrl).href;
+
+// FormSubmit posts to this endpoint and forwards every submission to my inbox.
+// Free, no signup required — only requires a one-time email-confirmation
+// click the very first time the endpoint is used.
+const formAction = "https://formsubmit.co/todor_147@abv.bg";
 ---
 
 <BaseLayout
@@ -30,20 +38,17 @@ import Button from "../components/Button.astro";
         <form
           name="contact"
           method="POST"
-          netlify
-          netlify-honeypot="bot-field"
-          action="/contact/success"
+          action={formAction}
           class="space-y-5"
         >
-          <!-- Netlify Forms required: identifies which form this is -->
-          <input type="hidden" name="form-name" value="contact" />
+          <!-- FormSubmit configuration -->
+          <input type="hidden" name="_subject" value="New message from portfolio" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_next" value={successUrl} />
 
           <!-- Honeypot — invisible to humans, bots fill it in -->
-          <p hidden aria-hidden="true">
-            <label>
-              Don't fill this out if you're human: <input name="bot-field" />
-            </label>
-          </p>
+          <input type="text" name="_honey" hidden aria-hidden="true" tabindex="-1" autocomplete="off" />
 
           <div class="grid sm:grid-cols-2 gap-5">
             <label class="block">
