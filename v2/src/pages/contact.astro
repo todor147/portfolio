@@ -30,15 +30,18 @@ import Button from "../components/Button.astro";
         <form
           name="contact"
           method="POST"
-          data-netlify="true"
+          netlify
           netlify-honeypot="bot-field"
           action="/contact/success"
           class="space-y-5"
         >
+          <!-- Netlify Forms required: identifies which form this is -->
           <input type="hidden" name="form-name" value="contact" />
-          <p class="hidden">
+
+          <!-- Honeypot — invisible to humans, bots fill it in -->
+          <p hidden aria-hidden="true">
             <label>
-              Don't fill this out: <input name="bot-field" />
+              Don't fill this out if you're human: <input name="bot-field" />
             </label>
           </p>
 
