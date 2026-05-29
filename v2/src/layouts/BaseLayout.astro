@@ -1,0 +1,109 @@
+---
+import "../styles/global.css";
+import NavBar from "../components/NavBar.astro";
+import Footer from "../components/Footer.astro";
+import CommandPalette from "../components/CommandPalette.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  showChrome?: boolean;
+  ogImage?: string;
+}
+
+const {
+  title = "Todor Aleksandrov — Computer Science · Sommelier",
+  description = "Computer Science student at the University of Limerick. Sommelier at Adare Manor. Software, hospitality, language, and lifeguarding.",
+  showChrome = true,
+  ogImage = "/og-image.svg",
+} = Astro.props;
+
+const siteUrl = Astro.site ?? new URL("https://todors-portfolio.netlify.app");
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = new URL(ogImage, siteUrl).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph / social -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Todor Aleksandrov" />
+    <meta property="og:locale" content="en_IE" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Theme color -->
+    <meta name="theme-color" content="#7B1E2D" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#2A2520" media="(prefers-color-scheme: dark)" />
+
+    <!-- Icons -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/favicon.svg" color="#7B1E2D" />
+
+    <!-- JSON-LD person schema -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: "Todor Aleksandrov",
+        url: siteUrl.href,
+        jobTitle: "Junior Sommelier & Computer Science Student",
+        worksFor: [
+          { "@type": "Organization", name: "Adare Manor", url: "https://www.adaremanor.com" },
+          { "@type": "Organization", name: "AMCS Group", url: "https://www.amcsgroup.com" },
+        ],
+        alumniOf: {
+          "@type": "CollegeOrUniversity",
+          name: "University of Limerick",
+          url: "https://www.ul.ie",
+        },
+        sameAs: [
+          "https://www.linkedin.com/in/todoraleksandrov/",
+          "https://github.com/todor147",
+        ],
+        knowsLanguage: ["en", "bg"],
+      })}
+    />
+
+    <script is:inline>
+      // Apply theme before paint to avoid flash
+      (function () {
+        const stored = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = stored ?? "auto";
+        const resolved = theme === "auto" ? (prefersDark ? "dark" : "light") : theme;
+        if (resolved === "dark") document.documentElement.classList.add("dark");
+        document.documentElement.dataset.themePref = theme;
+      })();
+    </script>
+
+    <script src="../scripts/enhancements.ts"></script>
+  </head>
+  <body class="min-h-dvh flex flex-col">
+    {showChrome && <NavBar />}
+    <main class="flex-1">
+      <slot />
+    </main>
+    {showChrome && <Footer />}
+    {showChrome && <CommandPalette />}
+  </body>
+</html>

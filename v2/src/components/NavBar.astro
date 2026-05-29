@@ -1,0 +1,111 @@
+---
+import Container from "./Container.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+
+const links = [
+  { href: "/about", label: "About" },
+  { href: "/experience", label: "Experience" },
+  { href: "/projects", label: "Projects" },
+  { href: "/sommelier", label: "Wine" },
+  { href: "/water", label: "Water" },
+  { href: "/language", label: "Language" },
+  { href: "/contact", label: "Contact" },
+];
+
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+---
+
+<header
+  id="site-nav"
+  class="sticky top-0 z-40 backdrop-blur-md bg-[color-mix(in_oklab,var(--bg)_82%,transparent)] border-b border-[color-mix(in_oklab,var(--text)_8%,transparent)]"
+>
+  <Container size="wide" class="flex items-center justify-between py-4">
+    <a
+      href="/"
+      class="font-display text-xl tracking-[-0.01em] hover:text-burgundy-600 transition-colors"
+      style="color: var(--text)"
+    >
+      Todor Aleksandrov
+    </a>
+
+    <nav aria-label="Primary" class="hidden md:flex items-center gap-1">
+      {links.map((link) => {
+        const active = path === link.href;
+        return (
+          <a
+            href={link.href}
+            class:list={[
+              "px-3 py-2 text-sm tracking-wide rounded-full transition-colors",
+              active
+                ? "text-burgundy-600"
+                : "hover:text-burgundy-600",
+            ]}
+            style={active ? undefined : "color: var(--text-soft)"}
+          >
+            {link.label}
+          </a>
+        );
+      })}
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <ThemeToggle />
+      <button
+        id="mobile-menu-toggle"
+        type="button"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-full border border-[color-mix(in_oklab,var(--text)_15%,transparent)] hover:border-burgundy-600 hover:text-burgundy-600 transition-colors"
+      >
+        <span aria-hidden="true" data-menu-icon>☰</span>
+      </button>
+    </div>
+  </Container>
+
+  <div
+    id="mobile-menu"
+    hidden
+    class="md:hidden border-t border-[color-mix(in_oklab,var(--text)_8%,transparent)]"
+  >
+    <Container size="wide" class="py-3">
+      <nav aria-label="Mobile" class="flex flex-col">
+        {links.map((link) => (
+          <a
+            href={link.href}
+            class="py-3 text-base border-b border-[color-mix(in_oklab,var(--text)_6%,transparent)] last:border-0 hover:text-burgundy-600 transition-colors"
+            style="color: var(--text)"
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+    </Container>
+  </div>
+</header>
+
+<script is:inline>
+  (function () {
+    const btn = document.getElementById("mobile-menu-toggle");
+    const menu = document.getElementById("mobile-menu");
+    if (!btn || !menu) return;
+    const icon = btn.querySelector("[data-menu-icon]");
+
+    btn.addEventListener("click", () => {
+      const open = !menu.hidden;
+      menu.hidden = open;
+      btn.setAttribute("aria-expanded", String(!open));
+      btn.setAttribute("aria-label", open ? "Open menu" : "Close menu");
+      if (icon) icon.textContent = open ? "☰" : "×";
+    });
+
+    // Close on link click (navigation will follow)
+    menu.querySelectorAll("a").forEach((a) =>
+      a.addEventListener("click", () => {
+        menu.hidden = true;
+        btn.setAttribute("aria-expanded", "false");
+        if (icon) icon.textContent = "☰";
+      }),
+    );
+  })();
+</script>

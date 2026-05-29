@@ -1,0 +1,308 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/Container.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import Card from "../components/Card.astro";
+import Button from "../components/Button.astro";
+import PhraseFinder from "../components/PhraseFinder.astro";
+import { formatMonthYear } from "../lib/dates";
+
+const certifications = await getCollection("certifications");
+const langCerts = certifications
+  .filter((c) => c.data.category === "language")
+  .sort((a, b) => b.data.issued.localeCompare(a.data.issued));
+
+const journey = [
+  {
+    year: "2003 – 2015",
+    place: "Bulgaria",
+    role: "First language, first decade",
+    note: "Born and raised in Bulgaria. Bulgarian as the language of family, school, and everyday life — Cyrillic, the rhythm of Slavic verbs, the famous head-shake for 'yes'.",
+  },
+  {
+    year: "2015 →",
+    place: "Ireland",
+    role: "Second language, second passport",
+    note: "Moved to Ireland in 2015. English from scratch through primary, into the Leaving Cert, then a Computer Science degree at UL. Bilingual switching becomes a reflex, not a choice. Naturalised Irish citizen in summer 2025 — eleven years after arriving.",
+  },
+  {
+    year: "2023 →",
+    place: "TRANSLIT",
+    role: "Interpretation, as a craft",
+    note: "Professional interpreter with TRANSLIT since February 2023 — Bulgarian ↔ English in medical and social-service settings. Where translation stops being a school skill and becomes a job with stakes.",
+  },
+];
+---
+
+<BaseLayout
+  title="On Language — Todor Aleksandrov"
+  description="Two languages, eleven years between them. Growing up bilingual, working as an interpreter, and a thirty-phrase Bulgarian phrasebook."
+>
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <div
+      aria-hidden="true"
+      class="absolute inset-0 -z-10"
+      style="background:
+        radial-gradient(60% 50% at 80% 10%, color-mix(in oklab, #3A2945 18%, transparent), transparent 70%),
+        radial-gradient(50% 40% at 10% 80%, color-mix(in oklab, var(--accent) 8%, transparent), transparent 70%);"
+    >
+    </div>
+
+    <Container size="wide" class="pt-(--spacing-section) pb-16">
+      <div class="grid lg:grid-cols-[1.3fr_1fr] gap-10 lg:gap-16 items-center">
+        <div class="space-y-7 md:space-y-9" data-reveal>
+          <p class="eyebrow">On language</p>
+          <h1
+            class="font-display tracking-[-0.03em]"
+            style="font-size:clamp(3rem, 8vw, 6.5rem); line-height:0.98;"
+          >
+            Two languages,
+            <em
+              class="not-italic block mt-2"
+              style="font-style: italic; color: var(--accent);"
+            >
+              one job that's the same as engineering.
+            </em>
+          </h1>
+          <p
+            class="text-lg md:text-xl leading-relaxed max-w-xl"
+            style="color:var(--text-soft)"
+          >
+            Born Bulgarian. Irish citizen since summer 2025. C2-certified in both
+            English and Bulgarian. Interpretation with TRANSLIT since 2023 —
+            taking what one person means and giving another person what they
+            meant. The same job as writing code, but the runtime is a stranger
+            in a clinic.
+          </p>
+          <div class="flex flex-wrap gap-3 pt-2">
+            <Button href="#phrase-finder" arrow magnetic>The phrasebook</Button>
+            <Button
+              href="https://translit.com/"
+              target="_blank"
+              variant="outline"
+            >
+              About TRANSLIT
+            </Button>
+          </div>
+        </div>
+
+        <!-- Cyrillic showcase tile -->
+        <div class="relative" data-reveal data-reveal-delay="120">
+          <div
+            aria-hidden="true"
+            class="absolute -inset-4 -z-10 rounded-[2.5rem] rotate-[-2deg]"
+            style="background:color-mix(in oklab, #3A2945 18%, transparent)"
+          >
+          </div>
+          <div
+            class="relative rounded-[2rem] p-8 md:p-10 border overflow-hidden flex flex-col gap-6"
+            style="border-color: color-mix(in oklab, var(--text) 12%, transparent); background: var(--surface);"
+          >
+            <p class="eyebrow">Two scripts</p>
+            <div class="space-y-4">
+              <div>
+                <p class="text-xs uppercase tracking-[0.18em] mb-1" style="color: var(--text-soft)">Bulgarian (Cyrillic)</p>
+                <p
+                  class="font-display tracking-[-0.02em] leading-none"
+                  style="font-size: clamp(2.5rem, 5vw, 4rem)"
+                  lang="bg"
+                >
+                  Здравейте
+                </p>
+                <p class="text-xs mt-1 italic" style="color: var(--text-soft)">zdrah-VEY-teh · "Hello"</p>
+              </div>
+              <hr class="rule" />
+              <div>
+                <p class="text-xs uppercase tracking-[0.18em] mb-1" style="color: var(--text-soft)">English</p>
+                <p
+                  class="font-display tracking-[-0.02em] leading-none"
+                  style="font-size: clamp(2.5rem, 5vw, 4rem); color: var(--accent);"
+                >
+                  Hello
+                </p>
+                <p class="text-xs mt-1 italic" style="color: var(--text-soft)">/həˈloʊ/ · greeting</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <!-- JOURNEY -->
+  <Container size="wide" class="py-(--spacing-section)">
+    <SectionHeader
+      eyebrow="The path"
+      title="Two countries, three chapters"
+      subtitle="From Bulgaria, to Ireland, to the interpretation booth."
+    />
+    <ol class="mt-12 grid gap-5 md:grid-cols-3">
+      {journey.map((step, i) => (
+        <li>
+          <Card variant="surface" padding="lg" class="h-full flex flex-col">
+            <p class="eyebrow" style="color: var(--accent)">
+              {String(i + 1).padStart(2, "0")} · {step.year}
+            </p>
+            <h3 class="font-display text-2xl tracking-[-0.01em] mt-2">
+              {step.place}
+            </h3>
+            <p class="text-sm font-medium mt-1" style="color: var(--text)">
+              {step.role}
+            </p>
+            <p class="text-sm leading-relaxed mt-4" style="color: var(--text-soft)">
+              {step.note}
+            </p>
+          </Card>
+        </li>
+      ))}
+    </ol>
+  </Container>
+
+  <!-- CERTIFICATIONS + STATS ROW -->
+  <Container size="wide" class="pb-(--spacing-section)">
+    <SectionHeader
+      eyebrow="The proof"
+      title="C2 in both"
+      subtitle="Verified at the highest CEFR level in each language."
+    />
+    <div class="mt-10 grid gap-5 lg:grid-cols-[1fr_1fr_1fr]">
+      {langCerts.map((cert) => (
+        <Card variant="outline" padding="lg">
+          <p class="eyebrow">Certified</p>
+          <h3 class="font-display text-xl tracking-[-0.01em] mt-2 leading-tight">
+            {cert.data.title}
+          </h3>
+          <p class="text-sm mt-2" style="color: var(--text-soft)">
+            {cert.data.issuer}
+          </p>
+          <p class="text-xs mt-3 font-mono" style="color: var(--text-soft)">
+            {formatMonthYear(cert.data.issued, true)}
+          </p>
+        </Card>
+      ))}
+      <Card variant="subtle" padding="lg">
+        <p class="eyebrow">Native</p>
+        <h3 class="font-display text-xl tracking-[-0.01em] mt-2 leading-tight">
+          Bulgarian
+        </h3>
+        <p class="text-sm mt-2" style="color: var(--text-soft)">
+          From birth
+        </p>
+        <p class="text-xs mt-3 italic" style="color: var(--text-soft)">
+          The language of family, food, and complicated grammar.
+        </p>
+      </Card>
+    </div>
+  </Container>
+
+  <!-- INTERPRETATION MOMENT -->
+  <Container size="narrow" class="pb-(--spacing-section)">
+    <div data-reveal>
+      <p class="eyebrow mb-3">Interpretation moment</p>
+      <div
+        class="relative overflow-hidden rounded-[2rem] p-8 md:p-14 border"
+        style="
+          border-color: color-mix(in oklab, var(--text) 10%, transparent);
+          background: linear-gradient(135deg,
+            color-mix(in oklab, var(--surface) 95%, transparent),
+            color-mix(in oklab, #3A2945 6%, var(--surface)));
+        "
+      >
+        <div
+          aria-hidden="true"
+          class="absolute top-6 right-6 hidden sm:flex flex-col items-end gap-1 text-right select-none"
+          style="color: var(--text-soft); opacity: 0.55;"
+        >
+          <span class="text-[0.65rem] font-mono tracking-[0.2em] uppercase">Medical setting</span>
+          <span class="text-[0.65rem] font-mono tracking-[0.2em] uppercase">BG ↔ EN</span>
+          <span class="text-[0.65rem] font-mono tracking-[0.2em] uppercase">TRANSLIT · 2024</span>
+        </div>
+
+        <p
+          class="text-xs uppercase tracking-[0.18em] mb-6 sm:hidden"
+          style="color: var(--text-soft);"
+        >
+          Medical interpretation · TRANSLIT
+        </p>
+
+        <p
+          class="font-display tracking-[-0.03em] leading-[0.95]"
+          style="font-size: clamp(2.25rem, 6vw, 4rem);"
+        >
+          "Tell her
+          <em
+            class="not-italic block"
+            style="font-style: italic; color: var(--accent);"
+          >it'll be alright."</em>
+        </p>
+
+        <p
+          class="mt-10 text-base md:text-lg leading-relaxed max-w-xl"
+          style="color: var(--text-soft);"
+        >
+          A consultant's instruction to me, mid-appointment, looking at the patient
+          rather than at me. That sentence isn't translatable — the comfort lives
+          in tone, in timing, in the small Bulgarian endearments the consultant
+          would never use. My job that day was to find the closest Bulgarian
+          version a stranger from Sofia would believe. We landed on it together.
+        </p>
+
+        <div
+          class="mt-8 pt-6 border-t flex flex-wrap items-baseline gap-x-6 gap-y-2 text-xs"
+          style="border-color: color-mix(in oklab, var(--text) 8%, transparent); color: var(--text-soft);"
+        >
+          <span class="font-mono uppercase tracking-[0.16em]">Languages: BG ↔ EN</span>
+          <span class="font-mono uppercase tracking-[0.16em]">Setting: clinical</span>
+          <span class="font-mono uppercase tracking-[0.16em]">Lesson: tone &gt; words</span>
+        </div>
+      </div>
+    </div>
+  </Container>
+
+  <!-- THE TOOL -->
+  <Container size="wide" class="pb-(--spacing-section)">
+    <PhraseFinder />
+  </Container>
+
+  <!-- LESSON -->
+  <Container size="narrow" class="pb-(--spacing-section)">
+    <div class="grid md:grid-cols-[1fr_2fr] gap-6 md:gap-12" data-reveal>
+      <p class="eyebrow self-start mt-2">What it taught me</p>
+      <div class="space-y-5 text-lg leading-relaxed" style="color: var(--text-soft)">
+        <p>
+          Translation isn't word-for-word. Half the work of interpreting is figuring
+          out what someone <em>actually meant</em> — given their culture, their stress
+          level, the unspoken thing they're hoping you'll catch — and then handing
+          that to the listener in a form their mind will accept.
+        </p>
+        <p>
+          Software engineering does the same job between people and machines. The
+          requirement says one thing. The user wanted something subtly different.
+          A good engineer is a translator with a compiler.
+        </p>
+      </div>
+    </div>
+  </Container>
+
+  <!-- PULL QUOTE -->
+  <Container size="narrow" class="pb-(--spacing-section)">
+    <blockquote class="relative">
+      <span
+        aria-hidden="true"
+        class="absolute -top-12 -left-4 font-display select-none"
+        style="font-size:8rem; line-height:1; color: color-mix(in oklab, var(--accent) 25%, transparent);"
+      >"</span>
+      <p
+        class="font-display tracking-[-0.02em] relative"
+        style="font-size:clamp(1.75rem, 4vw, 2.75rem); line-height:1.15;"
+      >
+        A good engineer is a translator with a compiler.
+      </p>
+      <footer class="mt-6 text-sm" style="color:var(--text-soft)">
+        — A working note, the third trade.
+      </footer>
+    </blockquote>
+  </Container>
+</BaseLayout>

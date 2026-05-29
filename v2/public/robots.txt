@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Block dev-only routes from search engines
+Disallow: /design
+
+Sitemap: https://todors-portfolio.netlify.app/sitemap-index.xml

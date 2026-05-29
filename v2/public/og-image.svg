@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FAF6F0"/>
+      <stop offset="1" stop-color="#F0E9DD"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="950" cy="100" r="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7B1E2D" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#7B1E2D" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- Logo dot -->
+  <g transform="translate(80, 70)">
+    <rect width="50" height="50" rx="12" fill="#7B1E2D"/>
+    <text
+      x="25"
+      y="36"
+      font-family="Georgia, 'Times New Roman', serif"
+      font-size="34"
+      font-weight="500"
+      font-style="italic"
+      fill="#FAF6F0"
+      text-anchor="middle"
+    >T</text>
+  </g>
+
+  <!-- Eyebrow -->
+  <text
+    x="80"
+    y="200"
+    font-family="'Inter', system-ui, sans-serif"
+    font-size="22"
+    font-weight="500"
+    fill="#7B1E2D"
+    letter-spacing="4"
+  >PORTFOLIO · 2026</text>
+
+  <!-- Headline -->
+  <text
+    x="80"
+    y="320"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="120"
+    font-weight="500"
+    fill="#1A1614"
+    letter-spacing="-3"
+  >Todor</text>
+  <text
+    x="80"
+    y="450"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="120"
+    font-weight="500"
+    fill="#7B1E2D"
+    letter-spacing="-3"
+  >Aleksandrov</text>
+
+  <!-- Rule line -->
+  <line x1="80" y1="495" x2="160" y2="495" stroke="#1A1614" stroke-width="2" opacity="0.5"/>
+
+  <!-- Tagline -->
+  <text
+    x="80"
+    y="535"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="30"
+    font-style="italic"
+    fill="#4A4239"
+  >Computer Science · Sommelier</text>
+
+  <!-- Footer info -->
+  <text
+    x="80"
+    y="588"
+    font-family="'Inter', system-ui, sans-serif"
+    font-size="18"
+    fill="#4A4239"
+    letter-spacing="0.5"
+  >Limerick, Ireland</text>
+
+  <!-- URL -->
+  <text
+    x="1120"
+    y="588"
+    font-family="'Inter', system-ui, sans-serif"
+    font-size="18"
+    fill="#4A4239"
+    text-anchor="end"
+    letter-spacing="0.5"
+  >todors-portfolio.netlify.app</text>
+</svg>

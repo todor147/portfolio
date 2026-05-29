@@ -1,0 +1,63 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/Container.astro";
+import Button from "../components/Button.astro";
+
+const suggestions = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/experience", label: "Experience" },
+  { href: "/projects", label: "Projects" },
+  { href: "/sommelier", label: "Sommelier" },
+  { href: "/contact", label: "Contact" },
+];
+---
+
+<BaseLayout
+  title="Not found — Todor Aleksandrov"
+  description="The page you were looking for isn't here."
+>
+  <Container size="narrow" class="py-(--spacing-section) text-center">
+    <p
+      class="font-display select-none mx-auto"
+      style="font-size: clamp(7rem, 18vw, 14rem); line-height: 0.95; color: var(--accent); letter-spacing: -0.04em;"
+    >
+      404
+    </p>
+
+    <hr class="rule my-6 max-w-xs mx-auto" />
+
+    <h1
+      class="font-display tracking-[-0.02em]"
+      style="font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1;"
+    >
+      The page poured out the bottle.
+    </h1>
+    <p
+      class="mt-5 text-lg leading-relaxed max-w-xl mx-auto"
+      style="color: var(--text-soft)"
+    >
+      Either the link is old, the page moved, or it never existed. Try one of the
+      pages below.
+    </p>
+
+    <nav
+      aria-label="Site links"
+      class="mt-10 flex flex-wrap justify-center gap-2"
+    >
+      {suggestions.map((s) => (
+        <a
+          href={s.href}
+          class="px-4 py-2 rounded-full text-sm font-medium tracking-wide border transition-colors hover:border-burgundy-600 hover:text-burgundy-600"
+          style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text-soft);"
+        >
+          {s.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="mt-12">
+      <Button href="/" arrow>Take me home</Button>
+    </div>
+  </Container>
+</BaseLayout>

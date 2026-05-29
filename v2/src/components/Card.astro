@@ -1,0 +1,55 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends Omit<HTMLAttributes<"div">, "class"> {
+  as?: keyof HTMLElementTagNameMap;
+  href?: string;
+  variant?: "surface" | "outline" | "subtle";
+  padding?: "sm" | "md" | "lg" | "none";
+  hover?: boolean;
+  class?: string;
+}
+
+const {
+  as,
+  href,
+  variant = "surface",
+  padding = "md",
+  hover = false,
+  class: className = "",
+  ...rest
+} = Astro.props;
+
+const Tag = (href ? "a" : (as ?? "div")) as keyof HTMLElementTagNameMap;
+
+const variants = {
+  surface: "bg-(--surface) border border-[color-mix(in_oklab,var(--text)_8%,transparent)]",
+  outline:
+    "bg-transparent border border-[color-mix(in_oklab,var(--text)_15%,transparent)]",
+  subtle: "bg-[color-mix(in_oklab,var(--text)_3%,transparent)] border border-transparent",
+};
+
+const paddings = {
+  none: "",
+  sm: "p-4",
+  md: "p-6",
+  lg: "p-8 sm:p-10",
+};
+
+const hoverStyles = hover
+  ? "transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:border-[color-mix(in_oklab,var(--text)_20%,transparent)]"
+  : "";
+
+const finalClass = [
+  "rounded-2xl",
+  variants[variant],
+  paddings[padding],
+  hoverStyles,
+  href ? "block" : "",
+  className,
+].join(" ");
+---
+
+<Tag href={href} class={finalClass} {...rest}>
+  <slot />
+</Tag>

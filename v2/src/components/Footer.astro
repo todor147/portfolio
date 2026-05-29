@@ -1,0 +1,89 @@
+---
+import Container from "./Container.astro";
+
+const year = new Date().getFullYear();
+const socials = [
+  { href: "https://www.linkedin.com/in/todoraleksandrov/", label: "LinkedIn" },
+  { href: "https://github.com/todor147", label: "GitHub" },
+  { href: "mailto:todor_147@abv.bg", label: "Email" },
+];
+---
+
+<footer
+  class="mt-(--spacing-section) border-t border-[color-mix(in_oklab,var(--text)_8%,transparent)]"
+>
+  <Container size="wide" class="py-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 items-start">
+    <div>
+      <p class="font-display text-2xl tracking-[-0.01em]">
+        Todor Aleksandrov
+      </p>
+      <p class="mt-2 text-sm" style="color: var(--text-soft)">
+        Limerick, Ireland · Open to internships and graduate roles.
+      </p>
+    </div>
+
+    <nav aria-label="Footer">
+      <p class="eyebrow mb-3">Pages</p>
+      <ul class="space-y-2 text-sm">
+        <li><a href="/about" class="hover:text-burgundy-600 transition-colors">About</a></li>
+        <li><a href="/experience" class="hover:text-burgundy-600 transition-colors">Experience</a></li>
+        <li><a href="/projects" class="hover:text-burgundy-600 transition-colors">Projects</a></li>
+        <li><a href="/certifications" class="hover:text-burgundy-600 transition-colors">Certifications</a></li>
+        <li><a href="/contact" class="hover:text-burgundy-600 transition-colors">Contact</a></li>
+      </ul>
+    </nav>
+
+    <nav aria-label="Three trades">
+      <p class="eyebrow mb-3">Three trades</p>
+      <ul class="space-y-2 text-sm">
+        <li><a href="/sommelier" class="hover:text-burgundy-600 transition-colors">Wine — Sommelier</a></li>
+        <li><a href="/water" class="hover:text-burgundy-600 transition-colors">Water — Lifeguard</a></li>
+        <li><a href="/language" class="hover:text-burgundy-600 transition-colors">Language — Interpreter</a></li>
+        <li><a href="/gallery" class="hover:text-burgundy-600 transition-colors">Gallery</a></li>
+        <li><a href="/now" class="hover:text-burgundy-600 transition-colors">Now</a></li>
+        <li><a href="/uses" class="hover:text-burgundy-600 transition-colors">Uses</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <p class="eyebrow mb-3">Find me</p>
+      <ul class="space-y-2 text-sm">
+        {socials.map((s) => (
+          <li>
+            <a
+              href={s.href}
+              target={s.href.startsWith("http") ? "_blank" : undefined}
+              rel={s.href.startsWith("http") ? "noopener noreferrer" : undefined}
+              class="hover:text-burgundy-600 transition-colors"
+            >
+              {s.label} →
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Container>
+
+  <Container size="wide" class="pb-10 pt-2">
+    <div
+      class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs"
+      style="color: var(--text-soft)"
+    >
+      <p>© {year} Todor Aleksandrov. All rights reserved.</p>
+      <p>
+        Built with <a
+          href="https://astro.build"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-burgundy-600 transition-colors">Astro</a
+        >
+        & <a
+          href="https://tailwindcss.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-burgundy-600 transition-colors">Tailwind</a
+        >.
+      </p>
+    </div>
+  </Container>
+</footer>

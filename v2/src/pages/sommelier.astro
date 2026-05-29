@@ -1,0 +1,319 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/Container.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import Card from "../components/Card.astro";
+import Button from "../components/Button.astro";
+import PairingTool from "../components/PairingTool.astro";
+import Picture from "../components/Picture.astro";
+import { formatMonthYear } from "../lib/dates";
+
+const certifications = await getCollection("certifications");
+const wineCerts = certifications
+  .filter((c) => c.data.category === "hospitality")
+  .sort((a, b) => b.data.issued.localeCompare(a.data.issued));
+
+const journey = [
+  {
+    year: "2022",
+    place: "The Mustard Seed",
+    role: "Food & Beverage Assistant",
+    note: "First hospitality role at an acclaimed country-house restaurant in Ballingarry. Where the obsession started.",
+    image: "mustard seed.jpg",
+  },
+  {
+    year: "2023",
+    place: "Adare Manor",
+    role: "Senior F&B Assistant — Carriage House",
+    note: "Premium VIP service. Coordinating wine service with the kitchen's tasting menus.",
+    image: "ch indoors.jpg",
+  },
+  {
+    year: "2024 →",
+    place: "Adare Manor",
+    role: "Junior Sommelier",
+    note: "Wine list, pairings, event planning. Studying for the next certification tier.",
+    image: "cellar.jpg",
+  },
+];
+
+const gallery = [
+  { src: "cellar.jpg", caption: "The cellar at Adare Manor" },
+  { src: "cms intro.jpeg", caption: "CMS Introductory Certificate · Madrid 2024" },
+  { src: "vines in bg.jpg", caption: "Vines along the Danube, Northern Bulgaria" },
+  { src: "waitering.jpg", caption: "New dish at The Mustard Seed" },
+  { src: "ch indoors.jpg", caption: "The Carriage House interior" },
+  { src: "ch outdoors.jpg", caption: "The Carriage House at dusk" },
+];
+---
+
+<BaseLayout
+  title="On Wine — Todor Aleksandrov"
+  description="How a Computer Science student ended up in the cellars of Adare Manor. The journey, certifications, and a pairing tool with 33 dishes."
+>
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <div
+      class="absolute inset-0 -z-10"
+      aria-hidden="true"
+      style="background:
+        radial-gradient(60% 50% at 80% 20%, color-mix(in oklab, var(--color-burgundy-600) 12%, transparent), transparent 70%),
+        radial-gradient(50% 40% at 10% 80%, color-mix(in oklab, var(--color-burgundy-300) 8%, transparent), transparent 70%);"
+    >
+    </div>
+
+    <Container size="wide" class="pt-(--spacing-section) pb-16">
+      <div class="grid lg:grid-cols-[1.3fr_1fr] gap-10 lg:gap-16 items-center">
+        <div class="space-y-7 md:space-y-9">
+          <p class="eyebrow">On wine</p>
+          <h1
+            class="font-display tracking-[-0.03em]"
+            style="font-size:clamp(3rem, 8vw, 6.5rem); line-height:0.98;"
+          >
+            How a CS student ended up in the cellars of
+            <em
+              class="not-italic block mt-2"
+              style="font-style: italic; color: var(--accent);"
+            >
+              Adare Manor.
+            </em>
+          </h1>
+          <p
+            class="text-lg md:text-xl leading-relaxed max-w-xl"
+            style="color:var(--text-soft)"
+          >
+            A side hustle at a country-house restaurant turned into a sommelier
+            kit, a trip to Madrid for the CMS Intro, and a WSET Level 2 pass
+            with merit. Software engineering by day, wine list by evening — they
+            ask for the same kind of attention.
+          </p>
+          <div class="flex flex-wrap gap-3 pt-2">
+            <Button href="#pairing-tool" arrow>Try the pairing tool</Button>
+            <Button href="/contact" variant="outline">Talk wine</Button>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div
+            aria-hidden="true"
+            class="absolute -inset-4 -z-10 rounded-[2.5rem] rotate-[2deg]"
+            style="background:color-mix(in oklab, var(--accent) 14%, transparent)"
+          >
+          </div>
+          <div
+            class="relative aspect-[4/5] rounded-[2rem] overflow-hidden border"
+            style="border-color: color-mix(in oklab, var(--text) 12%, transparent);"
+          >
+            <Picture
+              src="cellar.jpg"
+              alt="The wine cellar at Adare Manor"
+              class="w-full h-full object-cover"
+              loading="eager"
+              fetchpriority="high"
+            />
+          </div>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <!-- JOURNEY -->
+  <Container size="wide" class="py-(--spacing-section)">
+    <SectionHeader
+      eyebrow="The path"
+      title="From server to sommelier"
+      subtitle="Three stops that turned a hospitality job into a craft worth studying."
+    />
+    <ol class="mt-12 grid gap-5 md:grid-cols-3">
+      {journey.map((step, i) => (
+        <li>
+          <Card variant="surface" padding="none" class="h-full overflow-hidden flex flex-col">
+            <div class="aspect-[16/10] overflow-hidden">
+              <Picture
+                src={step.image}
+                alt={step.place}
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div class="p-6 flex flex-col flex-1">
+              <p
+                class="eyebrow"
+                style="color: var(--accent);"
+              >
+                {String(i + 1).padStart(2, "0")} · {step.year}
+              </p>
+              <h3 class="font-display text-2xl tracking-[-0.01em] mt-2">
+                {step.place}
+              </h3>
+              <p class="text-sm mt-1" style="color:var(--text-soft)">
+                {step.role}
+              </p>
+              <p class="text-sm leading-relaxed mt-3" style="color:var(--text-soft)">
+                {step.note}
+              </p>
+            </div>
+          </Card>
+        </li>
+      ))}
+    </ol>
+  </Container>
+
+  <!-- CERTIFICATIONS -->
+  <Container size="wide" class="pb-(--spacing-section)">
+    <SectionHeader
+      eyebrow="Credentials"
+      title="The qualifications"
+      subtitle="Working through the formal ladder while pouring."
+    />
+    <div class="mt-10 grid gap-5 md:grid-cols-2">
+      {wineCerts.map((cert) => (
+        <Card variant="outline" padding="lg" class="flex items-start gap-5">
+          {cert.data.icon && (
+            <img
+              src={`/assets/${cert.data.icon}`}
+              alt={cert.data.issuer}
+              class="w-16 h-16 rounded-xl object-contain bg-cream p-2 shrink-0"
+            />
+          )}
+          <div class="flex-1 min-w-0">
+            <p class="eyebrow">Issued {formatMonthYear(cert.data.issued, true)}</p>
+            <h3 class="font-display text-2xl tracking-[-0.01em] mt-2 leading-tight">
+              {cert.data.title}
+            </h3>
+            <p class="text-sm mt-1" style="color:var(--text-soft)">
+              {cert.data.issuer}
+            </p>
+          </div>
+        </Card>
+      ))}
+      <Card variant="subtle" padding="lg" class="md:col-span-2">
+        <p class="eyebrow mb-2">Next on the list</p>
+        <p class="font-display text-xl tracking-[-0.01em]">
+          WSET Level 3 in Wines — booked for late 2026.
+        </p>
+      </Card>
+    </div>
+  </Container>
+
+  <!-- SERVICE MOMENT -->
+  <Container size="narrow" class="pb-(--spacing-section)">
+    <div data-reveal>
+      <p class="eyebrow mb-3">Service moment</p>
+      <div
+        class="relative overflow-hidden rounded-[2rem] p-8 md:p-14 border"
+        style="
+          border-color: color-mix(in oklab, var(--text) 10%, transparent);
+          background: linear-gradient(135deg,
+            color-mix(in oklab, var(--surface) 95%, transparent),
+            color-mix(in oklab, var(--accent) 6%, var(--surface)));
+        "
+      >
+        <div
+          aria-hidden="true"
+          class="absolute top-6 right-6 hidden sm:flex flex-col items-end gap-1 text-right select-none"
+          style="color: var(--text-soft); opacity: 0.55;"
+        >
+          <span class="text-[0.65rem] font-mono tracking-[0.2em] uppercase">Adare Manor</span>
+          <span class="text-[0.65rem] font-mono tracking-[0.2em] uppercase">Carriage House</span>
+          <span class="text-[0.65rem] font-mono tracking-[0.2em] uppercase">Service · A table for two</span>
+        </div>
+
+        <p
+          class="text-xs uppercase tracking-[0.18em] mb-6 sm:hidden"
+          style="color: var(--text-soft);"
+        >
+          Adare Manor · The Carriage House
+        </p>
+
+        <p
+          class="font-display tracking-[-0.03em] leading-[0.95]"
+          style="font-size: clamp(2.25rem, 6vw, 4rem);"
+        >
+          "A wine
+          <em
+            class="not-italic block"
+            style="font-style: italic; color: var(--accent);"
+          >like a hug."</em>
+        </p>
+
+        <p
+          class="mt-10 text-base md:text-lg leading-relaxed max-w-xl"
+          style="color: var(--text-soft);"
+        >
+          A guest's only brief on the wine pairing — handed to me before the tasting
+          menu started. We landed on a glass of Volnay. They left with a bottle.
+          The pairing tool below started as a way to think more carefully about
+          questions like that one.
+        </p>
+
+        <div
+          class="mt-8 pt-6 border-t flex flex-wrap items-baseline gap-x-6 gap-y-2 text-xs"
+          style="border-color: color-mix(in oklab, var(--text) 8%, transparent); color: var(--text-soft);"
+        >
+          <span class="font-mono uppercase tracking-[0.16em]">Wine: Pinot Noir</span>
+          <span class="font-mono uppercase tracking-[0.16em]">Region: Volnay, Burgundy</span>
+          <span class="font-mono uppercase tracking-[0.16em]">Outcome: full bottle sold</span>
+        </div>
+      </div>
+    </div>
+  </Container>
+
+  <!-- PAIRING TOOL -->
+  <Container size="wide" class="pb-(--spacing-section)">
+    <PairingTool />
+  </Container>
+
+  <!-- GALLERY -->
+  <Container size="wide" class="pb-(--spacing-section)">
+    <SectionHeader
+      eyebrow="Cellar notes"
+      title="From the floor"
+      subtitle="A few photos from the bottle, the cellar and the journey."
+    />
+    <div class="mt-10 grid gap-3 md:gap-4 grid-cols-2 md:grid-cols-3 auto-rows-[12rem] md:auto-rows-[16rem]">
+      {gallery.map((g, i) => (
+        <figure
+          class:list={[
+            "relative overflow-hidden rounded-2xl group/photo",
+            i === 0 ? "md:row-span-2 md:col-span-2 row-span-2 col-span-2" : "",
+          ]}
+          style="border:1px solid color-mix(in oklab, var(--text) 8%, transparent)"
+        >
+          <Picture
+            src={g.src}
+            alt={g.caption}
+            class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover/photo:scale-105"
+          />
+          <figcaption
+            class="absolute inset-x-0 bottom-0 p-4 text-xs opacity-0 group-hover/photo:opacity-100 transition-opacity"
+            style="background:linear-gradient(to top, rgba(26,22,20,0.85), transparent); color: var(--color-cream);"
+          >
+            {g.caption}
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </Container>
+
+  <!-- PULL QUOTE -->
+  <Container size="narrow" class="pb-(--spacing-section)">
+    <blockquote class="relative">
+      <span
+        aria-hidden="true"
+        class="absolute -top-12 -left-4 font-display select-none"
+        style="font-size:8rem; line-height:1; color: color-mix(in oklab, var(--accent) 25%, transparent);"
+      >"</span>
+      <p
+        class="font-display tracking-[-0.02em] relative"
+        style="font-size:clamp(1.75rem, 4vw, 2.75rem); line-height:1.15;"
+      >
+        Wine doesn't ask you to be smart — it asks you to pay attention.
+        That's the same thing that makes you a good engineer.
+      </p>
+      <footer class="mt-6 text-sm" style="color:var(--text-soft)">
+        — A working note, two trades.
+      </footer>
+    </blockquote>
+  </Container>
+</BaseLayout>

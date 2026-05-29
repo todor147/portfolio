@@ -1,0 +1,116 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/Container.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import Card from "../components/Card.astro";
+
+const sections = [
+  {
+    label: "Software",
+    items: [
+      { name: "VS Code", note: "Daily driver, with the GitHub theme and Vim mode off (I'm not that brave)." },
+      { name: "Claude / Copilot", note: "AI pair programming — the second author on most of my code." },
+      { name: "Git + GitHub", note: "Always. Branch-per-feature, squash on merge." },
+      { name: "Azure DevOps", note: "Used in anger at AMCS for CI/CD pipelines." },
+      { name: "Cypress + Fiddler", note: "End-to-end test automation against WPF apps." },
+      { name: "Windows 11 + WSL2", note: "Windows for hardware, WSL Ubuntu when Linux tools are needed." },
+    ],
+  },
+  {
+    label: "Hardware",
+    items: [
+      { name: "Custom PC build", note: "Built it myself — see the photo on the /gallery page." },
+      { name: "MacBook on the side", note: "For when I'm out of the house." },
+      { name: "Mechanical keyboard", note: "Brown switches. Loud enough to know you're typing, quiet enough for the library." },
+      { name: "iPhone", note: "Two-factor codes and Notes app for wine pairings." },
+    ],
+  },
+  {
+    label: "On the floor",
+    items: [
+      { name: "Coravin", note: "When pouring a single glass from a bottle that needs to live another day." },
+      { name: "Riedel decanters", note: "Adare Manor cellar standard." },
+      { name: "WSET tasting notes booklet", note: "Carried for grape exams and CMS practice." },
+      { name: "PHECC FAR pocket guide", note: "Lifeguard kit essential — fits in the back pocket." },
+    ],
+  },
+  {
+    label: "Books on the desk",
+    items: [
+      { name: "Designing Data-Intensive Applications", note: "Kleppmann — the engineering bible." },
+      { name: "Wine Folly: The Master Guide", note: "Quick reference when memory fails on regions." },
+      { name: "The World Atlas of Wine", note: "Johnson & Robinson — the big one." },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Uses — Todor Aleksandrov"
+  description="The tools I actually reach for — editor, hardware, sommelier kit, books. A /uses page in the wesbos.com / uses.tech tradition."
+>
+  <Container size="narrow" class="py-(--spacing-section)">
+    <p class="eyebrow">Uses</p>
+    <h1
+      class="font-display tracking-[-0.03em] mt-4"
+      style="font-size: clamp(2.75rem, 6vw, 5rem); line-height: 1.02;"
+    >
+      What I
+      <em
+        class="not-italic block mt-2"
+        style="font-style: italic; color: var(--accent);"
+      >
+        make this with.
+      </em>
+    </h1>
+    <p class="mt-6 text-lg leading-relaxed" style="color: var(--text-soft)">
+      The tools that actually get used — for code, for service, for study. Inspired
+      by the <a
+        href="https://uses.tech"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline decoration-burgundy-300 underline-offset-4 hover:decoration-burgundy-600 transition-colors">uses.tech</a> tradition.
+    </p>
+
+    <hr class="rule mt-10 mb-12" />
+
+    <div class="space-y-12">
+      {sections.map((section) => (
+        <section data-reveal>
+          <h2
+            class="font-display text-2xl md:text-3xl tracking-[-0.01em] mb-6"
+          >
+            {section.label}
+          </h2>
+          <ul class="space-y-5">
+            {section.items.map((item) => (
+              <li class="grid sm:grid-cols-[12rem_1fr] gap-2 sm:gap-6 items-baseline">
+                <p
+                  class="font-display text-lg tracking-[-0.01em]"
+                  style="color: var(--text);"
+                >
+                  {item.name}
+                </p>
+                <p
+                  class="text-sm leading-relaxed"
+                  style="color: var(--text-soft);"
+                >
+                  {item.note}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+
+    <hr class="rule mt-14 mb-8" />
+
+    <Card variant="subtle" padding="lg">
+      <p class="eyebrow mb-2">Suggestion?</p>
+      <p class="text-sm leading-relaxed" style="color: var(--text-soft)">
+        If there's a tool you swear by — for the editor, for service, for tasting — I'd love to hear about it. <a href="/contact" style="color: var(--accent)">Drop a line</a>.
+      </p>
+    </Card>
+  </Container>
+</BaseLayout>

@@ -1,0 +1,32 @@
+---
+interface Props {
+  variant?: "default" | "accent" | "soft";
+  size?: "sm" | "md";
+  class?: string;
+}
+
+const { variant = "default", size = "sm", class: className = "" } = Astro.props;
+
+const variants = {
+  default:
+    "border border-[color-mix(in_oklab,var(--text)_18%,transparent)] text-(--text-soft) bg-transparent",
+  accent: "border border-burgundy-600 text-burgundy-600 bg-transparent",
+  soft: "bg-[color-mix(in_oklab,var(--accent)_12%,transparent)] text-(--accent) border border-transparent",
+};
+
+const sizes = {
+  sm: "text-[0.7rem] px-2.5 py-1",
+  md: "text-xs px-3 py-1.5",
+};
+---
+
+<span
+  class:list={[
+    "inline-flex items-center rounded-full font-medium tracking-[0.04em] uppercase",
+    variants[variant],
+    sizes[size],
+    className,
+  ]}
+>
+  <slot />
+</span>

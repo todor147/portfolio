@@ -1,0 +1,401 @@
+---
+/**
+ * Command Palette — ⌘K / Ctrl+K to open.
+ *
+ * Server-builds an index of every page, role, certification, project,
+ * pairing, scenario and phrase. Renders a native <dialog> with a fuzzy
+ * text filter. Arrow keys + enter navigate; Esc closes.
+ *
+ * Pure HTML + JS. No framework, no library.
+ */
+import { getCollection } from "astro:content";
+
+const experience = await getCollection("experience");
+const certifications = await getCollection("certifications");
+const projects = await getCollection("projects");
+const pairings = await getCollection("pairings");
+const scenarios = await getCollection("scenarios");
+const phrases = await getCollection("phrases");
+const education = await getCollection("education");
+
+type Item = {
+  kind: string;
+  label: string;
+  hint?: string;
+  href: string;
+  searchKey: string;
+};
+
+const items: Item[] = [];
+
+// Top-level pages
+const pages = [
+  { label: "Home", href: "/", hint: "The hero & featured" },
+  { label: "About", href: "/about", hint: "Bio + bento + education journey" },
+  { label: "Experience", href: "/experience", hint: "Timeline of every role" },
+  { label: "Projects", href: "/projects", hint: "Filterable project grid" },
+  { label: "Certifications", href: "/certifications", hint: "17 certs in 5 categories" },
+  { label: "Wine — Sommelier", href: "/sommelier", hint: "33-dish pairing tool" },
+  { label: "Water — Lifeguard", href: "/water", hint: "Emergency-scenario tool" },
+  { label: "Language — Interpreter", href: "/language", hint: "Bulgarian phrasebook" },
+  { label: "Gallery", href: "/gallery", hint: "Lightbox" },
+  { label: "Now", href: "/now", hint: "What I'm doing this month" },
+  { label: "Uses", href: "/uses", hint: "Tools & gear" },
+  { label: "Contact", href: "/contact", hint: "Send a message" },
+];
+pages.forEach((p) =>
+  items.push({
+    kind: "Page",
+    label: p.label,
+    hint: p.hint,
+    href: p.href,
+    searchKey: `${p.label} ${p.hint ?? ""}`.toLowerCase(),
+  }),
+);
+
+// Experience entries
+experience.forEach((e) =>
+  items.push({
+    kind: "Role",
+    label: `${e.data.title}`,
+    hint: e.data.employer,
+    href: `/experience#${e.id}`,
+    searchKey: `${e.data.title} ${e.data.employer} ${e.data.category} ${e.data.summary}`.toLowerCase(),
+  }),
+);
+
+// Certifications
+certifications.forEach((c) =>
+  items.push({
+    kind: "Certification",
+    label: c.data.title,
+    hint: c.data.issuer,
+    href: `/certifications#cat-${c.data.category}`,
+    searchKey: `${c.data.title} ${c.data.issuer} ${c.data.category}`.toLowerCase(),
+  }),
+);
+
+// Projects
+projects.forEach((p) =>
+  items.push({
+    kind: "Project",
+    label: p.data.title,
+    hint: p.data.tagline,
+    href: `/projects/${p.id}`,
+    searchKey: `${p.data.title} ${p.data.tagline} ${p.data.stack.join(" ")} ${p.data.tags.join(" ")}`.toLowerCase(),
+  }),
+);
+
+// Education
+education.forEach((ed) =>
+  items.push({
+    kind: "Education",
+    label: ed.data.institution,
+    hint: ed.data.degree,
+    href: "/about#",
+    searchKey: `${ed.data.institution} ${ed.data.degree} ${ed.data.location ?? ""}`.toLowerCase(),
+  }),
+);
+
+// Wine pairings
+pairings.forEach((p) =>
+  items.push({
+    kind: "Pairing",
+    label: p.data.dish,
+    hint: `→ ${p.data.wine}`,
+    href: `/sommelier#pairing-tool`,
+    searchKey: `${p.data.dish} ${p.data.wine} ${p.data.grape} ${p.data.region ?? ""}`.toLowerCase(),
+  }),
+);
+
+// Emergency scenarios
+scenarios.forEach((s) =>
+  items.push({
+    kind: "Scenario",
+    label: s.data.title,
+    hint: s.data.severity,
+    href: `/water#scenarios-tool`,
+    searchKey: `${s.data.title} ${s.data.severity} ${s.data.skills.join(" ")}`.toLowerCase(),
+  }),
+);
+
+// Phrases
+phrases.forEach((p) =>
+  items.push({
+    kind: "Phrase",
+    label: p.data.english,
+    hint: `${p.data.cyrillic} · ${p.data.pronunciation}`,
+    href: `/language#phrase-finder`,
+    searchKey: `${p.data.english} ${p.data.cyrillic} ${p.data.bulgarian} ${p.data.pronunciation} ${p.data.category}`.toLowerCase(),
+  }),
+);
+
+// External quick links
+const external = [
+  { label: "LinkedIn", hint: "todoraleksandrov", href: "https://www.linkedin.com/in/todoraleksandrov/" },
+  { label: "GitHub", hint: "todor147", href: "https://github.com/todor147" },
+  { label: "Email", hint: "todor_147@abv.bg", href: "mailto:todor_147@abv.bg" },
+];
+external.forEach((e) =>
+  items.push({
+    kind: "External",
+    label: e.label,
+    hint: e.hint,
+    href: e.href,
+    searchKey: `${e.label} ${e.hint ?? ""}`.toLowerCase(),
+  }),
+);
+---
+
+<!-- Trigger pill (desktop only) -->
+<button
+  id="cmdk-trigger"
+  type="button"
+  class="hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs transition-colors hover:border-burgundy-600 hover:text-burgundy-600 fixed bottom-6 right-6 z-30 backdrop-blur-md"
+  style="
+    border-color: color-mix(in oklab, var(--text) 18%, transparent);
+    background: color-mix(in oklab, var(--bg) 85%, transparent);
+    color: var(--text-soft);
+  "
+  aria-label="Open command palette (Ctrl/Cmd + K)"
+>
+  <span aria-hidden="true">⌕</span>
+  <span>Search</span>
+  <kbd
+    class="ml-1 px-1.5 py-0.5 rounded text-[0.65rem] font-mono"
+    style="background: color-mix(in oklab, var(--text) 10%, transparent);"
+  >⌘K</kbd>
+</button>
+
+<dialog
+  id="cmdk-dialog"
+  class="m-0 p-0 max-w-none w-full h-full bg-transparent backdrop:bg-black/60 backdrop:backdrop-blur-md"
+  aria-label="Command palette"
+>
+  <div class="min-h-full flex items-start justify-center pt-[8vh] px-4 pb-4">
+    <div
+      role="combobox"
+      aria-expanded="true"
+      aria-controls="cmdk-list"
+      class="w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+      style="
+        max-height: 76vh;
+        background: var(--bg);
+        border: 1px solid color-mix(in oklab, var(--text) 12%, transparent);
+        color: var(--text);
+      "
+    >
+      <!-- Search input -->
+      <div
+        class="flex items-center gap-3 px-5 py-4 border-b"
+        style="border-color: color-mix(in oklab, var(--text) 10%, transparent);"
+      >
+        <span aria-hidden="true" class="text-lg" style="color: var(--accent);">⌕</span>
+        <input
+          id="cmdk-input"
+          type="search"
+          placeholder="Search pages, roles, wines, phrases…"
+          autocomplete="off"
+          spellcheck="false"
+          class="flex-1 bg-transparent border-0 focus:outline-none text-base"
+          style="color: var(--text);"
+          aria-label="Search"
+          aria-autocomplete="list"
+          aria-controls="cmdk-list"
+        />
+        <kbd
+          class="px-2 py-0.5 rounded text-[0.7rem] font-mono shrink-0"
+          style="background: color-mix(in oklab, var(--text) 8%, transparent); color: var(--text-soft);"
+        >ESC</kbd>
+      </div>
+
+      <!-- Results -->
+      <ul
+        id="cmdk-list"
+        class="overflow-y-auto flex-1"
+        role="listbox"
+        aria-label="Results"
+      >
+        {items.map((item, i) => (
+          <li
+            role="option"
+            data-cmdk-item
+            data-key={item.searchKey}
+            data-href={item.href}
+            data-external={item.href.startsWith("http") || item.href.startsWith("mailto") ? "true" : "false"}
+            data-index={i}
+            aria-selected={i === 0 ? "true" : "false"}
+            class="px-5 py-3 cursor-pointer flex items-baseline justify-between gap-3 transition-colors"
+            style={i === 0 ? "background: color-mix(in oklab, var(--accent) 10%, transparent);" : ""}
+          >
+            <div class="min-w-0 flex-1">
+              <p class="font-medium text-sm truncate">{item.label}</p>
+              {item.hint && (
+                <p class="text-xs truncate" style="color: var(--text-soft);">
+                  {item.hint}
+                </p>
+              )}
+            </div>
+            <span
+              class="shrink-0 text-[0.7rem] tracking-[0.14em] uppercase px-2 py-0.5 rounded-full"
+              style="background: color-mix(in oklab, var(--text) 6%, transparent); color: var(--text-soft);"
+            >
+              {item.kind}
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      <p
+        id="cmdk-empty"
+        hidden
+        class="px-5 py-10 text-center text-sm"
+        style="color: var(--text-soft);"
+      >
+        Nothing matches. Try a different word.
+      </p>
+
+      <!-- Footer hints -->
+      <div
+        class="px-5 py-3 border-t flex items-center justify-between text-[0.7rem]"
+        style="
+          border-color: color-mix(in oklab, var(--text) 10%, transparent);
+          color: var(--text-soft);
+          background: color-mix(in oklab, var(--text) 3%, transparent);
+        "
+      >
+        <span class="flex items-center gap-2">
+          <kbd class="px-1.5 py-0.5 rounded font-mono" style="background: color-mix(in oklab, var(--text) 10%, transparent);">↑↓</kbd>
+          to navigate
+        </span>
+        <span class="flex items-center gap-2">
+          <kbd class="px-1.5 py-0.5 rounded font-mono" style="background: color-mix(in oklab, var(--text) 10%, transparent);">↵</kbd>
+          to open
+        </span>
+        <span class="hidden sm:flex items-center gap-2">
+          <kbd class="px-1.5 py-0.5 rounded font-mono" style="background: color-mix(in oklab, var(--text) 10%, transparent);">esc</kbd>
+          to close
+        </span>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script is:inline>
+  (function () {
+    const trigger = document.getElementById("cmdk-trigger");
+    const dialog = document.getElementById("cmdk-dialog");
+    const input = document.getElementById("cmdk-input");
+    const list = document.getElementById("cmdk-list");
+    const empty = document.getElementById("cmdk-empty");
+    if (!dialog || !input || !list) return;
+
+    const allItems = Array.from(list.querySelectorAll("[data-cmdk-item]"));
+    let visible = allItems.slice();
+    let cursor = 0;
+
+    function updateSelection() {
+      visible.forEach((el, i) => {
+        const selected = i === cursor;
+        el.setAttribute("aria-selected", selected ? "true" : "false");
+        el.style.background = selected
+          ? "color-mix(in oklab, var(--accent) 10%, transparent)"
+          : "";
+        if (selected) {
+          el.scrollIntoView({ block: "nearest" });
+        }
+      });
+    }
+
+    function applyFilter() {
+      const q = input.value.trim().toLowerCase();
+      visible = [];
+      allItems.forEach((el) => {
+        const match = !q || el.dataset.key.includes(q);
+        el.hidden = !match;
+        if (match) visible.push(el);
+      });
+      cursor = 0;
+      if (empty) empty.hidden = visible.length > 0;
+      updateSelection();
+    }
+
+    function openPalette() {
+      input.value = "";
+      applyFilter();
+      dialog.showModal();
+      document.body.style.overflow = "hidden";
+      requestAnimationFrame(() => input.focus());
+    }
+
+    function closePalette() {
+      if (dialog.open) dialog.close();
+      document.body.style.overflow = "";
+    }
+
+    function activate(el) {
+      const href = el.dataset.href;
+      const external = el.dataset.external === "true";
+      closePalette();
+      if (!href) return;
+      if (external) {
+        window.open(href, href.startsWith("mailto") ? "_self" : "_blank", "noopener");
+      } else {
+        window.location.href = href;
+      }
+    }
+
+    // Open via ⌘K / Ctrl+K
+    document.addEventListener("keydown", (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        if (dialog.open) closePalette();
+        else openPalette();
+        return;
+      }
+      if (e.key === "/" && !dialog.open) {
+        const tag = document.activeElement?.tagName;
+        if (tag !== "INPUT" && tag !== "TEXTAREA") {
+          e.preventDefault();
+          openPalette();
+        }
+      }
+    });
+
+    trigger?.addEventListener("click", openPalette);
+
+    // Search input
+    input.addEventListener("input", applyFilter);
+
+    // Keyboard nav inside the dialog
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        cursor = Math.min(cursor + 1, visible.length - 1);
+        updateSelection();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        cursor = Math.max(cursor - 1, 0);
+        updateSelection();
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        if (visible[cursor]) activate(visible[cursor]);
+      }
+    });
+
+    // Click on item
+    list.addEventListener("click", (e) => {
+      const li = e.target.closest("[data-cmdk-item]");
+      if (li) activate(li);
+    });
+
+    // Click on backdrop closes
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) closePalette();
+    });
+
+    dialog.addEventListener("close", () => {
+      document.body.style.overflow = "";
+    });
+  })();
+</script>

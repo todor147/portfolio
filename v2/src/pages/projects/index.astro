@@ -1,0 +1,136 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Container from "../../components/Container.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+
+const projects = await getCollection("projects");
+const sorted = projects.sort((a, b) => a.data.order - b.data.order);
+
+// Collect unique tags + counts
+const tagCounts = new Map<string, number>();
+for (const project of sorted) {
+  for (const tag of project.data.tags) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  }
+}
+
+const tagLabels: Record<string, string> = {
+  astro: "Astro",
+  tailwind: "Tailwind",
+  typescript: "TypeScript",
+  javascript: "JavaScript",
+  php: "PHP",
+  mysql: "MySQL",
+  bootstrap: "Bootstrap",
+  html: "HTML",
+  css: "CSS",
+};
+
+const allTags = [...tagCounts.entries()]
+  .sort((a, b) => b[1] - a[1])
+  .map(([id, count]) => ({ id, label: tagLabels[id] ?? id, count }));
+---
+
+<BaseLayout
+  title="Projects — Todor Aleksandrov"
+  description="A small, growing collection of things I've built — a four-person PHP/MySQL marketplace, a hand-coded charity microsite, and the Astro portfolio you're reading. Filter by stack."
+>
+  <Container size="wide" class="py-(--spacing-section)">
+    <SectionHeader
+      eyebrow="Work"
+      title="Projects"
+      subtitle={`${sorted.length} projects so far — from a four-person CS4116 marketplace to the editorial portfolio you're reading.`}
+      level={1}
+      rule
+    />
+
+    <!-- TAG FILTERS -->
+    <div
+      class="mt-12 mb-10 flex flex-wrap items-center gap-2"
+      role="group"
+      aria-label="Filter by tag"
+    >
+      <button
+        type="button"
+        class="proj-tag-btn active px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
+        data-tag="all"
+        style="border-color: var(--accent); background: var(--accent); color: var(--color-cream);"
+      >
+        All <span class="opacity-75 font-mono ml-1">{sorted.length}</span>
+      </button>
+      {allTags.map((tag) => (
+        <button
+          type="button"
+          class="proj-tag-btn px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all hover:border-burgundy-600 hover:text-burgundy-600"
+          data-tag={tag.id}
+          style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text-soft);"
+        >
+          {tag.label} <span class="opacity-60 font-mono ml-1">{tag.count}</span>
+        </button>
+      ))}
+    </div>
+
+    <!-- PROJECT GRID -->
+    <div
+      id="proj-grid"
+      class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+    >
+      {sorted.map((project) => (
+        <div
+          class="proj-cell"
+          data-tags={project.data.tags.join(",")}
+        >
+          <ProjectCard project={project} />
+        </div>
+      ))}
+    </div>
+
+    <p
+      id="proj-empty"
+      hidden
+      class="mt-10 text-sm text-center"
+      style="color:var(--text-soft)"
+    >
+      No projects match this tag. Try another?
+    </p>
+  </Container>
+</BaseLayout>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>(".proj-tag-btn");
+  const cells = document.querySelectorAll<HTMLElement>(".proj-cell");
+  const empty = document.getElementById("proj-empty");
+
+  function setActive(active: HTMLButtonElement) {
+    buttons.forEach((btn) => {
+      const isActive = btn === active;
+      btn.classList.toggle("active", isActive);
+      if (isActive) {
+        btn.style.borderColor = "var(--accent)";
+        btn.style.background = "var(--accent)";
+        btn.style.color = "var(--color-cream)";
+      } else {
+        btn.style.borderColor = "color-mix(in oklab, var(--text) 15%, transparent)";
+        btn.style.background = "transparent";
+        btn.style.color = "var(--text-soft)";
+      }
+    });
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      setActive(btn);
+      const tag = btn.dataset.tag ?? "all";
+      let anyVisible = false;
+      cells.forEach((cell) => {
+        const tags = (cell.dataset.tags ?? "").split(",");
+        const visible = tag === "all" || tags.includes(tag);
+        cell.hidden = !visible;
+        if (visible) anyVisible = true;
+      });
+      if (empty) empty.hidden = anyVisible;
+    });
+  });
+</script>

@@ -1,0 +1,190 @@
+---
+import { getCollection } from "astro:content";
+
+const phrases = await getCollection("phrases");
+
+const categoryOrder = [
+  "greetings",
+  "restaurant",
+  "directions",
+  "everyday",
+  "sommelier",
+  "emergency",
+] as const;
+
+type Cat = (typeof categoryOrder)[number];
+
+const categoryLabels: Record<Cat, string> = {
+  greetings: "Greetings",
+  restaurant: "Restaurant",
+  directions: "Directions",
+  everyday: "Everyday",
+  sommelier: "Wine & food",
+  emergency: "Emergency",
+};
+
+const counts = categoryOrder.map((cat) => ({
+  id: cat,
+  label: categoryLabels[cat],
+  count: phrases.filter((p) => p.data.category === cat).length,
+}));
+
+const sorted = phrases.sort((a, b) => {
+  const catDiff =
+    categoryOrder.indexOf(a.data.category as Cat) -
+    categoryOrder.indexOf(b.data.category as Cat);
+  if (catDiff !== 0) return catDiff;
+  return a.data.english.localeCompare(b.data.english);
+});
+---
+
+<section
+  id="phrase-finder"
+  class="relative overflow-hidden rounded-[2rem] p-8 md:p-12 lg:p-14"
+  style="
+    background: linear-gradient(160deg, #1F1A2E 0%, #3A2945 100%);
+    color: #F5F0E8;
+  "
+>
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 opacity-[0.04] pointer-events-none mix-blend-overlay"
+    style="background-image: radial-gradient(currentColor 1px, transparent 1px); background-size: 4px 4px;"
+  >
+  </div>
+
+  <div class="relative">
+    <p
+      class="text-[0.8125rem] font-medium tracking-[0.18em] uppercase"
+      style="color: #C4A6D4;"
+    >
+      Thirty phrases
+    </p>
+    <h2
+      class="font-display tracking-[-0.02em] mt-3"
+      style="font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1.05; color: #FFFFFF;"
+    >
+      A starter Bulgarian phrasebook.
+    </h2>
+    <p class="mt-3 text-lg max-w-2xl" style="color: rgba(245, 240, 232, 0.78)">
+      Useful phrases I'd actually teach someone on their first trip — with Cyrillic, Latin transliteration, and a phonetic guide for English speakers.
+    </p>
+
+    <!-- Filter pills -->
+    <div
+      class="mt-8 flex flex-wrap items-center gap-2"
+      role="group"
+      aria-label="Filter phrases by category"
+    >
+      <button
+        type="button"
+        class="phrase-cat-btn active px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
+        data-category="all"
+        style="border-color: #C4A6D4; background: #C4A6D4; color: #1F1A2E;"
+      >
+        All <span class="font-mono ml-1 opacity-80">{phrases.length}</span>
+      </button>
+      {counts.map((cat) => (
+        <button
+          type="button"
+          class="phrase-cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
+          data-category={cat.id}
+          style="border-color: rgba(196, 166, 212, 0.35); color: rgba(245, 240, 232, 0.75);"
+        >
+          {cat.label} <span class="font-mono ml-1 opacity-60">{cat.count}</span>
+        </button>
+      ))}
+    </div>
+
+    <!-- Phrase cards -->
+    <div id="phrase-grid" class="mt-8 grid gap-3 sm:grid-cols-2">
+      {sorted.map((p) => (
+        <article
+          class="phrase-card rounded-2xl p-5"
+          data-category={p.data.category}
+          style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1);"
+        >
+          <div class="flex items-start justify-between gap-2">
+            <p class="font-display text-lg leading-tight tracking-[-0.01em]" style="color: #FFFFFF">
+              {p.data.english}
+            </p>
+            <span
+              class="shrink-0 text-[0.65rem] font-medium tracking-[0.14em] uppercase px-2 py-0.5 rounded-full"
+              style="background: rgba(196, 166, 212, 0.18); color: #C4A6D4;"
+            >
+              {categoryLabels[p.data.category as Cat]}
+            </span>
+          </div>
+
+          <p
+            class="mt-3 font-display text-2xl tracking-[-0.01em]"
+            style="color: #C4A6D4"
+            lang="bg"
+          >
+            {p.data.cyrillic}
+          </p>
+
+          <div class="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm" style="color: rgba(245, 240, 232, 0.7)">
+            <span class="font-mono">{p.data.bulgarian}</span>
+            <span aria-hidden="true" class="opacity-50">·</span>
+            <span class="italic">{p.data.pronunciation}</span>
+          </div>
+
+          {p.data.note && (
+            <p
+              class="mt-3 text-xs leading-relaxed pl-3 border-l"
+              style="color: rgba(245, 240, 232, 0.6); border-color: rgba(196, 166, 212, 0.35);"
+            >
+              {p.data.note}
+            </p>
+          )}
+        </article>
+      ))}
+    </div>
+
+    <p
+      id="phrase-empty"
+      hidden
+      class="mt-6 text-center text-sm"
+      style="color: rgba(245, 240, 232, 0.55);"
+    >
+      No phrases in this category.
+    </p>
+  </div>
+</section>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>(".phrase-cat-btn");
+  const cards = document.querySelectorAll<HTMLElement>(".phrase-card");
+  const empty = document.getElementById("phrase-empty");
+
+  function activate(active: HTMLButtonElement) {
+    buttons.forEach((btn) => {
+      const isActive = btn === active;
+      btn.classList.toggle("active", isActive);
+      if (isActive) {
+        btn.style.borderColor = "#C4A6D4";
+        btn.style.background = "#C4A6D4";
+        btn.style.color = "#1F1A2E";
+      } else {
+        btn.style.borderColor = "rgba(196, 166, 212, 0.35)";
+        btn.style.background = "transparent";
+        btn.style.color = "rgba(245, 240, 232, 0.75)";
+      }
+    });
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      activate(btn);
+      const cat = btn.dataset.category ?? "all";
+      let anyVisible = false;
+      cards.forEach((card) => {
+        const visible = cat === "all" || card.dataset.category === cat;
+        card.hidden = !visible;
+        if (visible) anyVisible = true;
+      });
+      if (empty) empty.hidden = anyVisible;
+    });
+  });
+</script>

@@ -1,0 +1,78 @@
+---
+interface Props {
+  variant?: "primary" | "outline" | "ghost";
+  size?: "sm" | "md" | "lg";
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  target?: string;
+  rel?: string;
+  arrow?: boolean;
+  magnetic?: boolean;
+  class?: string;
+  id?: string;
+  ariaLabel?: string;
+}
+
+const {
+  variant = "primary",
+  size = "md",
+  href,
+  type = "button",
+  target,
+  rel,
+  arrow = false,
+  magnetic = false,
+  class: className = "",
+  id,
+  ariaLabel,
+} = Astro.props;
+
+const base =
+  "group inline-flex items-center gap-2 font-medium tracking-[0.01em] transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-burgundy-600 rounded-full whitespace-nowrap";
+
+const variants = {
+  primary:
+    "bg-burgundy-600 text-cream hover:bg-burgundy-700 active:bg-burgundy-800 shadow-sm hover:shadow-md",
+  outline:
+    "border border-burgundy-600 text-burgundy-600 hover:bg-burgundy-600 hover:text-cream",
+  ghost:
+    "text-burgundy-600 hover:text-burgundy-700 underline decoration-burgundy-300 underline-offset-4 decoration-1 hover:decoration-burgundy-600 px-0",
+};
+
+const sizes = {
+  sm: "px-4 py-2 text-sm",
+  md: "px-6 py-2.5 text-base",
+  lg: "px-8 py-3.5 text-lg",
+};
+
+const finalClass = [
+  base,
+  variants[variant],
+  variant !== "ghost" ? sizes[size] : "text-base",
+  className,
+].join(" ");
+
+const Tag = href ? "a" : "button";
+const finalRel = rel ?? (target === "_blank" ? "noopener noreferrer" : undefined);
+---
+
+<Tag
+  id={id}
+  href={href}
+  type={!href ? type : undefined}
+  target={target}
+  rel={finalRel}
+  aria-label={ariaLabel}
+  data-magnetic={magnetic ? "" : undefined}
+  class={finalClass}
+>
+  <slot />
+  {arrow && (
+    <span
+      aria-hidden="true"
+      class="inline-block transition-transform duration-300 group-hover:translate-x-1"
+    >
+      →
+    </span>
+  )}
+</Tag>

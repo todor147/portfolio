@@ -1,0 +1,42 @@
+# Netlify configuration for Portfolio v2.0
+#
+# CUTOVER INSTRUCTIONS — when you're ready to switch from the v1 site to v2:
+#
+#   1. Copy this file to the REPO ROOT:
+#        cp v2/netlify.toml netlify.toml
+#
+#   2. Commit and push. Netlify will read the root netlify.toml, run
+#      `npm install && npm run build` inside the v2/ folder, and publish
+#      v2/dist/ — replacing the current live site.
+#
+#   3. The v1 files (root index.html, style.css, etc.) are kept in place
+#      but no longer served. Roll back by deleting the root netlify.toml.
+
+[build]
+  base    = "v2"
+  command = "npm install && npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Long cache on hashed asset files (Astro emits hashes in filenames).
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Standard cache for raw images served from /assets.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# Security headers for every response.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options       = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
+    Permissions-Policy     = "camera=(), microphone=(), geolocation=()"

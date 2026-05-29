@@ -1,0 +1,264 @@
+@import "tailwindcss";
+@import "@fontsource-variable/fraunces/index.css";
+@import "@fontsource-variable/inter/index.css";
+
+@theme {
+  /* Brand palette */
+  --color-burgundy-900: #4A1218;
+  --color-burgundy-800: #5E1822;
+  --color-burgundy-700: #6E1B28;
+  --color-burgundy-600: #7B1E2D;
+  --color-burgundy-500: #92364A;
+  --color-burgundy-400: #A95A6B;
+  --color-burgundy-300: #C28892;
+  --color-burgundy-200: #E0B8BF;
+  --color-burgundy-100: #F1DCE0;
+
+  /* Neutrals — warm-leaning */
+  --color-cream: #FAF6F0;
+  --color-parchment: #F0E9DD;
+  --color-ink: #1A1614;
+  --color-ink-soft: #4A4239;
+  --color-charcoal: #2A2520;
+  --color-charcoal-soft: #3A332C;
+
+  /* Accent */
+  --color-gold: #B8860B;
+  --color-gold-soft: #D4A736;
+
+  /* Typography */
+  --font-display: "Fraunces Variable", "Fraunces", Georgia, serif;
+  --font-sans: "Inter Variable", "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Type scale (fluid via clamp) */
+  --text-display: clamp(3.5rem, 8vw, 6rem);
+  --text-h1: clamp(2.5rem, 5vw, 4rem);
+  --text-h2: clamp(2rem, 3.5vw, 2.75rem);
+  --text-h3: clamp(1.375rem, 2vw, 1.75rem);
+  --text-eyebrow: 0.8125rem;
+
+  /* Spacing scale */
+  --spacing-section: clamp(4rem, 8vw, 8rem);
+}
+
+@layer base {
+  :root {
+    --bg: var(--color-cream);
+    --surface: var(--color-parchment);
+    --text: var(--color-ink);
+    --text-soft: var(--color-ink-soft);
+    --accent: var(--color-burgundy-600);
+    --accent-soft: var(--color-burgundy-300);
+    color-scheme: light;
+  }
+
+  :root.dark {
+    --bg: var(--color-charcoal);
+    --surface: var(--color-charcoal-soft);
+    --text: var(--color-cream);
+    --text-soft: #B8B0A5;
+    --accent: var(--color-burgundy-300);
+    --accent-soft: var(--color-burgundy-500);
+    color-scheme: dark;
+  }
+
+  html {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100dvh;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  h1, h2, h3, h4, .display {
+    font-family: var(--font-display);
+    font-feature-settings: "ss01", "ss02";
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: var(--text);
+  }
+
+  ::selection {
+    background: var(--color-burgundy-600);
+    color: var(--color-cream);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: var(--text-eyebrow);
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .display {
+    font-size: var(--text-display);
+  }
+
+  .container-edge {
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+  }
+
+  .rule {
+    height: 1px;
+    background: currentColor;
+    opacity: 0.12;
+    border: 0;
+  }
+}
+
+/* ───────────────── Scroll reveal ───────────────── */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+[data-reveal].in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ───────────────── Magnetic button ───────────────── */
+
+[data-magnetic] {
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* ───────────────── Focus visible ───────────────── */
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline-offset: 4px;
+}
+
+/* ───────────────── Native cross-document view transitions ───────────────── */
+/* Chrome/Edge get a smooth cross-fade between pages; Firefox/Safari fall back
+ * to instant navigation. Zero JS, zero framework cost. */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 280ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+/* ───────────────── Print stylesheet ───────────────── */
+/* When printed, the site reflows into a clean CV-style document. */
+@media print {
+  html, body {
+    background: #ffffff !important;
+    color: #111111 !important;
+    font-size: 11pt;
+  }
+
+  /* Hide all the chrome */
+  #site-nav,
+  footer,
+  #cmdk-trigger,
+  #cmdk-dialog,
+  .floating-arrow,
+  [data-magnetic],
+  button,
+  .scroll-indicator,
+  #pairing-tool,
+  #scenarios-tool,
+  #phrase-finder,
+  .konami-card,
+  #konami-overlay {
+    display: none !important;
+  }
+
+  /* Reset card / surface styles for print */
+  [class*="rounded-"] {
+    border-radius: 0 !important;
+    border-color: #cccccc !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0.5rem 0 !important;
+  }
+
+  /* Re-enable visibility for content */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Tighter type for paper */
+  h1 { font-size: 22pt !important; line-height: 1.1 !important; margin-bottom: 0.5rem; }
+  h2 { font-size: 16pt !important; line-height: 1.15 !important; margin-top: 1.5rem; }
+  h3 { font-size: 12pt !important; line-height: 1.2 !important; }
+  p, li { font-size: 10.5pt !important; line-height: 1.45 !important; }
+  .eyebrow { font-size: 8pt !important; color: #666 !important; }
+
+  /* No background images / decorative gradients */
+  [style*="gradient"], [style*="radial-gradient"] {
+    background: transparent !important;
+  }
+
+  /* Make links readable on paper */
+  a { color: #4a1218 !important; text-decoration: underline !important; }
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 8pt;
+    color: #666;
+  }
+  a[href^="/"]::after, a[href^="#"]::after, a[href^="mailto"]::after { content: ""; }
+
+  /* Page breaks */
+  section, article { break-inside: avoid; }
+  h1, h2, h3 { break-after: avoid; }
+  img { max-width: 100% !important; height: auto !important; break-inside: avoid; }
+}
