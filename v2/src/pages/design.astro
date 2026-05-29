@@ -1,0 +1,365 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/Container.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import Button from "../components/Button.astro";
+import Card from "../components/Card.astro";
+import Tag from "../components/Tag.astro";
+
+// Color groups for the swatch grid
+const burgundy = [
+  ["100", "#F1DCE0"],
+  ["200", "#E0B8BF"],
+  ["300", "#C28892"],
+  ["400", "#A95A6B"],
+  ["500", "#92364A"],
+  ["600", "#7B1E2D"],
+  ["700", "#6E1B28"],
+  ["800", "#5E1822"],
+  ["900", "#4A1218"],
+];
+
+const neutrals = [
+  ["Cream", "#FAF6F0", "page bg, light"],
+  ["Parchment", "#F0E9DD", "surfaces, light"],
+  ["Ink", "#1A1614", "body text, light"],
+  ["Ink soft", "#4A4239", "muted text, light"],
+  ["Charcoal", "#2A2520", "page bg, dark"],
+  ["Charcoal soft", "#3A332C", "surfaces, dark"],
+];
+
+const accents = [
+  ["Gold", "#B8860B", "awards & highlights"],
+  ["Gold soft", "#D4A736", "hover, decoration"],
+];
+
+const typeScale = [
+  ["Display", "clamp(3.5rem, 8vw, 6rem)", "display", "Fraunces"],
+  ["H1", "clamp(2.5rem, 5vw, 4rem)", "h1", "Fraunces"],
+  ["H2", "clamp(2rem, 3.5vw, 2.75rem)", "h2", "Fraunces"],
+  ["H3", "clamp(1.375rem, 2vw, 1.75rem)", "h3", "Fraunces"],
+  ["Body large", "1.125rem", "body-lg", "Inter"],
+  ["Body", "1rem", "body", "Inter"],
+  ["Small", "0.875rem", "small", "Inter"],
+  ["Eyebrow", "0.8125rem · uppercase · tracked", "eyebrow", "Inter"],
+];
+---
+
+<BaseLayout title="Design System — Portfolio v2">
+  <Container size="wide" class="py-(--spacing-section) space-y-24">
+    <!-- INTRO -->
+    <section>
+      <SectionHeader
+        eyebrow="Style guide"
+        title="Design system"
+        subtitle="The visual contract for Portfolio v2 — every color, type style and component used across the site. Open this page side-by-side with a real page to catch drift."
+        level={1}
+        rule
+      />
+    </section>
+
+    <!-- COLOR -->
+    <section>
+      <SectionHeader
+        eyebrow="01 · Color"
+        title="Palette"
+        subtitle="Burgundy as the editorial accent, cream and ink as the canvas, gold as quiet punctuation. All exposed as Tailwind v4 theme tokens."
+      />
+
+      <div class="mt-12 space-y-12">
+        <div>
+          <h3 class="font-display text-2xl mb-4">Burgundy</h3>
+          <div class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-2">
+            {burgundy.map(([step, hex]) => (
+              <div class="space-y-2">
+                <div
+                  class="aspect-square rounded-lg border border-[color-mix(in_oklab,var(--text)_8%,transparent)]"
+                  style={`background:${hex}`}
+                ></div>
+                <p class="text-xs font-mono" style="color:var(--text-soft)">
+                  {step}
+                </p>
+                <p class="text-[0.7rem] font-mono" style="color:var(--text-soft)">
+                  {hex}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h3 class="font-display text-2xl mb-4">Neutrals</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            {neutrals.map(([name, hex, role]) => (
+              <Card variant="outline" padding="sm">
+                <div
+                  class="h-16 rounded-md mb-3 border border-[color-mix(in_oklab,var(--text)_8%,transparent)]"
+                  style={`background:${hex}`}
+                ></div>
+                <p class="text-sm font-medium">{name}</p>
+                <p class="text-xs font-mono mt-0.5" style="color:var(--text-soft)">{hex}</p>
+                <p class="text-xs mt-1" style="color:var(--text-soft)">{role}</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h3 class="font-display text-2xl mb-4">Accent</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {accents.map(([name, hex, role]) => (
+              <Card variant="outline" padding="sm">
+                <div
+                  class="h-16 rounded-md mb-3"
+                  style={`background:${hex}`}
+                ></div>
+                <p class="text-sm font-medium">{name}</p>
+                <p class="text-xs font-mono mt-0.5" style="color:var(--text-soft)">{hex}</p>
+                <p class="text-xs mt-1" style="color:var(--text-soft)">{role}</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TYPOGRAPHY -->
+    <section>
+      <SectionHeader
+        eyebrow="02 · Typography"
+        title="Type pair"
+        subtitle="Fraunces Variable for display headlines. Inter Variable for everything else. Sizes use clamp() for fluid scaling — never set a fixed pixel value."
+      />
+
+      <div class="mt-12 space-y-10">
+        {typeScale.map(([label, size, kind, family]) => (
+          <div
+            class="grid md:grid-cols-[14rem_1fr] gap-6 items-baseline pb-8"
+            style="border-bottom:1px solid color-mix(in oklab, var(--text) 8%, transparent)"
+          >
+            <div class="space-y-1">
+              <p class="eyebrow">{label}</p>
+              <p class="text-xs font-mono" style="color:var(--text-soft)">{size}</p>
+              <p class="text-xs" style="color:var(--text-soft)">{family}</p>
+            </div>
+            <div>
+              {kind === "display" && (
+                <p class="font-display tracking-[-0.02em]" style="font-size:var(--text-display); line-height:1.02">
+                  Fine wines & fine code
+                </p>
+              )}
+              {kind === "h1" && (
+                <p class="font-display tracking-[-0.02em]" style="font-size:var(--text-h1); line-height:1.05">
+                  Headline one — the page title
+                </p>
+              )}
+              {kind === "h2" && (
+                <p class="font-display tracking-[-0.02em]" style="font-size:var(--text-h2); line-height:1.1">
+                  Headline two — the section title
+                </p>
+              )}
+              {kind === "h3" && (
+                <p class="font-display tracking-[-0.02em]" style="font-size:var(--text-h3); line-height:1.2">
+                  Headline three — a card title
+                </p>
+              )}
+              {kind === "body-lg" && (
+                <p class="text-lg leading-relaxed max-w-2xl" style="color:var(--text-soft)">
+                  Larger body for introductory paragraphs and lede copy. Inter at 18 / 28 reads cleanly at this size and pairs beautifully with Fraunces above.
+                </p>
+              )}
+              {kind === "body" && (
+                <p class="text-base leading-relaxed max-w-2xl" style="color:var(--text)">
+                  Standard body copy. Should always run wider than ~70 characters per line for comfortable reading.
+                </p>
+              )}
+              {kind === "small" && (
+                <p class="text-sm" style="color:var(--text-soft)">
+                  Small text — for metadata, footnotes, and dense UI labels.
+                </p>
+              )}
+              {kind === "eyebrow" && <p class="eyebrow">Section eyebrow</p>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- BUTTONS -->
+    <section>
+      <SectionHeader
+        eyebrow="03 · Components"
+        title="Buttons"
+        subtitle="Pill-shaped, three variants, three sizes. The arrow flag adds an animated chevron that nudges on hover."
+      />
+
+      <div class="mt-12 space-y-8">
+        <div>
+          <p class="eyebrow mb-4">Variants</p>
+          <div class="flex flex-wrap gap-3">
+            <Button variant="primary" arrow>Primary</Button>
+            <Button variant="outline" arrow>Outline</Button>
+            <Button variant="ghost" arrow>Ghost link</Button>
+          </div>
+        </div>
+
+        <div>
+          <p class="eyebrow mb-4">Sizes</p>
+          <div class="flex flex-wrap items-center gap-3">
+            <Button size="sm">Small</Button>
+            <Button size="md">Medium</Button>
+            <Button size="lg" arrow>Large</Button>
+          </div>
+        </div>
+
+        <div>
+          <p class="eyebrow mb-4">As link</p>
+          <div class="flex flex-wrap gap-3">
+            <Button href="/" arrow>Internal link</Button>
+            <Button
+              href="https://astro.build"
+              target="_blank"
+              variant="outline"
+              arrow
+            >
+              External
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARDS -->
+    <section>
+      <SectionHeader
+        eyebrow="04 · Components"
+        title="Cards"
+        subtitle="Surfaces for grouping content. Surface (default), outline (thinner border), and subtle (translucent fill)."
+      />
+
+      <div class="mt-12 grid gap-4 md:grid-cols-3">
+        <Card variant="surface">
+          <p class="eyebrow mb-2">Surface</p>
+          <h3 class="font-display text-2xl mb-2">Card title</h3>
+          <p class="text-sm" style="color:var(--text-soft)">
+            Filled background with a subtle border. The default for content blocks.
+          </p>
+        </Card>
+
+        <Card variant="outline">
+          <p class="eyebrow mb-2">Outline</p>
+          <h3 class="font-display text-2xl mb-2">Card title</h3>
+          <p class="text-sm" style="color:var(--text-soft)">
+            Transparent with a single-line border. Use for restraint.
+          </p>
+        </Card>
+
+        <Card variant="subtle">
+          <p class="eyebrow mb-2">Subtle</p>
+          <h3 class="font-display text-2xl mb-2">Card title</h3>
+          <p class="text-sm" style="color:var(--text-soft)">
+            Faint tint, no border. Soft grouping that doesn't compete.
+          </p>
+        </Card>
+
+        <Card variant="surface" hover>
+          <p class="eyebrow mb-2">Hover lift</p>
+          <h3 class="font-display text-2xl mb-2">Hover me</h3>
+          <p class="text-sm" style="color:var(--text-soft)">
+            Add the <code>hover</code> prop for a subtle translate + shadow on hover.
+          </p>
+        </Card>
+
+        <Card href="/" hover>
+          <p class="eyebrow mb-2">Linked</p>
+          <h3 class="font-display text-2xl mb-2">Clickable card →</h3>
+          <p class="text-sm" style="color:var(--text-soft)">
+            Pass <code>href</code> and the card becomes a clickable link.
+          </p>
+        </Card>
+      </div>
+    </section>
+
+    <!-- TAGS -->
+    <section>
+      <SectionHeader
+        eyebrow="05 · Components"
+        title="Tags"
+        subtitle="Small pill labels — categories, tech stacks, statuses. Three variants and two sizes."
+      />
+
+      <div class="mt-12 space-y-6">
+        <div>
+          <p class="eyebrow mb-3">Variants</p>
+          <div class="flex flex-wrap gap-2">
+            <Tag>Default</Tag>
+            <Tag variant="accent">Accent</Tag>
+            <Tag variant="soft">Soft</Tag>
+          </div>
+        </div>
+
+        <div>
+          <p class="eyebrow mb-3">Stack example</p>
+          <div class="flex flex-wrap gap-2">
+            <Tag>Astro</Tag>
+            <Tag>Tailwind</Tag>
+            <Tag>TypeScript</Tag>
+            <Tag>GSAP</Tag>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LAYOUT PRIMITIVES -->
+    <section>
+      <SectionHeader
+        eyebrow="06 · Layout"
+        title="Spacing & layout"
+        subtitle="The container is centered with fluid padding. Section spacing uses the --spacing-section token (clamps from 4rem to 8rem)."
+      />
+
+      <div class="mt-12 space-y-6">
+        <Card variant="outline">
+          <p class="eyebrow mb-3">Container sizes</p>
+          <ul class="text-sm space-y-1" style="color:var(--text-soft)">
+            <li><code>narrow</code> — max-w-3xl · long-form reading width</li>
+            <li><code>default</code> — max-w-7xl · most pages</li>
+            <li><code>wide</code> — max-w-[88rem] · galleries, timelines</li>
+          </ul>
+        </Card>
+
+        <Card variant="outline">
+          <p class="eyebrow mb-3">Section header</p>
+          <p class="text-sm mb-6" style="color:var(--text-soft)">
+            The same SectionHeader component, in <code>align="center"</code> mode:
+          </p>
+          <SectionHeader
+            eyebrow="Eyebrow"
+            title="A centered section title"
+            subtitle="With a short subtitle line beneath."
+            align="center"
+            rule
+          />
+        </Card>
+      </div>
+    </section>
+
+    <!-- DARK MODE NOTE -->
+    <section>
+      <SectionHeader
+        eyebrow="07 · Theme"
+        title="Light & dark"
+        subtitle="Toggle the theme button in the top nav (cycles Auto → Light → Dark). All tokens use semantic CSS variables, so components flip automatically."
+      />
+
+      <Card variant="subtle" class="mt-8">
+        <p class="text-sm" style="color:var(--text-soft)">
+          The button icons mean:
+          <span class="font-mono ml-2">◐</span> auto ·
+          <span class="font-mono ml-2">○</span> light ·
+          <span class="font-mono ml-2">●</span> dark
+        </p>
+      </Card>
+    </section>
+  </Container>
+</BaseLayout>

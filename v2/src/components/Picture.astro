@@ -1,0 +1,54 @@
+---
+/**
+ * <Picture> — serves WebP with a JPG/PNG fallback.
+ *
+ * Pass the original asset filename (the one that lives in public/assets/).
+ * The component emits a <picture> with the .webp variant first so modern
+ * browsers grab the smaller file, and the original as the <img> fallback.
+ *
+ * Run `npm run optimize:images` to (re)generate the .webp variants.
+ */
+
+interface Props {
+  src: string;                     // e.g. "profile pic.jpg" — original filename
+  alt: string;
+  class?: string;
+  width?: number | string;
+  height?: number | string;
+  loading?: "lazy" | "eager";
+  decoding?: "async" | "sync" | "auto";
+  fetchpriority?: "high" | "low" | "auto";
+  sizes?: string;
+}
+
+const {
+  src,
+  alt,
+  class: className = "",
+  width,
+  height,
+  loading = "lazy",
+  decoding = "async",
+  fetchpriority,
+  sizes,
+} = Astro.props;
+
+const lastDot = src.lastIndexOf(".");
+const base = lastDot === -1 ? src : src.slice(0, lastDot);
+const webp = `/assets/${base}.webp`;
+const fallback = `/assets/${src}`;
+---
+
+<picture>
+  <source srcset={webp} type="image/webp" sizes={sizes} />
+  <img
+    src={fallback}
+    alt={alt}
+    class={className}
+    width={width}
+    height={height}
+    loading={loading}
+    decoding={decoding}
+    fetchpriority={fetchpriority}
+  />
+</picture>

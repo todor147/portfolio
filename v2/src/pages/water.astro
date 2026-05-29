@@ -1,0 +1,322 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/Container.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import Card from "../components/Card.astro";
+import Button from "../components/Button.astro";
+import EmergencyScenarios from "../components/EmergencyScenarios.astro";
+import { formatMonthYear } from "../lib/dates";
+
+const certifications = await getCollection("certifications");
+const safetyCerts = certifications
+  .filter((c) => c.data.category === "safety")
+  .sort((a, b) => b.data.issued.localeCompare(a.data.issued));
+
+const journey = [
+  {
+    year: "Late 2024",
+    place: "The deep end",
+    role: "Learning to swim, properly",
+    note: "Always loved the water — never actually learned to swim properly until adult lessons at Swimmax in 2024. First full length without panic around Halloween. Joined UL Swim Club a few weeks later and have been a member since.",
+    icon: "swimmax.png",
+    iconAlt: "Swimmax Swim School",
+  },
+  {
+    year: "Feb – Aug 2025",
+    place: "West Lake Aqua Park",
+    role: "Lifeguard → Lifeguard Supervisor",
+    note: "Pool Lifeguarding and AED qualifications in February, first lifeguard role at West Lake in May, promoted to Supervisor by June — running dock activities, training new starters, leading emergency drills.",
+    icon: "WLAP.jpg",
+    iconAlt: "West Lake Aqua Park",
+  },
+  {
+    year: "Oct 2025 → now",
+    place: "Beach + Askeaton + Portugal",
+    role: "Beach-qualified, swim teacher, training camp",
+    note: "Beach Lifeguard Qualification in October. Lifeguard and Swim Teacher at Askeaton Pool & Leisure since December. UL Swim Club training camp at Vila Real de Santo António, Portugal, in January 2026. Cardiac First Response — Advanced in February.",
+    icon: "Swim-Ireland.png",
+    iconAlt: "Swim Ireland",
+  },
+];
+
+const stats = [
+  { value: "18", label: "months swimming", suffix: "mo", sub: "since adult lessons, Oct 2024" },
+  { value: safetyCerts.length.toString(), label: "active safety certs", suffix: "", sub: "across 5 issuing bodies" },
+  { value: "1", label: "UL Swim Club", suffix: "", sub: "Portugal training camp '26" },
+  { value: "0", label: "fatal incidents on watch", suffix: "", sub: "the only one that matters" },
+];
+---
+
+<BaseLayout
+  title="On Water — Todor Aleksandrov"
+  description="Learned to swim properly in 2024. Eighteen months later: certified beach lifeguard, swim teacher, ten safety certifications, UL Swim Club member. The shortest path I've walked from learner to teacher."
+>
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <div
+      aria-hidden="true"
+      class="absolute inset-0 -z-10"
+      style="background:
+        radial-gradient(60% 50% at 20% 0%, color-mix(in oklab, #1B3D5A 18%, transparent), transparent 70%),
+        radial-gradient(50% 40% at 90% 70%, color-mix(in oklab, var(--accent) 8%, transparent), transparent 70%);"
+    >
+    </div>
+
+    <Container size="wide" class="pt-(--spacing-section) pb-16">
+      <div class="grid lg:grid-cols-[1.3fr_1fr] gap-10 lg:gap-16 items-center">
+        <div class="space-y-7 md:space-y-9" data-reveal>
+          <p class="eyebrow">On water</p>
+          <h1
+            class="font-display tracking-[-0.03em]"
+            style="font-size:clamp(3rem, 8vw, 6.5rem); line-height:0.98;"
+          >
+            Learned to swim
+            <em
+              class="not-italic block mt-2"
+              style="font-style: italic; color: var(--accent);"
+            >
+              in 2024. Now I teach it.
+            </em>
+          </h1>
+          <p
+            class="text-lg md:text-xl leading-relaxed max-w-xl"
+            style="color:var(--text-soft)"
+          >
+            Adult lessons completed around Halloween 2024. Eighteen months later: pool
+            and beach lifeguard certified, swim teacher at Askeaton, UL Swim Club
+            member, ten current safety qualifications. The shortest path I've ever
+            walked from learner to teacher.
+          </p>
+          <div class="flex flex-wrap gap-3 pt-2">
+            <Button href="#scenarios-tool" arrow magnetic>What would you do?</Button>
+            <Button href="/certifications#cat-safety" variant="outline">All credentials</Button>
+          </div>
+        </div>
+
+        <div class="relative" data-reveal data-reveal-delay="120">
+          <!-- Stats panel (the journey in numbers) -->
+          <div
+            class="relative rounded-[2rem] p-6 md:p-8 border overflow-hidden"
+            style="border-color: color-mix(in oklab, var(--text) 12%, transparent); background: color-mix(in oklab, var(--surface) 60%, transparent);"
+          >
+            <p class="eyebrow mb-4">In numbers</p>
+            <dl class="grid grid-cols-2 gap-y-6 gap-x-4">
+              {stats.map((s) => (
+                <div>
+                  <dt
+                    class="text-xs tracking-[0.16em] uppercase"
+                    style="color: var(--text-soft)"
+                  >
+                    {s.label}
+                  </dt>
+                  <dd
+                    class="font-display text-4xl md:text-5xl tracking-[-0.02em] mt-1"
+                    style="color: var(--accent)"
+                  >
+                    {s.value}<span class="text-2xl ml-1" style="color: var(--text-soft)">{s.suffix}</span>
+                  </dd>
+                  {s.sub && (
+                    <p class="text-[0.7rem] italic mt-1" style="color: var(--text-soft)">
+                      {s.sub}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <!-- JOURNEY -->
+  <Container size="wide" class="py-(--spacing-section)">
+    <SectionHeader
+      eyebrow="The path"
+      title="Pool → beach → instructor"
+      subtitle="The three steps that turned a summer job into a discipline."
+    />
+    <ol class="mt-12 grid gap-5 md:grid-cols-3">
+      {journey.map((step, i) => (
+        <li>
+          <Card variant="surface" padding="none" class="h-full flex flex-col">
+            <div class="p-6 flex items-center gap-4 border-b" style="border-color: color-mix(in oklab, var(--text) 8%, transparent);">
+              <img
+                src={`/assets/${step.icon}`}
+                alt={step.iconAlt}
+                class="w-14 h-14 rounded-xl object-contain bg-cream p-1.5 shrink-0"
+              />
+              <div>
+                <p class="eyebrow" style="color: var(--accent)">
+                  {String(i + 1).padStart(2, "0")} · {step.year}
+                </p>
+                <h3 class="font-display text-xl tracking-[-0.01em] mt-1 leading-tight">
+                  {step.place}
+                </h3>
+              </div>
+            </div>
+            <div class="p-6 flex-1">
+              <p class="text-sm font-medium" style="color: var(--accent)">
+                {step.role}
+              </p>
+              <p class="text-sm leading-relaxed mt-3" style="color: var(--text-soft)">
+                {step.note}
+              </p>
+            </div>
+          </Card>
+        </li>
+      ))}
+    </ol>
+  </Container>
+
+  <!-- CAMP MOMENT -->
+  <Container size="narrow" class="pb-(--spacing-section)">
+    <div data-reveal>
+      <p class="eyebrow mb-3">Camp moment</p>
+      <div
+        class="relative overflow-hidden rounded-[2rem] p-8 md:p-14 border"
+        style="
+          border-color: color-mix(in oklab, var(--text) 10%, transparent);
+          background: linear-gradient(135deg,
+            color-mix(in oklab, var(--surface) 95%, transparent),
+            color-mix(in oklab, #1B3D5A 6%, var(--surface)));
+        "
+      >
+        <!-- corner stamp -->
+        <div
+          aria-hidden="true"
+          class="absolute top-6 right-6 hidden sm:flex flex-col items-end gap-1 text-right select-none"
+          style="color: var(--text-soft); opacity: 0.55;"
+        >
+          <span class="text-[0.65rem] font-mono tracking-[0.2em] uppercase">Vila Real</span>
+          <span class="text-[0.65rem] font-mono tracking-[0.2em] uppercase">de Santo António</span>
+          <span class="text-[0.65rem] font-mono tracking-[0.2em] uppercase">Jan · 2026</span>
+        </div>
+
+        <p
+          class="text-xs uppercase tracking-[0.18em] mb-6 sm:hidden"
+          style="color: var(--text-soft);"
+        >
+          Vila Real de Santo António · January 2026
+        </p>
+
+        <p
+          class="font-display tracking-[-0.03em] leading-[0.92]"
+          style="font-size: clamp(2.75rem, 8vw, 5.5rem);"
+        >
+          "Last one,
+          <em
+            class="not-italic block"
+            style="font-style: italic; color: var(--accent);"
+          >fast one."</em>
+        </p>
+
+        <p
+          class="mt-10 text-base md:text-lg leading-relaxed max-w-xl"
+          style="color: var(--text-soft);"
+        >
+          A throwaway line I muttered to myself on the sixth rep of a 10×50 set
+          at the UL Swim Club training camp in Portugal. It became the chant of
+          the whole squad by the end of the week. I still say it on the last
+          rep of every set since.
+        </p>
+
+        <div
+          class="mt-8 pt-6 border-t flex flex-wrap items-baseline gap-x-6 gap-y-2 text-xs"
+          style="border-color: color-mix(in oklab, var(--text) 8%, transparent); color: var(--text-soft);"
+        >
+          <span class="font-mono uppercase tracking-[0.16em]">Set: 10 × 50m</span>
+          <span class="font-mono uppercase tracking-[0.16em]">Club: UL Swim</span>
+          <span class="font-mono uppercase tracking-[0.16em]">Duration: 7 days</span>
+        </div>
+      </div>
+    </div>
+  </Container>
+
+  <!-- CERTIFICATIONS GRID -->
+  <Container size="wide" class="pb-(--spacing-section)">
+    <SectionHeader
+      eyebrow="Credentials"
+      title="Ten certifications, five issuing bodies"
+      subtitle="PHECC, RLSS UK, Swim Ireland, Water Safety Ireland and Irish Red Cross. All current."
+    />
+    <div class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {safetyCerts.map((cert) => (
+        <Card variant="outline" padding="md" class="flex gap-4 items-start">
+          {cert.data.icon && (
+            <img
+              src={`/assets/${cert.data.icon}`}
+              alt={cert.data.issuer}
+              class="w-12 h-12 rounded-lg object-contain bg-cream p-1.5 shrink-0"
+              loading="lazy"
+            />
+          )}
+          <div class="flex-1 min-w-0">
+            <h3 class="font-display text-base tracking-[-0.01em] leading-tight">
+              {cert.data.title}
+            </h3>
+            <p class="text-xs mt-1" style="color: var(--text-soft)">
+              {cert.data.issuer}
+            </p>
+            <p class="text-[0.7rem] font-mono mt-2" style="color: var(--text-soft)">
+              {formatMonthYear(cert.data.issued)}
+              {cert.data.expires && <> – {formatMonthYear(cert.data.expires)}</>}
+            </p>
+          </div>
+        </Card>
+      ))}
+    </div>
+  </Container>
+
+  <!-- THE TOOL -->
+  <Container size="wide" class="pb-(--spacing-section)">
+    <EmergencyScenarios />
+  </Container>
+
+  <!-- THE LESSON SECTION -->
+  <Container size="narrow" class="pb-(--spacing-section)">
+    <div class="grid md:grid-cols-[1fr_2fr] gap-6 md:gap-12" data-reveal>
+      <p class="eyebrow self-start mt-2">What it taught me</p>
+      <div class="space-y-5 text-lg leading-relaxed" style="color: var(--text-soft)">
+        <p>
+          I always loved the water. I just didn't learn to swim properly until
+          adult lessons at the end of 2024. Most lifeguards have been doing laps
+          since they were children — they don't remember not knowing how. I do.
+        </p>
+        <p>
+          The advantage is that I remember how it felt to be afraid in the deep
+          end. Most of teaching swim is reassurance, and most of lifeguarding is
+          noticing when reassurance has run out for someone in the lane next to
+          you. Coming late made me better at both.
+        </p>
+        <p>
+          The same is true of software incident response — the engineers who've
+          broken production before are the ones who notice when something is
+          going sideways for a junior. Experience makes you fluent in someone
+          else's fear.
+        </p>
+      </div>
+    </div>
+  </Container>
+
+  <!-- PULL QUOTE -->
+  <Container size="narrow" class="pb-(--spacing-section)">
+    <blockquote class="relative">
+      <span
+        aria-hidden="true"
+        class="absolute -top-12 -left-4 font-display select-none"
+        style="font-size:8rem; line-height:1; color: color-mix(in oklab, var(--accent) 25%, transparent);"
+      >"</span>
+      <p
+        class="font-display tracking-[-0.02em] relative"
+        style="font-size:clamp(1.75rem, 4vw, 2.75rem); line-height:1.15;"
+      >
+        You don't rise to the level of your composure under pressure. You fall to the level of your routine.
+      </p>
+      <footer class="mt-6 text-sm" style="color:var(--text-soft)">
+        — A working note, the second trade.
+      </footer>
+    </blockquote>
+  </Container>
+</BaseLayout>

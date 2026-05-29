@@ -1,0 +1,57 @@
+---
+// Theme toggle cycling: auto → light → dark → auto
+// The actual `dark` class is applied to <html> by the inline pre-paint script
+// in BaseLayout.astro so there's no flash on load.
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  aria-label="Toggle color theme"
+  title="Toggle theme (Auto · Light · Dark)"
+  class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[color-mix(in_oklab,var(--text)_15%,transparent)] hover:border-burgundy-600 hover:text-burgundy-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-burgundy-600 focus-visible:ring-offset-2"
+>
+  <span aria-hidden="true" data-theme-icon class="text-base leading-none"></span>
+</button>
+
+<script is:inline>
+  (function () {
+    const btn = document.getElementById("theme-toggle");
+    if (!btn) return;
+    const icon = btn.querySelector("[data-theme-icon]");
+
+    const apply = (theme) => {
+      const root = document.documentElement;
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const resolved = theme === "auto" ? (prefersDark ? "dark" : "light") : theme;
+      root.classList.toggle("dark", resolved === "dark");
+      root.dataset.themePref = theme;
+      if (icon) {
+        icon.textContent =
+          theme === "auto" ? "◐" : theme === "dark" ? "●" : "○";
+      }
+      btn.setAttribute(
+        "aria-label",
+        `Theme: ${theme} (click to switch)`
+      );
+    };
+
+    const stored = localStorage.getItem("theme") || "auto";
+    apply(stored);
+
+    btn.addEventListener("click", () => {
+      const current = localStorage.getItem("theme") || "auto";
+      const next =
+        current === "auto" ? "light" : current === "light" ? "dark" : "auto";
+      localStorage.setItem("theme", next);
+      apply(next);
+    });
+
+    // React to system changes while in auto mode
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", () => {
+        if ((localStorage.getItem("theme") || "auto") === "auto") apply("auto");
+      });
+  })();
+</script>

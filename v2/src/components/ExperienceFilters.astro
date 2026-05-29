@@ -1,0 +1,140 @@
+---
+interface Props {
+  categories: { id: string; label: string; count: number }[];
+}
+
+const { categories } = Astro.props;
+const total = categories.reduce((sum, c) => sum + c.count, 0);
+---
+
+<div
+  id="exp-filters"
+  class="sticky top-[4.25rem] z-30 -mx-5 sm:-mx-8 lg:-mx-10 px-5 sm:px-8 lg:px-10 py-4 mb-10 backdrop-blur-md border-y"
+  style="background: color-mix(in oklab, var(--bg) 88%, transparent); border-color: color-mix(in oklab, var(--text) 8%, transparent);"
+>
+  <div class="flex flex-col gap-4 lg:flex-row lg:items-center">
+    <!-- Search -->
+    <div class="relative lg:max-w-xs lg:flex-1">
+      <label for="exp-search" class="sr-only">Search experience</label>
+      <span
+        aria-hidden="true"
+        class="absolute left-4 top-1/2 -translate-y-1/2 text-sm"
+        style="color:var(--text-soft)"
+      >⌕</span>
+      <input
+        type="search"
+        id="exp-search"
+        placeholder="Search roles, employers, keywords..."
+        autocomplete="off"
+        class="w-full pl-10 pr-3 py-2.5 text-sm rounded-full border bg-transparent focus:outline-none focus:border-burgundy-600 transition-colors"
+        style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text);"
+      />
+    </div>
+
+    <!-- Category filters -->
+    <div class="flex flex-wrap items-center gap-2 lg:flex-1 lg:justify-end" role="group" aria-label="Filter by category">
+      <button
+        type="button"
+        class="exp-cat-btn active px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
+        data-category="all"
+        style="border-color: var(--accent); background: var(--accent); color: var(--color-cream);"
+      >
+        All <span class="opacity-75 font-mono ml-1">{total}</span>
+      </button>
+      {categories.map((cat) => (
+        <button
+          type="button"
+          class="exp-cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all hover:border-burgundy-600 hover:text-burgundy-600"
+          data-category={cat.id}
+          style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text-soft);"
+        >
+          {cat.label} <span class="opacity-60 font-mono ml-1">{cat.count}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <p
+    id="exp-empty-state"
+    hidden
+    class="text-sm mt-3 text-center"
+    style="color:var(--text-soft)"
+  >
+    No roles match — try a different keyword or category.
+  </p>
+</div>
+
+<script>
+  const filtersRoot = document.getElementById("exp-filters");
+  const search = document.getElementById("exp-search") as HTMLInputElement | null;
+  const buttons = document.querySelectorAll<HTMLButtonElement>(".exp-cat-btn");
+  const items = document.querySelectorAll<HTMLDetailsElement>(".experience-item");
+  const yearGroups = document.querySelectorAll<HTMLElement>("[data-year-group]");
+  const empty = document.getElementById("exp-empty-state");
+
+  let activeCategory = "all";
+  let activeQuery = "";
+
+  function activateButton(cat: string) {
+    buttons.forEach((btn) => {
+      const active = btn.dataset.category === cat;
+      btn.classList.toggle("active", active);
+      if (active) {
+        btn.style.borderColor = "var(--accent)";
+        btn.style.background = "var(--accent)";
+        btn.style.color = "var(--color-cream)";
+      } else {
+        btn.style.borderColor = "color-mix(in oklab, var(--text) 15%, transparent)";
+        btn.style.background = "transparent";
+        btn.style.color = "var(--text-soft)";
+      }
+    });
+  }
+
+  function apply() {
+    let anyVisible = false;
+
+    items.forEach((item) => {
+      const cat = item.dataset.category ?? "";
+      const hay = item.dataset.search ?? "";
+      const catMatch = activeCategory === "all" || cat === activeCategory;
+      const queryMatch = !activeQuery || hay.includes(activeQuery);
+      const visible = catMatch && queryMatch;
+      item.hidden = !visible;
+      if (visible) anyVisible = true;
+    });
+
+    yearGroups.forEach((group) => {
+      const visibleItems = group.querySelectorAll<HTMLDetailsElement>(
+        ".experience-item:not([hidden])",
+      );
+      group.hidden = visibleItems.length === 0;
+    });
+
+    if (empty) empty.hidden = anyVisible;
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      activeCategory = btn.dataset.category ?? "all";
+      activateButton(activeCategory);
+      apply();
+    });
+  });
+
+  search?.addEventListener("input", () => {
+    activeQuery = search.value.trim().toLowerCase();
+    apply();
+  });
+
+  // Auto-expand a deep-linked entry
+  if (location.hash) {
+    const target = document.getElementById(location.hash.slice(1));
+    if (target && target.tagName === "DETAILS") {
+      (target as HTMLDetailsElement).open = true;
+      requestAnimationFrame(() => {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }
+</script>

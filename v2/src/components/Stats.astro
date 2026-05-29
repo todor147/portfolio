@@ -1,0 +1,65 @@
+---
+import { getCollection } from "astro:content";
+import Container from "./Container.astro";
+
+const experience = await getCollection("experience");
+const certifications = await getCollection("certifications");
+
+function earliestStartIn(category: string): string | undefined {
+  const matches = experience
+    .filter((e) => e.data.category === category)
+    .map((e) => e.data.start)
+    .sort();
+  return matches[0];
+}
+
+function yearsSince(yyyymm: string | undefined): number {
+  if (!yyyymm) return 0;
+  const [yearStr, monthStr] = yyyymm.split("-");
+  const start = new Date(Number(yearStr), Number(monthStr) - 1, 1);
+  const now = new Date();
+  const months = (now.getFullYear() - start.getFullYear()) * 12 +
+    (now.getMonth() - start.getMonth());
+  return Math.round((months / 12) * 10) / 10;
+}
+
+const hospitalityYears = yearsSince(earliestStartIn("hospitality"));
+const softwareYears = yearsSince(earliestStartIn("software"));
+const certCount = certifications.length;
+
+const stats = [
+  { value: hospitalityYears.toFixed(1), unit: "yrs", label: "in hospitality", since: "since 2022" },
+  { value: softwareYears.toFixed(1), unit: "yrs", label: "in software", since: "since 2024" },
+  { value: certCount.toString(), unit: "", label: "certifications", since: "across 5 areas" },
+  { value: "2", unit: "", label: "languages", since: "EN · BG" },
+];
+---
+
+<section class="py-(--spacing-section)" aria-label="Stats">
+  <Container size="wide">
+    <div
+      class="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 border rounded-3xl overflow-hidden"
+      style="
+        border-color: color-mix(in oklab, var(--text) 10%, transparent);
+        --tw-divide-opacity:1;
+        background: color-mix(in oklab, var(--surface) 60%, transparent);
+      "
+    >
+      {stats.map((stat, i) => (
+        <div
+          class="p-6 sm:p-8 flex flex-col gap-1"
+          style="border-color: color-mix(in oklab, var(--text) 10%, transparent)"
+        >
+          <p class="eyebrow">{String(i + 1).padStart(2, "0")} · {stat.label}</p>
+          <p class="font-display text-5xl md:text-6xl tracking-[-0.02em] mt-3" style="color:var(--accent)">
+            <span
+              data-count-up={stat.value}
+              data-count-decimals={stat.value.includes(".") ? "1" : "0"}
+            >{stat.value}</span><span class="text-2xl ml-1" style="color:var(--text-soft)">{stat.unit}</span>
+          </p>
+          <p class="text-sm mt-2" style="color:var(--text-soft)">{stat.since}</p>
+        </div>
+      ))}
+    </div>
+  </Container>
+</section>

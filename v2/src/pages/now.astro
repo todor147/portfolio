@@ -1,0 +1,132 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/Container.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import Card from "../components/Card.astro";
+
+// Update this whenever you want. Date in ISO format.
+const lastUpdated = "2026-05-28";
+
+const sections = [
+  {
+    label: "Working on",
+    items: [
+      "Final year of the BSc Computer Science at UL — dissertation incoming.",
+      "Assisting the release manager at AMCS Group on the v2 platform releases.",
+      "Pouring wine at Adare Manor weekends, swim-teaching at Askeaton weeknights.",
+    ],
+  },
+  {
+    label: "Learning",
+    items: [
+      "Reading for the WSET Level 3 in Wines — booked for late 2026.",
+      "Brushing up Java + diving into AI/ML basics ahead of the MSc in September.",
+      "Open-water swim drills carried back from the Portugal training camp.",
+    ],
+  },
+  {
+    label: "Reading / watching",
+    items: [
+      "Designing Data-Intensive Applications — Martin Kleppmann.",
+      "Wine Folly — Madeline Puckette & Justin Hammack.",
+      "Anything Adam Ragusea publishes on the food / wine technique side.",
+    ],
+  },
+  {
+    label: "Drinking",
+    items: [
+      "Bourgogne Pinot Noir villages — currently exploring Mercurey.",
+      "A lot of Lavazza espresso. Three a day. Sometimes four.",
+      "Bulgarian rakia at home for celebrations.",
+    ],
+  },
+];
+
+const formattedDate = new Date(lastUpdated).toLocaleDateString("en-IE", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+---
+
+<BaseLayout
+  title="Now — Todor Aleksandrov"
+  description="What I'm working on, learning, reading, drinking — this month. A living snapshot inspired by Derek Sivers's /now movement."
+>
+  <Container size="narrow" class="py-(--spacing-section)">
+    <p class="eyebrow">Now</p>
+    <h1
+      class="font-display tracking-[-0.03em] mt-4"
+      style="font-size: clamp(2.75rem, 6vw, 5rem); line-height: 1.02;"
+    >
+      What I'm doing
+      <em
+        class="not-italic block mt-2"
+        style="font-style: italic; color: var(--accent);"
+      >
+        this month.
+      </em>
+    </h1>
+    <p
+      class="mt-6 text-lg leading-relaxed"
+      style="color: var(--text-soft)"
+    >
+      A page from <a
+        href="https://nownownow.com/about"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline decoration-burgundy-300 underline-offset-4 hover:decoration-burgundy-600 transition-colors">Derek Sivers's <em>/now</em> movement</a>
+      — what I'd tell you if we ran into each other today. Updated whenever I notice it's gone stale.
+    </p>
+    <p class="mt-4 text-sm font-mono" style="color: var(--text-soft)">
+      Last updated · {formattedDate}
+    </p>
+
+    <hr class="rule mt-10 mb-12" />
+
+    <div class="space-y-10">
+      {sections.map((section, i) => (
+        <section data-reveal>
+          <div class="grid sm:grid-cols-[8rem_1fr] gap-3 sm:gap-8">
+            <div>
+              <span
+                class="font-display text-3xl tabular-nums"
+                style="color: var(--accent);"
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <p
+                class="text-xs tracking-[0.18em] uppercase mt-2"
+                style="color: var(--text-soft);"
+              >
+                {section.label}
+              </p>
+            </div>
+            <ul class="space-y-3">
+              {section.items.map((item) => (
+                <li class="flex gap-3 text-base md:text-lg leading-relaxed">
+                  <span
+                    aria-hidden="true"
+                    class="shrink-0 mt-2 w-1.5 h-1.5 rounded-full"
+                    style="background: var(--accent);"
+                  ></span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <hr class="rule mt-14 mb-8" />
+
+    <Card variant="subtle" padding="lg">
+      <p class="eyebrow mb-2">Stale?</p>
+      <p class="text-sm leading-relaxed" style="color: var(--text-soft)">
+        If this page hasn't been updated in over three months, ping me — chances are
+        my real life has moved on and I just haven't written it down yet.
+      </p>
+    </Card>
+  </Container>
+</BaseLayout>

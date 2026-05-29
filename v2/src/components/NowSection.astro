@@ -1,0 +1,69 @@
+---
+import { getCollection } from "astro:content";
+import Container from "./Container.astro";
+import SectionHeader from "./SectionHeader.astro";
+import Button from "./Button.astro";
+import Tag from "./Tag.astro";
+import { byMostRecent, formatRange } from "../lib/dates";
+
+const experience = await getCollection("experience");
+const current = experience
+  .filter((e) => e.data.current)
+  .sort((a, b) => byMostRecent(a.data, b.data));
+
+const categoryLabels: Record<string, string> = {
+  software: "Software",
+  hospitality: "Hospitality",
+  education: "Education",
+  lifeguarding: "Lifeguarding",
+  interpretation: "Languages",
+  delivery: "Delivery",
+  other: "Other",
+};
+---
+
+<section class="py-(--spacing-section)">
+  <Container size="wide">
+    <div class="flex flex-wrap justify-between items-end gap-6 mb-12">
+      <SectionHeader
+        eyebrow="Now"
+        title="What I'm doing this month"
+        subtitle="Roles I'm actively in, right now."
+      />
+      <Button href="/experience" variant="ghost" arrow>Full timeline</Button>
+    </div>
+
+    <ol class="space-y-3">
+      {current.map((role, i) => (
+        <li
+          class="group grid grid-cols-[3rem_1fr_auto] sm:grid-cols-[3.5rem_minmax(0,1.5fr)_minmax(0,2fr)_auto] gap-4 sm:gap-6 items-baseline py-5 border-b transition-colors hover:border-burgundy-300"
+          style="border-color: color-mix(in oklab, var(--text) 8%, transparent)"
+        >
+          <span
+            class="font-display text-2xl sm:text-3xl tabular-nums leading-none"
+            style="color: var(--text-soft)"
+          >
+            {String(i + 1).padStart(2, "0")}
+          </span>
+          <div class="min-w-0">
+            <h3 class="font-display text-xl sm:text-2xl tracking-[-0.01em] truncate">
+              {role.data.title}
+            </h3>
+            <p class="text-sm mt-0.5 truncate" style="color: var(--text-soft)">
+              {role.data.employer}
+            </p>
+          </div>
+          <p class="hidden sm:block text-sm leading-relaxed" style="color: var(--text-soft)">
+            {role.data.summary}
+          </p>
+          <div class="text-right whitespace-nowrap flex flex-col items-end gap-1.5">
+            <Tag variant="soft">{categoryLabels[role.data.category] ?? role.data.category}</Tag>
+            <span class="text-xs tabular-nums" style="color: var(--text-soft)">
+              {formatRange(role.data.start, role.data.end, role.data.current)}
+            </span>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </Container>
+</section>

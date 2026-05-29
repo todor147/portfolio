@@ -1,0 +1,42 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  align?: "left" | "center";
+  rule?: boolean;
+  level?: 1 | 2 | 3;
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  subtitle,
+  align = "left",
+  rule = false,
+  level = 2,
+  class: className = "",
+} = Astro.props;
+
+const alignClass = align === "center" ? "text-center mx-auto" : "text-left";
+const Heading = `h${level}` as keyof HTMLElementTagNameMap;
+const headingSize = {
+  1: "text-(length:--text-display) leading-[1.02]",
+  2: "text-(length:--text-h1) leading-[1.05]",
+  3: "text-(length:--text-h2) leading-[1.1]",
+}[level];
+---
+
+<header data-reveal class:list={["max-w-3xl space-y-4", alignClass, className]}>
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <Heading class:list={["font-display tracking-[-0.02em]", headingSize]}>
+    {title}
+  </Heading>
+  {subtitle && (
+    <p class="text-lg leading-relaxed" style="color: var(--text-soft)">
+      {subtitle}
+    </p>
+  )}
+  {rule && <hr class="rule mt-6" />}
+</header>

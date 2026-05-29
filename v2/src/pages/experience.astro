@@ -1,0 +1,93 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/Container.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import ExperienceItem from "../components/ExperienceItem.astro";
+import ExperienceFilters from "../components/ExperienceFilters.astro";
+import { byMostRecent } from "../lib/dates";
+
+const experience = await getCollection("experience");
+const sorted = experience.sort((a, b) => byMostRecent(a.data, b.data));
+
+// Group by start year
+const grouped: Record<string, typeof sorted> = {};
+for (const entry of sorted) {
+  const year = entry.data.start.split("-")[0];
+  if (!grouped[year]) grouped[year] = [];
+  grouped[year].push(entry);
+}
+const yearsDesc = Object.keys(grouped).sort((a, b) => Number(b) - Number(a));
+
+// Build category counts
+const categoryLabels: Record<string, string> = {
+  software: "Software",
+  hospitality: "Hospitality",
+  education: "Education",
+  lifeguarding: "Lifeguarding",
+  interpretation: "Languages",
+  delivery: "Delivery",
+  other: "Other",
+};
+
+const categoryCounts = sorted.reduce<Record<string, number>>((acc, e) => {
+  acc[e.data.category] = (acc[e.data.category] ?? 0) + 1;
+  return acc;
+}, {});
+
+const categories = Object.entries(categoryCounts)
+  .sort((a, b) => b[1] - a[1])
+  .map(([id, count]) => ({ id, label: categoryLabels[id] ?? id, count }));
+---
+
+<BaseLayout
+  title="Experience — Todor Aleksandrov"
+  description="Twenty-four roles across software, hospitality, education and lifeguarding. Filter by category or search by keyword."
+>
+  <Container size="wide" class="py-(--spacing-section)">
+    <SectionHeader
+      eyebrow="Experience"
+      title="Every role, by year"
+      subtitle={`${sorted.length} positions since 2022 across software, hospitality, education, lifeguarding and language work. Filter, search, expand any entry for the full story.`}
+      level={1}
+      rule
+    />
+
+    <div class="mt-12">
+      <ExperienceFilters categories={categories} />
+
+      <div class="relative">
+        <!-- Vertical timeline rail -->
+        <div
+          aria-hidden="true"
+          class="absolute left-[5px] sm:left-[5px] top-0 bottom-0 w-px"
+          style="background: linear-gradient(to bottom,
+            color-mix(in oklab, var(--text) 15%, transparent) 0%,
+            color-mix(in oklab, var(--text) 8%, transparent) 100%);"
+        >
+        </div>
+
+        {yearsDesc.map((year) => (
+          <section data-year-group={year} class="mb-6">
+            <h2
+              class="font-display tracking-[-0.02em] mt-10 mb-2 pl-8 sm:pl-10 relative"
+              style="font-size: clamp(2.5rem, 5vw, 3.5rem); color: var(--text);"
+            >
+              <span
+                aria-hidden="true"
+                class="absolute left-0 top-[40%] -translate-y-1/2 w-3 h-3 rounded-full"
+                style="background: var(--accent);"
+              ></span>
+              {year}
+            </h2>
+            <div>
+              {grouped[year].map((entry) => (
+                <ExperienceItem entry={entry} />
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    </div>
+  </Container>
+</BaseLayout>

@@ -1,0 +1,187 @@
+---
+import { getCollection } from "astro:content";
+
+const pairings = await getCollection("pairings");
+const sorted = pairings.sort((a, b) => a.data.dish.localeCompare(b.data.dish));
+const initial = sorted[0];
+---
+
+<section
+  id="pairing-tool"
+  class="relative overflow-hidden rounded-[2rem] p-8 md:p-12 lg:p-14"
+  style="
+    background: linear-gradient(160deg,
+      color-mix(in oklab, var(--color-burgundy-900) 96%, transparent),
+      color-mix(in oklab, var(--color-burgundy-700) 92%, transparent));
+    color: var(--color-cream);
+  "
+>
+  <!-- subtle dot grain -->
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 opacity-[0.05] pointer-events-none mix-blend-overlay"
+    style="background-image: radial-gradient(currentColor 1px, transparent 1px); background-size: 4px 4px;"
+  >
+  </div>
+
+  <div class="relative">
+    <p
+      class="text-[0.8125rem] font-medium tracking-[0.18em] uppercase"
+      style="color: var(--color-burgundy-300)"
+    >
+      The pairing tool
+    </p>
+    <h2
+      class="font-display tracking-[-0.02em] mt-3"
+      style="font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1.05;"
+    >
+      Tell me what you're eating tonight.
+    </h2>
+    <p
+      class="mt-3 text-lg max-w-2xl"
+      style="color: color-mix(in oklab, var(--color-cream) 78%, transparent)"
+    >
+      Thirty-three classic pairings — pick a dish, get a wine and a one-line reason.
+    </p>
+
+    <!-- CONTROLS -->
+    <div class="mt-8 flex flex-wrap items-center gap-3">
+      <label for="dish-select" class="sr-only">Choose a dish</label>
+      <div class="relative flex-1 min-w-[15rem]">
+        <select
+          id="dish-select"
+          class="appearance-none w-full rounded-full pl-5 pr-12 py-3.5 text-base font-medium tracking-wide bg-transparent border focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer transition-colors"
+          style="
+            border-color: color-mix(in oklab, var(--color-cream) 35%, transparent);
+            color: var(--color-cream);
+            --tw-ring-color: var(--color-cream);
+            --tw-ring-offset-color: var(--color-burgundy-800);
+          "
+        >
+          {sorted.map((p) => (
+            <option value={p.id} style="color:#1A1614; background:#FAF6F0;">
+              {p.data.dish}
+            </option>
+          ))}
+        </select>
+        <span
+          aria-hidden="true"
+          class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none"
+          style="color: var(--color-burgundy-300)"
+        >▾</span>
+      </div>
+      <button
+        id="dish-random"
+        type="button"
+        class="rounded-full px-5 py-3.5 font-medium border transition-colors hover:bg-cream hover:text-burgundy-900"
+        style="border-color: color-mix(in oklab, var(--color-cream) 35%, transparent); color: var(--color-cream);"
+      >
+        Surprise me ✦
+      </button>
+    </div>
+
+    <!-- RESULT CARDS (only one visible at a time) -->
+    <div id="pairing-results" class="mt-8">
+      {sorted.map((p) => (
+        <article
+          data-pairing-id={p.id}
+          hidden={p.id !== initial.id}
+          class="rounded-2xl p-6 md:p-8"
+          style="background: color-mix(in oklab, var(--color-cream) 12%, transparent); border: 1px solid color-mix(in oklab, var(--color-cream) 18%, transparent);"
+        >
+          <p
+            class="text-[0.75rem] font-medium tracking-[0.2em] uppercase"
+            style="color: var(--color-burgundy-300)"
+          >
+            For your {p.data.dish.toLowerCase()}
+          </p>
+          <h3
+            class="font-display mt-2"
+            style="font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.1; letter-spacing: -0.01em;"
+          >
+            <span style="color: var(--color-burgundy-300)">→</span> {p.data.wine}
+          </h3>
+
+          <dl class="mt-5 grid sm:grid-cols-3 gap-y-3 gap-x-6 text-sm">
+            <div>
+              <dt
+                class="text-[0.7rem] uppercase tracking-[0.16em]"
+                style="color: color-mix(in oklab, var(--color-cream) 55%, transparent)"
+              >Grape</dt>
+              <dd class="font-medium mt-0.5">{p.data.grape}</dd>
+            </div>
+            {p.data.region && (
+              <div>
+                <dt
+                  class="text-[0.7rem] uppercase tracking-[0.16em]"
+                  style="color: color-mix(in oklab, var(--color-cream) 55%, transparent)"
+                >Region</dt>
+                <dd class="font-medium mt-0.5">{p.data.region}</dd>
+              </div>
+            )}
+            {p.data.example && (
+              <div>
+                <dt
+                  class="text-[0.7rem] uppercase tracking-[0.16em]"
+                  style="color: color-mix(in oklab, var(--color-cream) 55%, transparent)"
+                >Try a bottle</dt>
+                <dd class="italic mt-0.5">{p.data.example}</dd>
+              </div>
+            )}
+          </dl>
+
+          <hr
+            class="my-5 border-0 h-px"
+            style="background: color-mix(in oklab, var(--color-cream) 18%, transparent);"
+          />
+
+          <p
+            class="leading-relaxed text-base md:text-lg"
+            style="color: color-mix(in oklab, var(--color-cream) 88%, transparent)"
+          >
+            {p.data.rationale}
+          </p>
+        </article>
+      ))}
+    </div>
+
+    <p
+      class="mt-6 text-xs"
+      style="color: color-mix(in oklab, var(--color-cream) 55%, transparent)"
+    >
+      Pairings are suggestions, not laws. The best wine is usually the one you both have.
+    </p>
+  </div>
+</section>
+
+<script>
+  const select = document.getElementById("dish-select") as HTMLSelectElement | null;
+  const random = document.getElementById("dish-random") as HTMLButtonElement | null;
+  const cards = document.querySelectorAll<HTMLElement>("[data-pairing-id]");
+
+  function showPairing(id: string) {
+    cards.forEach((card) => {
+      card.hidden = card.dataset.pairingId !== id;
+    });
+  }
+
+  select?.addEventListener("change", () => {
+    showPairing(select.value);
+  });
+
+  random?.addEventListener("click", () => {
+    if (!select) return;
+    let pick = select.value;
+    let attempts = 0;
+    while (pick === select.value && attempts < 10) {
+      pick = select.options[Math.floor(Math.random() * select.options.length)].value;
+      attempts++;
+    }
+    select.value = pick;
+    showPairing(pick);
+    document.getElementById("pairing-results")?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+    });
+  });
+</script>

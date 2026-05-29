@@ -1,0 +1,57 @@
+---
+import Container from "./Container.astro";
+import Button from "./Button.astro";
+---
+
+<section class="pt-(--spacing-section) pb-(--spacing-section)">
+  <Container size="wide">
+    <div
+      class="relative overflow-hidden rounded-[2rem] p-10 md:p-16 lg:p-20"
+      style="background: linear-gradient(135deg, var(--color-burgundy-900), var(--color-burgundy-600)); color: var(--color-cream);"
+    >
+      <!-- decorative grain -->
+      <div
+        aria-hidden="true"
+        class="absolute inset-0 opacity-[0.04] pointer-events-none mix-blend-overlay"
+        style="background-image: radial-gradient(currentColor 1px, transparent 1px); background-size: 3px 3px;"
+      >
+      </div>
+
+      <div class="relative max-w-3xl">
+        <p
+          class="text-[0.8125rem] font-medium tracking-[0.18em] uppercase"
+          style="color: var(--color-burgundy-300)"
+        >
+          Let's build something
+        </p>
+        <h2
+          class="font-display tracking-[-0.02em] mt-3"
+          style="font-size: clamp(2.25rem, 5vw, 3.75rem); line-height: 1.05;"
+        >
+          Have a project in mind, or just want to talk wine?
+        </h2>
+        <p class="mt-6 text-lg md:text-xl max-w-2xl" style="color: color-mix(in oklab, var(--color-cream) 85%, transparent);">
+          I'm finishing my BSc in Computer Science at UL in 2026 and looking for
+          graduate software roles. Always open to a conversation — engineering,
+          hospitality, or both.
+        </p>
+
+        <div class="mt-10 flex flex-wrap gap-3">
+          <a
+            href="/contact"
+            class="inline-flex items-center gap-2 rounded-full bg-cream text-burgundy-900 px-7 py-3.5 font-medium transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+          >
+            Send a message
+            <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </a>
+          <a
+            href="mailto:todor_147@abv.bg"
+            class="inline-flex items-center gap-2 rounded-full border border-cream/40 px-7 py-3.5 font-medium hover:bg-cream/10 transition-colors"
+          >
+            todor_147@abv.bg
+          </a>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

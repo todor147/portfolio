@@ -1,0 +1,29 @@
+---
+import { getCollection } from "astro:content";
+import Container from "./Container.astro";
+import SectionHeader from "./SectionHeader.astro";
+import Button from "./Button.astro";
+import ProjectCard from "./ProjectCard.astro";
+
+const projects = await getCollection("projects");
+const featured = projects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<section class="py-(--spacing-section)">
+  <Container size="wide">
+    <div class="flex flex-wrap justify-between items-end gap-6 mb-12">
+      <SectionHeader
+        eyebrow="Selected work"
+        title="Featured projects"
+        subtitle="Three projects that capture what I build and how I think — from a four-person marketplace to the site you're reading now."
+      />
+      <Button href="/projects" variant="ghost" arrow>All projects</Button>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {featured.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </Container>
+</section>

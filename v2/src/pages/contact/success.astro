@@ -1,0 +1,51 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Container from "../../components/Container.astro";
+import Button from "../../components/Button.astro";
+---
+
+<BaseLayout
+  title="Message sent — Todor Aleksandrov"
+  description="Your message has been received. I'll be in touch soon."
+>
+  <Container size="narrow" class="py-(--spacing-section) text-center">
+    <p class="eyebrow">Received</p>
+    <h1
+      class="font-display tracking-[-0.03em] mt-4"
+      style="font-size: clamp(2.75rem, 6vw, 5rem); line-height: 1.02;"
+    >
+      Thanks — your message is in.
+    </h1>
+    <p
+      class="mt-6 text-lg md:text-xl leading-relaxed max-w-xl mx-auto"
+      style="color: var(--text-soft)"
+    >
+      I'll get back to you within a day or two. If it's urgent — or your message
+      involves wine — feel free to email me directly.
+    </p>
+
+    <div class="mt-10 flex flex-wrap justify-center gap-3">
+      <Button href="/" arrow>Back to home</Button>
+      <Button
+        href="mailto:todor_147@abv.bg"
+        variant="outline"
+      >
+        Email me directly
+      </Button>
+    </div>
+
+    <div
+      class="mt-16 inline-flex items-center gap-3 px-5 py-3 rounded-full border"
+      style="border-color: color-mix(in oklab, var(--text) 12%, transparent);"
+    >
+      <span
+        class="inline-block w-2 h-2 rounded-full"
+        style="background: var(--accent)"
+        aria-hidden="true"
+      ></span>
+      <span class="text-xs tracking-wide" style="color: var(--text-soft)">
+        Typical reply window: 24–48 hours
+      </span>
+    </div>
+  </Container>
+</BaseLayout>

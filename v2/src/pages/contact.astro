@@ -1,0 +1,194 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/Container.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import Card from "../components/Card.astro";
+import Button from "../components/Button.astro";
+---
+
+<BaseLayout
+  title="Contact — Todor Aleksandrov"
+  description="Get in touch — for graduate roles, freelance work, interpretation, or just to talk wine."
+>
+  <Container size="wide" class="py-(--spacing-section)">
+    <SectionHeader
+      eyebrow="Get in touch"
+      title="Send a message"
+      subtitle="Whether it's a graduate role, an interpretation gig, a project collaboration, or a wine recommendation — I read every message and reply within a day or two."
+      level={1}
+      rule
+    />
+
+    <div class="mt-12 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
+      <!-- FORM -->
+      <Card variant="surface" padding="lg">
+        <p class="eyebrow mb-2">Message</p>
+        <h2 class="font-display text-2xl tracking-[-0.01em] mb-6">
+          Drop a note.
+        </h2>
+
+        <form
+          name="contact"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          action="/contact/success"
+          class="space-y-5"
+        >
+          <input type="hidden" name="form-name" value="contact" />
+          <p class="hidden">
+            <label>
+              Don't fill this out: <input name="bot-field" />
+            </label>
+          </p>
+
+          <div class="grid sm:grid-cols-2 gap-5">
+            <label class="block">
+              <span class="text-sm font-medium block mb-1.5">Your name</span>
+              <input
+                type="text"
+                name="name"
+                required
+                autocomplete="name"
+                class="w-full px-4 py-3 rounded-xl border bg-transparent focus:outline-none focus:border-burgundy-600 transition-colors"
+                style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text);"
+              />
+            </label>
+            <label class="block">
+              <span class="text-sm font-medium block mb-1.5">Email</span>
+              <input
+                type="email"
+                name="email"
+                required
+                autocomplete="email"
+                class="w-full px-4 py-3 rounded-xl border bg-transparent focus:outline-none focus:border-burgundy-600 transition-colors"
+                style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text);"
+              />
+            </label>
+          </div>
+
+          <label class="block">
+            <span class="text-sm font-medium block mb-1.5">Subject</span>
+            <input
+              type="text"
+              name="subject"
+              required
+              placeholder="e.g. Graduate role, Interpretation enquiry, Wine question..."
+              class="w-full px-4 py-3 rounded-xl border bg-transparent focus:outline-none focus:border-burgundy-600 transition-colors"
+              style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text);"
+            />
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-medium block mb-1.5">Message</span>
+            <textarea
+              name="message"
+              required
+              rows="6"
+              placeholder="Tell me what you're working on, or what you'd like to talk about."
+              class="w-full px-4 py-3 rounded-xl border bg-transparent focus:outline-none focus:border-burgundy-600 transition-colors resize-y"
+              style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text);"
+            ></textarea>
+          </label>
+
+          <div class="pt-2 flex flex-wrap items-center gap-3">
+            <Button type="submit" arrow>Send message</Button>
+            <p class="text-xs" style="color:var(--text-soft)">
+              Goes straight to my inbox. No newsletter, no marketing.
+            </p>
+          </div>
+        </form>
+      </Card>
+
+      <!-- DIRECT CONTACT INFO -->
+      <aside class="space-y-5">
+        <Card variant="outline" padding="lg">
+          <p class="eyebrow mb-3">Direct lines</p>
+          <ul class="space-y-3">
+            <li class="flex items-baseline justify-between gap-3">
+              <span class="text-sm" style="color:var(--text-soft)">Email</span>
+              <a
+                href="mailto:todor_147@abv.bg"
+                class="text-sm font-medium hover:text-burgundy-600 transition-colors"
+              >todor_147@abv.bg</a>
+            </li>
+            <li class="flex items-baseline justify-between gap-3">
+              <span class="text-sm" style="color:var(--text-soft)">University</span>
+              <a
+                href="mailto:22336303@studentmail.ul.ie"
+                class="text-sm font-medium hover:text-burgundy-600 transition-colors"
+              >studentmail.ul.ie</a>
+            </li>
+            <li class="flex items-baseline justify-between gap-3">
+              <span class="text-sm" style="color:var(--text-soft)">Mobile</span>
+              <a
+                href="tel:+353894694333"
+                class="text-sm font-medium hover:text-burgundy-600 transition-colors"
+              >+353 89 469 4333</a>
+            </li>
+          </ul>
+        </Card>
+
+        <Card variant="outline" padding="lg">
+          <p class="eyebrow mb-3">Find me</p>
+          <ul class="space-y-3">
+            <li>
+              <a
+                href="https://www.linkedin.com/in/todoraleksandrov/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-baseline justify-between gap-3 group/link"
+              >
+                <span class="text-sm font-medium group-hover/link:text-burgundy-600 transition-colors">LinkedIn</span>
+                <span aria-hidden="true" style="color:var(--text-soft)" class="text-xs">↗</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/todor147"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-baseline justify-between gap-3 group/link"
+              >
+                <span class="text-sm font-medium group-hover/link:text-burgundy-600 transition-colors">GitHub</span>
+                <span aria-hidden="true" style="color:var(--text-soft)" class="text-xs">↗</span>
+              </a>
+            </li>
+          </ul>
+        </Card>
+
+        <Card variant="subtle" padding="lg">
+          <p class="eyebrow mb-3">Status</p>
+          <p class="flex items-center gap-2 text-sm">
+            <span
+              class="inline-block w-2 h-2 rounded-full"
+              style="background:#22c55e"
+              aria-hidden="true"></span>
+            Open to graduate software roles
+          </p>
+          <p class="flex items-center gap-2 text-sm mt-2">
+            <span
+              class="inline-block w-2 h-2 rounded-full"
+              style="background:#22c55e"
+              aria-hidden="true"></span>
+            Available for interpretation work
+          </p>
+          <p class="flex items-center gap-2 text-sm mt-2">
+            <span
+              class="inline-block w-2 h-2 rounded-full"
+              style="background:var(--accent)"
+              aria-hidden="true"></span>
+            Currently in Limerick, Ireland
+          </p>
+        </Card>
+
+        <Card variant="subtle" padding="lg">
+          <p class="eyebrow mb-2">Response time</p>
+          <p class="text-sm leading-relaxed" style="color:var(--text-soft)">
+            I reply within a day or two — sometimes faster if I'm not on shift at Adare Manor.
+          </p>
+        </Card>
+      </aside>
+    </div>
+  </Container>
+</BaseLayout>
