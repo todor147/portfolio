@@ -8,10 +8,20 @@ import Button from "../components/Button.astro";
 const siteUrl = Astro.site ?? new URL("https://todors-portfolio.netlify.app");
 const successUrl = new URL("/contact/success", siteUrl).href;
 
-// FormSubmit posts to this endpoint and forwards every submission to my inbox.
-// Free, no signup required — only requires a one-time email-confirmation
-// click the very first time the endpoint is used.
-const formAction = "https://formsubmit.co/todor_147@abv.bg";
+// Web3Forms — free unlimited form-to-email forwarding.
+//
+// Setup (one-time, ~60 sec):
+//   1. Go to https://web3forms.com/
+//   2. Enter your email (todor_147@abv.bg)
+//   3. They email you an "access key" (looks like a UUID)
+//   4. Paste it as the value of ACCESS_KEY below
+//
+// Until ACCESS_KEY is filled in, submissions will fail gracefully and the
+// page also shows a direct mailto: link as a fallback.
+const ACCESS_KEY = "PASTE_YOUR_WEB3FORMS_KEY_HERE";
+
+const formAction = "https://api.web3forms.com/submit";
+const directEmail = "todor_147@abv.bg";
 ---
 
 <BaseLayout
@@ -31,9 +41,18 @@ const formAction = "https://formsubmit.co/todor_147@abv.bg";
       <!-- FORM -->
       <Card variant="surface" padding="lg">
         <p class="eyebrow mb-2">Message</p>
-        <h2 class="font-display text-2xl tracking-[-0.01em] mb-6">
+        <h2 class="font-display text-2xl tracking-[-0.01em] mb-2">
           Drop a note.
         </h2>
+        <p class="text-sm mb-6" style="color: var(--text-soft)">
+          Use the form below, or
+          <a
+            href={`mailto:${directEmail}?subject=From%20your%20portfolio`}
+            class="font-medium underline decoration-burgundy-300 underline-offset-4 hover:decoration-burgundy-600 transition-colors"
+            style="color: var(--accent)"
+          >email me directly</a>
+          — either reaches me.
+        </p>
 
         <form
           name="contact"
@@ -41,14 +60,14 @@ const formAction = "https://formsubmit.co/todor_147@abv.bg";
           action={formAction}
           class="space-y-5"
         >
-          <!-- FormSubmit configuration -->
-          <input type="hidden" name="_subject" value="New message from portfolio" />
-          <input type="hidden" name="_template" value="table" />
-          <input type="hidden" name="_captcha" value="false" />
-          <input type="hidden" name="_next" value={successUrl} />
+          <!-- Web3Forms configuration -->
+          <input type="hidden" name="access_key" value={ACCESS_KEY} />
+          <input type="hidden" name="subject" value="New message from portfolio" />
+          <input type="hidden" name="from_name" value="Portfolio contact form" />
+          <input type="hidden" name="redirect" value={successUrl} />
 
           <!-- Honeypot — invisible to humans, bots fill it in -->
-          <input type="text" name="_honey" hidden aria-hidden="true" tabindex="-1" autocomplete="off" />
+          <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
 
           <div class="grid sm:grid-cols-2 gap-5">
             <label class="block">
