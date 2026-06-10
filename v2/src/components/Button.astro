@@ -6,6 +6,7 @@ interface Props {
   type?: "button" | "submit" | "reset";
   target?: string;
   rel?: string;
+  download?: boolean | string;
   arrow?: boolean;
   magnetic?: boolean;
   class?: string;
@@ -20,6 +21,7 @@ const {
   type = "button",
   target,
   rel,
+  download,
   arrow = false,
   magnetic = false,
   class: className = "",
@@ -62,6 +64,7 @@ const finalRel = rel ?? (target === "_blank" ? "noopener noreferrer" : undefined
   type={!href ? type : undefined}
   target={target}
   rel={finalRel}
+  download={download === true ? "" : download || undefined}
   aria-label={ariaLabel}
   data-magnetic={magnetic ? "" : undefined}
   class={finalClass}
