@@ -1,0 +1,70 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Container from "../../components/Container.astro";
+import SectionHeader from "../../components/SectionHeader.astro";
+import Card from "../../components/Card.astro";
+import Button from "../../components/Button.astro";
+import { cvVariants, GENERAL_PDF } from "../../lib/cv";
+
+const general = cvVariants.find((v) => v.id === "general")!;
+const tailored = cvVariants.filter((v) => v.id !== "general");
+---
+
+<BaseLayout
+  title="CV — Todor Aleksandrov"
+  description="Curriculum vitae — read it online or download the PDF. Tailored views for software, wine & hospitality, and customer service."
+>
+  <Container size="wide" class="py-(--spacing-section)">
+    <SectionHeader
+      eyebrow="Curriculum Vitae"
+      title="Pick your view"
+      subtitle="One career, a few different angles. Read any version online, or download the designed general CV as a PDF. Every view is built from the same source as the rest of this site, so it's always current."
+      level={1}
+      rule
+    />
+
+    <!-- General CV — featured -->
+    <Card variant="surface" padding="lg" class="mt-12">
+      <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div class="max-w-xl">
+          <p class="eyebrow mb-2">General · {general.headline}</p>
+          <h2 class="font-display text-2xl tracking-[-0.01em] mb-2">The full CV</h2>
+          <p class="text-sm leading-relaxed" style="color: var(--text-soft)">{general.blurb}</p>
+        </div>
+        <div class="flex flex-wrap gap-3 shrink-0">
+          <Button href="/cv/general" arrow>Read online</Button>
+          <Button
+            href={GENERAL_PDF}
+            variant="outline"
+            download
+            ariaLabel="Download Todor Aleksandrov's general CV (PDF)"
+          >Download PDF ↓</Button>
+        </div>
+      </div>
+    </Card>
+
+    <!-- Tailored views -->
+    <p class="eyebrow mt-14 mb-5">Tailored for a role</p>
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {tailored.map((v) => (
+        <Card variant="outline" padding="lg" hover href={`/cv/${v.id}`} class="group">
+          <div class="flex flex-col h-full">
+            <p class="eyebrow mb-2">{v.label}</p>
+            <h2 class="font-display text-xl tracking-[-0.01em] mb-2 group-hover:text-burgundy-600 transition-colors">
+              {v.headline}
+            </h2>
+            <p class="text-sm leading-relaxed flex-1" style="color: var(--text-soft)">{v.blurb}</p>
+            <span class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-burgundy-600">
+              Read online
+              <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+            </span>
+          </div>
+        </Card>
+      ))}
+    </div>
+
+    <p class="mt-10 text-sm" style="color: var(--text-soft)">
+      Each tailored view can be saved as a PDF from its own page (Print / Save as PDF).
+    </p>
+  </Container>
+</BaseLayout>

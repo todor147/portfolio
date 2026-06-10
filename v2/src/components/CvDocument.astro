@@ -1,0 +1,249 @@
+---
+import { getCollection } from "astro:content";
+import {
+  CONTACT,
+  selectExperience,
+  selectCerts,
+  type CvVariant,
+} from "../lib/cv";
+import { formatRange } from "../lib/dates";
+
+interface Props {
+  variant: CvVariant;
+}
+const { variant } = Astro.props;
+
+const roles = selectExperience(await getCollection("experience"), variant);
+const certs = selectCerts(await getCollection("certifications"), variant);
+
+const projects = variant.showProjects
+  ? (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order)
+  : [];
+
+const allEducation = (await getCollection("education")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const education =
+  variant.id === "general"
+    ? allEducation.filter((e) => e.data.order <= 3) // higher ed + Leaving Cert
+    : allEducation.filter((e) => e.data.status !== "completed"); // degree + MSc
+
+const volunteering = variant.showVolunteering
+  ? (await getCollection("volunteering")).sort((a, b) =>
+      b.data.start.localeCompare(a.data.start),
+    )
+  : [];
+
+const achievements = variant.showAchievements
+  ? await getCollection("achievements")
+  : [];
+
+const contactLinks = [
+  { label: CONTACT.location, href: undefined },
+  { label: CONTACT.email, href: `mailto:${CONTACT.email}` },
+  { label: CONTACT.phone, href: CONTACT.phoneHref },
+  { label: CONTACT.site, href: CONTACT.siteHref },
+  { label: CONTACT.linkedin, href: CONTACT.linkedinHref },
+  { label: CONTACT.github, href: CONTACT.githubHref },
+];
+---
+
+<article class="cv-document mx-auto max-w-3xl">
+  <!-- ── Header ── -->
+  <header class="pb-6 border-b" style="border-color: color-mix(in oklab, var(--text) 15%, transparent)">
+    <h1 class="font-display tracking-[-0.02em]" style="font-size: clamp(2.25rem, 6vw, 3rem)">
+      {CONTACT.name}
+    </h1>
+    <p class="eyebrow mt-2">{variant.headline}</p>
+    <ul class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm" style="color: var(--text-soft)">
+      {contactLinks.map((c) => (
+        <li>
+          {c.href ? (
+            <a
+              href={c.href}
+              target={c.href.startsWith("http") ? "_blank" : undefined}
+              rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
+              class="hover:text-burgundy-600 transition-colors"
+            >{c.label}</a>
+          ) : (
+            <span>{c.label}</span>
+          )}
+        </li>
+      ))}
+    </ul>
+  </header>
+
+  <!-- ── Profile ── -->
+  <section class="cv-section">
+    <h2 class="cv-heading">Profile</h2>
+    <p class="leading-relaxed" style="color: var(--text)">{variant.profile}</p>
+  </section>
+
+  <!-- ── Experience ── -->
+  <section class="cv-section">
+    <h2 class="cv-heading">Experience</h2>
+    <div class="space-y-5">
+      {roles.map((r) => (
+        <div class="cv-entry">
+          <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+            <h3 class="font-display text-lg tracking-[-0.01em]">{r.title}</h3>
+            <span class="text-sm whitespace-nowrap" style="color: var(--text-soft)">
+              {formatRange(r.start, r.end, r.current)}
+            </span>
+          </div>
+          <p class="text-sm font-medium" style="color: var(--accent)">
+            {r.employerUrl ? (
+              <a href={r.employerUrl} target="_blank" rel="noopener noreferrer" class="hover:underline">{r.employer}</a>
+            ) : r.employer}
+            {r.location && <span style="color: var(--text-soft)"> · {r.location}</span>}
+          </p>
+          <p class="mt-1 text-sm leading-relaxed" style="color: var(--text-soft)">{r.summary}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ── Selected projects ── -->
+  {projects.length > 0 && (
+    <section class="cv-section">
+      <h2 class="cv-heading">Selected projects</h2>
+      <div class="space-y-4">
+        {projects.map((p) => (
+          <div class="cv-entry">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+              <h3 class="font-display text-lg tracking-[-0.01em]">{p.data.title}</h3>
+              {p.data.liveUrl && (
+                <a href={p.data.liveUrl} target="_blank" rel="noopener noreferrer" class="text-sm hover:underline" style="color: var(--accent)">Live ↗</a>
+              )}
+            </div>
+            <p class="text-sm" style="color: var(--text-soft)">{p.data.tagline}</p>
+            <p class="mt-1 text-xs" style="color: var(--text-soft)">{p.data.stack.join(" · ")}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ── Education ── -->
+  <section class="cv-section">
+    <h2 class="cv-heading">Education</h2>
+    <div class="space-y-4">
+      {education.map((e) => (
+        <div class="cv-entry">
+          <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+            <h3 class="font-display text-lg tracking-[-0.01em]">{e.data.degree}</h3>
+            <span class="text-sm whitespace-nowrap" style="color: var(--text-soft)">
+              {formatRange(e.data.start, e.data.end, e.data.status === "current")}
+            </span>
+          </div>
+          <p class="text-sm font-medium" style="color: var(--accent)">{e.data.institution}</p>
+          {e.data.grade && <p class="mt-1 text-sm" style="color: var(--text-soft)">{e.data.grade}</p>}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ── Skills ── -->
+  <section class="cv-section">
+    <h2 class="cv-heading">{variant.id === "general" || variant.id === "software" ? "Technical skills" : "Skills"}</h2>
+    <dl class="space-y-2">
+      {variant.skills.map((s) => (
+        <div class="flex flex-col sm:flex-row sm:gap-3">
+          <dt class="text-sm font-medium shrink-0 sm:w-44" style="color: var(--text)">{s.group}</dt>
+          <dd class="text-sm" style="color: var(--text-soft)">{s.items.join(" · ")}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <!-- ── Certifications ── -->
+  {certs.length > 0 && (
+    <section class="cv-section">
+      <h2 class="cv-heading">Certifications</h2>
+      <ul class="space-y-1.5 text-sm">
+        {certs.map((c) => (
+          <li class="flex flex-wrap items-baseline justify-between gap-x-4">
+            <span style="color: var(--text)">{c.data.title}</span>
+            <span class="whitespace-nowrap" style="color: var(--text-soft)">{c.data.issuer}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <!-- ── Languages ── -->
+  <section class="cv-section">
+    <h2 class="cv-heading">Languages</h2>
+    <p class="text-sm" style="color: var(--text-soft)">{CONTACT.languages}</p>
+  </section>
+
+  <!-- ── Volunteering (general only) ── -->
+  {volunteering.length > 0 && (
+    <section class="cv-section">
+      <h2 class="cv-heading">Volunteering & leadership</h2>
+      <div class="space-y-3">
+        {volunteering.map((vv) => (
+          <div class="cv-entry">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+              <h3 class="text-sm font-medium" style="color: var(--text)">{vv.data.title}</h3>
+              <span class="text-sm whitespace-nowrap" style="color: var(--text-soft)">
+                {formatRange(vv.data.start, vv.data.end, !vv.data.end)}
+              </span>
+            </div>
+            <p class="text-sm" style="color: var(--text-soft)">{vv.data.organization}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ── Honours (general only) ── -->
+  {achievements.length > 0 && (
+    <section class="cv-section">
+      <h2 class="cv-heading">Honours & awards</h2>
+      <ul class="space-y-1.5 text-sm">
+        {achievements.map((a) => (
+          <li class="flex flex-wrap items-baseline justify-between gap-x-4">
+            <span style="color: var(--text)">{a.data.title}</span>
+            <span class="whitespace-nowrap" style="color: var(--text-soft)">{a.data.issuer}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</article>
+
+<style>
+  .cv-section {
+    margin-top: 2rem;
+  }
+  .cv-heading {
+    font-family: var(--font-sans);
+    font-size: var(--text-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid color-mix(in oklab, var(--text) 10%, transparent);
+  }
+  .cv-entry {
+    break-inside: avoid;
+  }
+
+  @media print {
+    /* A clean single-document layout on paper. */
+    .cv-document {
+      max-width: none;
+    }
+    .cv-section {
+      margin-top: 1.25rem;
+    }
+    .cv-heading {
+      color: #000 !important;
+      border-color: #999 !important;
+      margin-bottom: 0.6rem;
+    }
+  }
+</style>

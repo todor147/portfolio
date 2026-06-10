@@ -1,0 +1,66 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Container from "../../components/Container.astro";
+import CvDocument from "../../components/CvDocument.astro";
+import { cvVariants, getVariant, GENERAL_PDF, type CvVariant } from "../../lib/cv";
+
+export function getStaticPaths() {
+  return cvVariants.map((v) => ({ params: { variant: v.id }, props: { variant: v } }));
+}
+
+const { variant } = Astro.props as { variant: CvVariant };
+---
+
+<BaseLayout
+  title={`${variant.label} CV — Todor Aleksandrov`}
+  description={variant.blurb}
+>
+  <Container size="wide" class="py-12 md:py-16">
+    <!-- Toolbar (hidden when printing) -->
+    <div class="print:hidden flex flex-wrap items-center justify-between gap-4 mb-10">
+      <a href="/cv" class="inline-flex items-center gap-1 text-sm hover:text-burgundy-600 transition-colors" style="color: var(--text-soft)">
+        <span aria-hidden="true">←</span> All CVs
+      </a>
+
+      <nav aria-label="CV versions" class="flex flex-wrap items-center gap-2">
+        {cvVariants.map((v) => (
+          <a
+            href={`/cv/${v.id}`}
+            aria-current={v.id === variant.id ? "page" : undefined}
+            class:list={[
+              "px-3 py-1.5 rounded-full text-xs font-medium tracking-wide border transition-colors",
+              v.id === variant.id
+                ? "border-burgundy-600 text-cream bg-burgundy-600"
+                : "hover:border-burgundy-600 hover:text-burgundy-600",
+            ]}
+            style={v.id === variant.id ? undefined : "border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text-soft);"}
+          >{v.label}</a>
+        ))}
+      </nav>
+
+      <div class="flex items-center gap-3">
+        {variant.id === "general" && (
+          <a
+            href={GENERAL_PDF}
+            download
+            class="text-sm font-medium hover:text-burgundy-600 transition-colors"
+            style="color: var(--accent)"
+          >Download PDF ↓</a>
+        )}
+        <button
+          id="cv-print"
+          type="button"
+          class="inline-flex items-center gap-2 rounded-full bg-burgundy-600 text-cream px-5 py-2 text-sm font-medium hover:bg-burgundy-700 transition-colors"
+        >
+          Print / Save as PDF
+        </button>
+      </div>
+    </div>
+
+    <CvDocument variant={variant} />
+  </Container>
+</BaseLayout>
+
+<script>
+  document.getElementById("cv-print")?.addEventListener("click", () => window.print());
+</script>
