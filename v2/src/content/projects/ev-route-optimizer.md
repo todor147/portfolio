@@ -14,6 +14,14 @@ contribution: "Sole developer — A* engine, energy and charging models, all fou
 learnings: "The routing problem is harder than it looks because SoC is not just a constraint — it is part of the search state. Treating it that way (rather than post-processing a road route) is what allows the engine to find routes that would never emerge from a road-distance-only search: a slightly longer road segment that bypasses a detour to a slow charger, or a route that arrives at a fast charger with exactly enough margin to charge quickly and press on. The other hard lesson was the energy model: an overly aggressive speed-consumption curve caused the engine to over-insert stops on motorways. Calibrating it against real-world EV consumption data (80% rolling resistance, 20% aerodynamic drag growing with v²) brought the stop count in line with what drivers actually experience."
 ---
 
+## Screenshots
+
+<div class="screenshot-grid">
+  <img src="/assets/ev-route-optimizer-plan.png" alt="Plan Route — origin, destination, battery parameters and connector type" />
+  <img src="/assets/ev-route-optimizer-itinerary.png" alt="Route Itinerary — charging stops, durations, arrival SoC, and quality score" />
+  <img src="/assets/ev-route-optimizer.png" alt="Turn-by-turn Navigation — MapLibre map with route line and speed/ETA HUD" />
+</div>
+
 > A multi-stop EV route planner that treats charging as a first-class citizen of the search — not a post-processing step bolted onto a road-distance result.
 
 EV Route Optimizer plans electric-vehicle road trips end-to-end: you enter origin, destination, battery parameters, and connector type; the engine finds the optimal sequence of charging stops and returns a full itinerary with charge durations, arrival SoC at each stop, and a quality score versus the unconstrained baseline.
