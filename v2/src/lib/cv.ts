@@ -74,7 +74,7 @@ export const cvVariants: CvVariant[] = [
     headline: "Graduate Software Engineer",
     blurb: "The complete picture — software, hospitality, language and aquatics in one document.",
     profile:
-      "Final-year Computer Science student at the University of Limerick (graduating 2026) with two years of hands-on software experience at AMCS Group, spanning test automation, CI/CD, and release management on a large enterprise platform. I build full-stack web applications end to end, and complement that with first-line IT support, high-end hospitality, lifeguarding, and Bulgarian–English interpreting. Comfortable shipping code, leading on the ground, and communicating clearly with people from every background.",
+      "BSc Computer Science graduate (University of Limerick, 2026), continuing to MSc AI & Machine Learning at UL from September 2026. Two years of hands-on software experience at AMCS Group spanning test automation, CI/CD, and release management on a large enterprise platform. I build full-stack web applications end to end, and complement that with first-line IT support, high-end hospitality, lifeguarding, and Bulgarian–English interpreting. Comfortable shipping code, leading on the ground, and communicating clearly with people from every background.",
     experienceCategories: ["software", "hospitality", "education", "lifeguarding", "interpretation", "delivery", "other"],
     certCategories: ["tech", "hospitality", "safety", "language", "other"],
     showProjects: true,
@@ -88,7 +88,7 @@ export const cvVariants: CvVariant[] = [
     headline: "Graduate Software Engineer",
     blurb: "Focused on engineering — AMCS Platform work, full-stack projects and the technical stack.",
     profile:
-      "Final-year Computer Science student at the University of Limerick (graduating 2026) with two years of hands-on software experience at AMCS Group — test automation with Cypress and Fiddler, CI/CD on Azure DevOps, and release management across a large enterprise platform. I build and ship full-stack web applications end to end, from a solo re-engineered coaching marketplace to this portfolio. Seeking a graduate software engineering role.",
+      "BSc Computer Science graduate (University of Limerick, 2026), continuing to MSc AI & Machine Learning at UL from September 2026. Two years of hands-on software experience at AMCS Group — test automation with Cypress and Fiddler, CI/CD on Azure DevOps, and release management across a large enterprise platform. I build and ship full-stack web applications end to end, from a solo re-engineered coaching marketplace to this portfolio. Seeking a graduate software engineering role from 2027.",
     experienceCategories: ["software"],
     experienceIncludeSlugs: ["ul-ict-tutor-2025-26", "ul-pslg-tutor"],
     certCategories: ["tech", "language"],
