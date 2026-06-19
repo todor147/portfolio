@@ -6,8 +6,8 @@ location: Templeglantine, Co. Limerick, Ireland
 category: hospitality
 start: "2023-04"
 end: "2023-05"
-summary: Serving guests in a fast-paced hotel environment.
+summary: Table service and F&B operations in a busy hotel restaurant environment.
 icon: devon inn.jpg
 ---
 
-Served guests in a fast-paced environment with a focus on teamwork and efficient hospitality service delivery.
+Delivered attentive table service in a fast-paced hotel restaurant, managing orders, table settings and timely communication with kitchen staff. Maintained service standards under pressure and contributed to smooth front-of-house operations throughout each shift.

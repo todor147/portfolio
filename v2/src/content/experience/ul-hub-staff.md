@@ -6,8 +6,8 @@ location: Limerick, Ireland
 category: education
 start: "2025-08"
 end: "2025-10"
-summary: Hub operations and student services during the First 7 Weeks programme.
+summary: Front-line student support at the UL hub throughout the First 7 Weeks orientation programme.
 icon: ul.png
 ---
 
-Supported hub operations and student services during the First 7 Weeks programme — the orientation runway that helps incoming students settle into university life.
+Staffed the student hub across the First 7 Weeks programme — UL's structured orientation runway for incoming students. Handled walk-in queries, directed students to the right services and resources, and helped maintain a welcoming, well-organised environment during one of the busiest and most disorienting periods in a new student's year.
