@@ -6,8 +6,8 @@ location: Limerick, Ireland
 category: education
 start: "2025-08"
 end: "2025-09"
-summary: Guiding new students through orientation week.
+summary: Welcoming and guiding new students through orientation week and first-week registration.
 icon: ul.png
 ---
 
-Walked new students through orientation week — campus navigation, registration, and first-week logistics — helping them feel at home before classes started.
+Welcomed incoming students at the start of the academic year, helping them navigate campus, complete registration steps and find key services. Answered questions, directed students to support resources and contributed to a calm, positive first impression of university life — drawing on personal experience of arriving at UL as an international student.

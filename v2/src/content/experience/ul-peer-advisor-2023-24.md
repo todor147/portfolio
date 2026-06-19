@@ -6,7 +6,7 @@ location: Limerick, Ireland
 category: education
 start: "2023-08"
 end: "2024-05"
-summary: First year on the Glucksman Library Peer Advisor team.
+summary: Front-line library service at the Glucksman Library — inquiries, tours and the Every Seat Counts programme.
 icon: ul.png
 ---
 
