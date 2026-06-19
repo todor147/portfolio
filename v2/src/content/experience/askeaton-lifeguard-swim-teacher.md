@@ -6,8 +6,8 @@ location: Askeaton, Ireland
 category: lifeguarding
 start: "2025-12"
 current: true
-summary: Lifeguarding pool sessions and teaching swimming lessons across age groups.
+summary: Teaching Swim Ireland Learn to Swim lessons and lifeguarding pool sessions across all ages and abilities.
 icon: Swim-Ireland.png
 ---
 
-Lifeguard duties poolside combined with structured swim instruction. Active rescue readiness, water safety education and progressive skills coaching for swimmers of all levels.
+Teach Swim Ireland Learn to Swim lessons across all ages and abilities — from beginners to confident swimmers — adapting sessions to individual progress and keeping every lesson purposeful and safe. Lifeguard pool sessions with constant vigilance, calm response under pressure, and a focus on proactive risk management.
