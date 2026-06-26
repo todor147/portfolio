@@ -5,11 +5,13 @@ institutionUrl: https://www.ul.ie/
 location: Limerick, Ireland
 start: "2022-09"
 end: "2026-08"
-grade: "Cumulative QCA: 3.09"
-activities: "Enactus 22/23 · Surf Club 24/25 · Swim Club 24/25, 25/26 (Portugal training camp Jan '26)"
-status: current
+grade: "2:1 Honours — QCA 3.06 / 4.00"
+activities: "Student Council Vice-Chairperson (23/24) · Executive Events Chairperson (23/24, 25/26) · Class Representative (22/23) · Enactus UL (22/23) · Swim Club · Surf Club · Rowing Club · Badminton Club · Taekwondo Club · BJJ Club · President's Gold Volunteer Award (22/23)"
+status: completed
 order: 2
-note: Software development, systems, databases, networking, and group software-engineering projects — alongside tutoring, library service and student-executive roles. Leads directly into the MSc AI & ML programme.
+note: Graduated 2026. Four years spanning software development, systems, databases, networking and group engineering projects — alongside tutoring, library service and student-executive roles. Leads directly into the MSc AI & ML programme.
 ---
 
-BSc in Computer Science at the University of Limerick. Coursework spans software development, systems, databases, networking and group software-engineering projects, alongside leadership roles in tutoring, library service and student executive bodies.
+Four-year programme at the University of Limerick covering software development, systems architecture, databases, networking, algorithms and group software-engineering projects. Graduated 2026 with a 2:1 Honours (QCA 3.06 / 4.00).
+
+Alongside the degree: two years of student leadership (Student Council Vice-Chairperson, Executive Events Chairperson, Class Representative), three years as a Glucksman Library Peer Advisor, two years as an ICT Learning Centre Tutor, and a PSLG Tutor role in first year. Recipient of the President's Gold Volunteer Award (2022–23).
