@@ -1,0 +1,332 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/Container.astro";
+
+const modules = [
+  { code: "CS4012", title: "Representation and Modelling",                year: 1, sem: "Sem 1", grade: "A1", credits: 6,  cat: "Fundamentals",         gradeN: 9 },
+  { code: "CS4141", title: "Introduction to Programming",                 year: 1, sem: "Sem 1", grade: "A1", credits: 6,  cat: "Programming",          gradeN: 9 },
+  { code: "CS4221", title: "Foundations of Computer Science 1",           year: 1, sem: "Sem 1", grade: "A1", credits: 6,  cat: "Fundamentals",         gradeN: 9 },
+  { code: "ET4011", title: "Fundamentals of Computer Organisation",       year: 1, sem: "Sem 1", grade: "A1", credits: 6,  cat: "Systems",              gradeN: 9 },
+  { code: "MS4111", title: "Discrete Mathematics 1",                      year: 1, sem: "Sem 1", grade: "B3", credits: 6,  cat: "Mathematics",          gradeN: 5 },
+  { code: "CS4043", title: "Games Modelling Design",                      year: 1, sem: "Sem 2", grade: "B1", credits: 6,  cat: "Graphics & Games",     gradeN: 7 },
+  { code: "CS4182", title: "Foundations of Computer Science 2",           year: 1, sem: "Sem 2", grade: "A1", credits: 6,  cat: "Fundamentals",         gradeN: 9 },
+  { code: "CS4222", title: "Software Development",                        year: 1, sem: "Sem 2", grade: "A1", credits: 6,  cat: "Programming",          gradeN: 9 },
+  { code: "ET4162", title: "Computing Systems Organisation",              year: 1, sem: "Sem 2", grade: "A1", credits: 6,  cat: "Systems",              gradeN: 9 },
+  { code: "MA4402", title: "Computer Maths 2",                            year: 1, sem: "Sem 2", grade: "A2", credits: 6,  cat: "Mathematics",          gradeN: 8 },
+  { code: "CS4004", title: "Software Testing and Inspection",             year: 2, sem: "Sem 1", grade: "C1", credits: 6,  cat: "Software Engineering", gradeN: 4 },
+  { code: "CS4013", title: "Object Oriented Development",                 year: 2, sem: "Sem 1", grade: "B1", credits: 6,  cat: "Programming",          gradeN: 7 },
+  { code: "CS4023", title: "Operating Systems",                           year: 2, sem: "Sem 1", grade: "A1", credits: 6,  cat: "Systems",              gradeN: 9 },
+  { code: "CS4178", title: "Software Requirements and Modelling",         year: 2, sem: "Sem 1", grade: "B1", credits: 6,  cat: "Software Engineering", gradeN: 7 },
+  { code: "CS4416", title: "Database Systems",                            year: 2, sem: "Sem 1", grade: "A2", credits: 6,  cat: "Data",                 gradeN: 8 },
+  { code: "CS4006", title: "Intelligent Systems",                         year: 2, sem: "Sem 2", grade: "B2", credits: 6,  cat: "AI & ML",              gradeN: 6 },
+  { code: "CS4076", title: "Event Driven Programming",                    year: 2, sem: "Sem 2", grade: "A2", credits: 6,  cat: "Programming",          gradeN: 8 },
+  { code: "CS4115", title: "Data Structures and Algorithms",              year: 2, sem: "Sem 2", grade: "C3", credits: 6,  cat: "Fundamentals",         gradeN: 2 },
+  { code: "CS4815", title: "Computer Graphics",                           year: 2, sem: "Sem 2", grade: "B1", credits: 6,  cat: "Graphics & Games",     gradeN: 7 },
+  { code: "MA4413", title: "Statistics for Computing",                    year: 2, sem: "Sem 2", grade: "C2", credits: 6,  cat: "Mathematics",          gradeN: 3 },
+  { code: "CO4230", title: "Cooperative Education 1 — AMCS Group",       year: 2, sem: "Co-op", grade: "P",  credits: 30, cat: "Co-op",                gradeN: 0 },
+  { code: "CO4310", title: "Cooperative Education 2 — AMCS Group",       year: 3, sem: "Co-op", grade: "P",  credits: 30, cat: "Co-op",                gradeN: 0 },
+  { code: "CS4084", title: "Mobile Application Development",              year: 3, sem: "Sem 2", grade: "B2", credits: 6,  cat: "Programming",          gradeN: 6 },
+  { code: "CS4106", title: "Machine Learning: Methods and Applications",  year: 3, sem: "Sem 2", grade: "C3", credits: 6,  cat: "AI & ML",              gradeN: 2 },
+  { code: "CS4116", title: "Software Development Project",                year: 3, sem: "Sem 2", grade: "A2", credits: 6,  cat: "Software Engineering", gradeN: 8 },
+  { code: "CS4187", title: "Professional Issues in Computing",            year: 3, sem: "Sem 2", grade: "B1", credits: 6,  cat: "Software Engineering", gradeN: 7 },
+  { code: "CS4457", title: "Project Management and Practice",             year: 3, sem: "Sem 2", grade: "A1", credits: 6,  cat: "Software Engineering", gradeN: 9 },
+  { code: "CS4207", title: "Advanced Programming Concepts and Practices", year: 4, sem: "Sem 1", grade: "B1", credits: 6,  cat: "Programming",          gradeN: 7 },
+  { code: "CS4287", title: "Neural Computing",                            year: 4, sem: "Sem 1", grade: "B3", credits: 6,  cat: "AI & ML",              gradeN: 5 },
+  { code: "CS4297", title: "Applied System Design",                       year: 4, sem: "Sem 1", grade: "C3", credits: 6,  cat: "Systems",              gradeN: 2 },
+  { code: "CS4617", title: "Computer Systems Project 1",                  year: 4, sem: "Sem 1", grade: "B1", credits: 6,  cat: "Project",              gradeN: 7 },
+  { code: "CS4928", title: "Theory and Practice of Software Design",      year: 4, sem: "Sem 1", grade: "A1", credits: 6,  cat: "Software Engineering", gradeN: 9 },
+  { code: "CS4135", title: "Software Architectures",                      year: 4, sem: "Sem 2", grade: "B1", credits: 6,  cat: "Software Engineering", gradeN: 7 },
+  { code: "CS4158", title: "Programming Language Technology",             year: 4, sem: "Sem 2", grade: "B1", credits: 6,  cat: "Programming",          gradeN: 7 },
+  { code: "CS4168", title: "Data Mining",                                 year: 4, sem: "Sem 2", grade: "C3", credits: 6,  cat: "AI & ML",              gradeN: 2 },
+  { code: "CS4618", title: "Computer Systems Project 2",                  year: 4, sem: "Sem 2", grade: "B1", credits: 12, cat: "Project",              gradeN: 7 },
+];
+
+const qcaSteps = [
+  { label: "After Year 1", qca: "3.76" },
+  { label: "After Year 2", qca: "3.08" },
+  { label: "After Year 3", qca: "3.12" },
+  { label: "Final",        qca: "3.06" },
+];
+
+function gradeClass(g: string) {
+  if (g.startsWith("A")) return "grade-a";
+  if (g.startsWith("B")) return "grade-b";
+  if (g.startsWith("C")) return "grade-c";
+  return "grade-p";
+}
+---
+
+<BaseLayout
+  title="Academic Transcript — Todor Aleksandrov"
+  description="Full academic transcript for BSc Computer Systems at the University of Limerick (2022–2026). 2:1 Honours, QCA 3.06 / 4.00."
+>
+  <Container size="wide" class="py-(--spacing-section)">
+
+    <p class="eyebrow">BSc Computer Systems · University of Limerick · 2022–2026</p>
+    <h1
+      class="font-display tracking-[-0.03em] mt-4"
+      style="font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.02;"
+    >
+      Academic Transcript
+    </h1>
+
+    <!-- Summary stats -->
+    <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
+      {[
+        { label: "Final QCA",   value: "3.06"            },
+        { label: "Award",       value: "2:1 Honours"     },
+        { label: "Modules",     value: "36"              },
+        { label: "Credits",     value: "300"             },
+      ].map(s => (
+        <div class="rounded-xl border p-4" style="border-color: color-mix(in oklab, var(--text) 10%, transparent); background: var(--bg-soft);">
+          <p class="eyebrow text-[0.65rem]">{s.label}</p>
+          <p class="font-display mt-1 text-2xl font-semibold" style="color: var(--accent)">{s.value}</p>
+        </div>
+      ))}
+    </div>
+
+    <!-- QCA progression -->
+    <div class="mt-8">
+      <p class="eyebrow mb-4">QCA Progression</p>
+      <div class="flex flex-wrap items-end gap-x-3 gap-y-4">
+        {qcaSteps.map((step, i) => (
+          <div class="flex items-end gap-3">
+            <div class="text-center">
+              <span class="font-display text-2xl font-semibold" style="color: var(--accent)">{step.qca}</span>
+              <p class="text-xs mt-1" style="color: var(--text-soft)">{step.label}</p>
+            </div>
+            {i < qcaSteps.length - 1 && (
+              <span class="text-lg mb-5" style="color: color-mix(in oklab, var(--text) 25%, transparent)">→</span>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <hr class="rule my-8" />
+
+    <!-- Controls -->
+    <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between mb-5">
+      <input
+        id="ts-search"
+        type="search"
+        placeholder="Search code or module title…"
+        autocomplete="off"
+        class="w-full sm:w-72 rounded-xl border px-4 py-2.5 text-sm outline-none transition-shadow"
+        style="background: var(--bg-soft); border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text);"
+      />
+      <div class="flex flex-wrap gap-2" id="year-filters">
+        {(["all", "1", "2", "3", "4"] as const).map(y => (
+          <button
+            data-year={y}
+            class="year-btn text-xs font-medium px-3 py-1.5 rounded-full border transition-colors"
+            style={y === "all"
+              ? "background: var(--accent); color: var(--color-cream); border-color: var(--accent);"
+              : "background: transparent; color: var(--text-soft); border-color: color-mix(in oklab, var(--text) 15%, transparent);"}
+          >
+            {y === "all" ? "All years" : `Year ${y}`}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto rounded-xl border" style="border-color: color-mix(in oklab, var(--text) 10%, transparent);">
+      <table id="ts-table" class="w-full text-sm border-collapse">
+        <thead>
+          <tr style="background: var(--bg-soft);">
+            {[
+              { key: "code",    label: "Code"     },
+              { key: "title",   label: "Module"   },
+              { key: "year",    label: "Yr"       },
+              { key: "sem",     label: "Sem"      },
+              { key: "cat",     label: "Area"     },
+              { key: "grade",   label: "Grade"    },
+              { key: "credits", label: "Cr"       },
+            ].map(col => (
+              <th
+                data-col={col.key}
+                class="sort-th px-4 py-3 text-left text-[0.65rem] font-semibold tracking-widest uppercase cursor-pointer select-none whitespace-nowrap border-b transition-colors"
+                style="color: var(--text-soft); border-color: color-mix(in oklab, var(--text) 12%, transparent);"
+              >
+                {col.label}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody id="ts-body">
+          {modules.map(m => (
+            <tr
+              class:list={["ts-row border-b", m.cat === "Co-op" ? "coop-row" : ""]}
+              data-year={m.year}
+              data-search={`${m.code} ${m.title}`.toLowerCase()}
+              data-code={m.code}
+              data-title={m.title.toLowerCase()}
+              data-sem={m.sem}
+              data-cat={m.cat.toLowerCase()}
+              data-grade={m.gradeN}
+              data-credits={m.credits}
+              style="border-color: color-mix(in oklab, var(--text) 7%, transparent);"
+            >
+              <td class="px-4 py-3 font-mono text-xs whitespace-nowrap" style="color: var(--text-soft)">{m.code}</td>
+              <td class="px-4 py-3 font-medium">{m.title}</td>
+              <td class="px-4 py-3 text-xs text-center tabular-nums" style="color: var(--text-soft)">{m.year}</td>
+              <td class="px-4 py-3 text-xs whitespace-nowrap" style="color: var(--text-soft)">{m.sem}</td>
+              <td class="px-4 py-3">
+                <span class="text-xs px-2 py-0.5 rounded-md" style="background: color-mix(in oklab, var(--text) 7%, transparent); color: var(--text-soft);">
+                  {m.cat}
+                </span>
+              </td>
+              <td class="px-4 py-3">
+                <span class:list={["grade-badge", gradeClass(m.grade)]}>{m.grade}</span>
+              </td>
+              <td class="px-4 py-3 text-xs text-right tabular-nums" style="color: var(--text-soft)">{m.credits}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p id="ts-empty" class="hidden px-6 py-12 text-center text-sm" style="color: var(--text-soft);">
+        No modules match your search.
+      </p>
+    </div>
+
+    <p class="mt-4 text-xs leading-relaxed" style="color: var(--text-soft);">
+      Co-operative Education placements (CO4230 / CO4310) are graded Pass/Fail and do not contribute to QCA.
+      Final-year project (CS4617 / CS4618) spans two semesters worth 18 credits total.
+      Final-year modules (Years 3–4) are weighted ×2 in the QCA calculation.
+      Click any column header to sort. Use the search box to filter by code or module name.
+    </p>
+
+  </Container>
+</BaseLayout>
+
+<style>
+  .grade-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.4rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 0.375rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    font-family: ui-monospace, "Cascadia Code", monospace;
+    letter-spacing: 0.04em;
+  }
+
+  .grade-a { background: #dcfce7; color: #166534; }
+  .grade-b {
+    background: color-mix(in oklab, var(--color-burgundy-600, #7B1E2D) 13%, transparent);
+    color: var(--color-burgundy-700, #6b1826);
+  }
+  .grade-c { background: #fef3c7; color: #92400e; }
+  .grade-p { background: color-mix(in oklab, var(--text) 8%, transparent); color: var(--text-soft); }
+
+  :global(.dark) .grade-a { background: #14532d; color: #86efac; }
+  :global(.dark) .grade-b {
+    background: color-mix(in oklab, var(--color-burgundy-400, #b85c6e) 18%, transparent);
+    color: var(--color-burgundy-300, #d4899a);
+  }
+  :global(.dark) .grade-c { background: #78350f; color: #fde68a; }
+
+  .coop-row td { opacity: 0.55; }
+  .ts-row:last-child { border-bottom: none !important; }
+
+  .sort-th:hover { color: var(--text) !important; }
+  .sort-th.sort-asc::after  { content: " ↑"; color: var(--accent); }
+  .sort-th.sort-desc::after { content: " ↓"; color: var(--accent); }
+
+  #ts-search:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 35%, transparent);
+  }
+</style>
+
+<script>
+  const searchEl = document.getElementById("ts-search") as HTMLInputElement;
+  const tbody    = document.getElementById("ts-body") as HTMLTableSectionElement;
+  const emptyEl  = document.getElementById("ts-empty") as HTMLElement;
+  const yearBtns = document.querySelectorAll<HTMLButtonElement>(".year-btn");
+  const sortThs  = document.querySelectorAll<HTMLTableCellElement>(".sort-th");
+
+  let activeYear = "all";
+  let sortCol    = "year";
+  let sortDir: "asc" | "desc" = "asc";
+
+  const numericCols = new Set(["year", "grade", "credits"]);
+
+  function allRows() {
+    return Array.from(tbody.querySelectorAll<HTMLTableRowElement>(".ts-row"));
+  }
+
+  function applyFilters() {
+    const q = searchEl.value.toLowerCase().trim();
+    let visible = 0;
+    allRows().forEach(row => {
+      const yearOk   = activeYear === "all" || row.dataset.year === activeYear;
+      const searchOk = !q || (row.dataset.search ?? "").includes(q);
+      const show = yearOk && searchOk;
+      row.style.display = show ? "" : "none";
+      if (show) visible++;
+    });
+    emptyEl.classList.toggle("hidden", visible > 0);
+  }
+
+  function doSort() {
+    const sorted = allRows().sort((a, b) => {
+      const av = a.dataset[sortCol] ?? "";
+      const bv = b.dataset[sortCol] ?? "";
+      let cmp: number;
+      if (numericCols.has(sortCol)) {
+        cmp = parseFloat(av) - parseFloat(bv);
+      } else {
+        cmp = av.localeCompare(bv);
+      }
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+    sorted.forEach(r => tbody.appendChild(r));
+    sortThs.forEach(th => {
+      th.classList.remove("sort-asc", "sort-desc");
+      if (th.dataset.col === sortCol) {
+        th.classList.add(sortDir === "asc" ? "sort-asc" : "sort-desc");
+      }
+    });
+  }
+
+  doSort();
+
+  searchEl.addEventListener("input", applyFilters);
+
+  yearBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      activeYear = btn.dataset.year ?? "all";
+      yearBtns.forEach(b => {
+        const active = b.dataset.year === activeYear;
+        if (active) {
+          b.style.background = "var(--accent)";
+          b.style.color      = "var(--color-cream)";
+          b.style.borderColor= "var(--accent)";
+        } else {
+          b.style.background = "transparent";
+          b.style.color      = "var(--text-soft)";
+          b.style.borderColor= "color-mix(in oklab, var(--text) 15%, transparent)";
+        }
+      });
+      applyFilters();
+    });
+  });
+
+  sortThs.forEach(th => {
+    th.addEventListener("click", () => {
+      const col = th.dataset.col ?? "";
+      if (sortCol === col) {
+        sortDir = sortDir === "asc" ? "desc" : "asc";
+      } else {
+        sortCol = col;
+        sortDir = "asc";
+      }
+      doSort();
+      applyFilters();
+    });
+  });
+</script>
