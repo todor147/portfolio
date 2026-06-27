@@ -1,0 +1,88 @@
+---
+import Container from "./Container.astro";
+
+const trades = [
+  {
+    href: "/sommelier",
+    sublabel: "Sommelier",
+    label: "Wine",
+    note: "Junior Sommelier at Adare Manor. WSET Level 2 certified, CMS Introductory passed. Wine service, cellar management, and table-side decanting.",
+  },
+  {
+    href: "/water",
+    sublabel: "Lifeguard",
+    label: "Water",
+    note: "PHECC FAR qualified. Pool deck and open-water experience. Emergency first response trained to national standard.",
+  },
+  {
+    href: "/language",
+    sublabel: "Interpreter",
+    label: "Language",
+    note: "English and Bulgarian at C2 / native level. Professional conference and community interpreting across medical, legal, and business contexts.",
+  },
+];
+
+const extras = [
+  { href: "/gallery",        label: "Gallery",        note: "Photos from service, travel, and sport." },
+  { href: "/now",            label: "Now",             note: "What I'm currently working on." },
+  { href: "/uses",           label: "Uses",            note: "Tools, hardware, and what's in the cellar." },
+  { href: "/transcript",     label: "Transcript",      note: "Full BSc academic record, searchable." },
+  { href: "/certifications", label: "Certifications",  note: "WSET, PHECC, and professional qualifications." },
+];
+---
+
+<section class="py-(--spacing-section)">
+  <Container size="wide">
+
+    <div class="mb-8">
+      <p class="eyebrow">Explore</p>
+      <h2
+        class="font-display tracking-[-0.02em] mt-2"
+        style="font-size: clamp(1.75rem, 3.5vw, 2.75rem); line-height: 1.1;"
+      >
+        Three trades
+        <em class="not-italic" style="color: var(--accent)"> · and more</em>
+      </h2>
+    </div>
+
+    <!-- Trade cards — larger -->
+    <div class="grid sm:grid-cols-3 gap-4 mb-4">
+      {trades.map((p) => (
+        <a
+          href={p.href}
+          class="group flex flex-col justify-between rounded-2xl border p-6 transition-all duration-200 hover:border-burgundy-600 hover:shadow-sm"
+          style="border-color: color-mix(in oklab, var(--text) 12%, transparent); background: var(--bg-soft);"
+        >
+          <div>
+            <p class="eyebrow text-[0.65rem] mb-3">{p.sublabel}</p>
+            <p class="font-display text-2xl tracking-[-0.02em]">{p.label}</p>
+            <p class="mt-2 text-sm leading-relaxed" style="color: var(--text-soft);">{p.note}</p>
+          </div>
+          <p class="mt-5 text-sm font-medium" style="color: var(--accent);">
+            Explore
+            <span class="inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
+          </p>
+        </a>
+      ))}
+    </div>
+
+    <!-- Secondary tiles — compact -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+      {extras.map((p) => (
+        <a
+          href={p.href}
+          class="group rounded-xl border px-4 py-4 transition-all duration-200 hover:border-burgundy-600"
+          style="border-color: color-mix(in oklab, var(--text) 10%, transparent);"
+        >
+          <p class="font-display text-base tracking-[-0.01em]">{p.label}</p>
+          <p class="mt-1 text-xs leading-relaxed" style="color: var(--text-soft);">{p.note}</p>
+          <span
+            class="mt-3 inline-block text-xs transition-transform duration-200 group-hover:translate-x-0.5"
+            style="color: var(--text-soft);"
+          >→</span>
+        </a>
+      ))}
+    </div>
+
+  </Container>
+</section>
