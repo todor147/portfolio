@@ -103,7 +103,7 @@ export const cvVariants: CvVariant[] = [
     headline: "Junior Sommelier · Food & Beverage",
     blurb: "Sommelier and fine-dining service at Adare Manor, with WSET and Court of Master Sommeliers credentials.",
     profile:
-      "Junior Sommelier at Adare Manor — Ireland's five-star Forbes-rated estate — holding WSET Level 2 (Merit) and the Court of Master Sommeliers Introductory certification. I maintain deep knowledge of an extensive wine list, craft food pairings and bespoke event selections, and consistently lift wine spend through attentive, knowledgeable service for an international clientele.",
+      "Junior Sommelier at Adare Manor (2024–2026) — Ireland's five-star Forbes-rated estate — holding WSET Level 2 (Merit) and the Court of Master Sommeliers Introductory certification. Deep knowledge of an extensive wine list, crafting food pairings and bespoke event selections, consistently lifting wine spend through attentive, knowledgeable service for an international clientele.",
     experienceCategories: ["hospitality"],
     certCategories: ["hospitality"],
     showProjects: false,
