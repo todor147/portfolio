@@ -9,6 +9,9 @@ export default defineConfig({
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],
+    ssr: {
+      external: ["@resvg/resvg-js"],
+    },
   },
   experimental: {
     clientPrerender: true,
