@@ -13,6 +13,7 @@ const modules = [
   { code: "CS4222", title: "Software Development",                        year: 1, sem: "Sem 2", grade: "A1", credits: 6,  cat: "Programming",          gradeN: 9 },
   { code: "ET4162", title: "Computing Systems Organisation",              year: 1, sem: "Sem 2", grade: "A1", credits: 6,  cat: "Systems",              gradeN: 9 },
   { code: "MA4402", title: "Computer Maths 2",                            year: 1, sem: "Sem 2", grade: "A2", credits: 6,  cat: "Mathematics",          gradeN: 8 },
+  { code: "PV1000", title: "President's Volunteer Award — Gold",          year: 1, sem: "Sem 2", grade: "G",  credits: 0,  cat: "Award",                gradeN: 0 },
   { code: "CS4004", title: "Software Testing and Inspection",             year: 2, sem: "Sem 1", grade: "C1", credits: 6,  cat: "Software Engineering", gradeN: 4 },
   { code: "CS4013", title: "Object Oriented Development",                 year: 2, sem: "Sem 1", grade: "B1", credits: 6,  cat: "Programming",          gradeN: 7 },
   { code: "CS4023", title: "Operating Systems",                           year: 2, sem: "Sem 1", grade: "A1", credits: 6,  cat: "Systems",              gradeN: 9 },
@@ -49,6 +50,7 @@ const qcaSteps = [
 ];
 
 function gradeClass(g: string) {
+  if (g === "G")          return "grade-g";
   if (g.startsWith("A")) return "grade-a";
   if (g.startsWith("B")) return "grade-b";
   if (g.startsWith("C")) return "grade-c";
@@ -192,6 +194,7 @@ function gradeClass(g: string) {
 
     <p class="mt-4 text-xs leading-relaxed" style="color: var(--text-soft);">
       Co-operative Education placements (CO4230 / CO4310) are graded Pass/Fail and do not contribute to QCA.
+      PV1000 (President's Volunteer Award — Gold) carries 0 credits and is non-qualifying.
       Final-year project (CS4617 / CS4618) spans two semesters worth 18 credits total.
       Final-year modules (Years 3–4) are weighted ×2 in the QCA calculation.
       Click any column header to sort. Use the search box to filter by code or module name.
@@ -221,6 +224,7 @@ function gradeClass(g: string) {
   }
   .grade-c { background: #fef3c7; color: #92400e; }
   .grade-p { background: color-mix(in oklab, var(--text) 8%, transparent); color: var(--text-soft); }
+  .grade-g { background: #fef9c3; color: #854d0e; }
 
   :global(.dark) .grade-a { background: #14532d; color: #86efac; }
   :global(.dark) .grade-b {
@@ -228,6 +232,7 @@ function gradeClass(g: string) {
     color: var(--color-burgundy-300, #d4899a);
   }
   :global(.dark) .grade-c { background: #78350f; color: #fde68a; }
+  :global(.dark) .grade-g { background: #713f12; color: #fde68a; }
 
   .coop-row td { opacity: 0.55; }
   .ts-row:last-child { border-bottom: none !important; }
