@@ -1,7 +1,7 @@
 ---
 title: Student Professional
 employer: National Building Control Office (NBCO) & National Market Surveillance Office (NMSO)
-employerUrl: https://www.nbco.localgov.ie/
+employerUrl: https://www.gov.ie/en/organisation/national-building-control-office/
 location: Dublin, Ireland (remote)
 category: other
 start: "2025-05"
