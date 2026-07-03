@@ -14,6 +14,14 @@ const wineCerts = certifications
   .filter((c) => c.data.category === "hospitality")
   .sort((a, b) => b.data.issued.localeCompare(a.data.issued));
 
+// Hospitality tenure: Adare Manor May 2023 – July 2026 (closed period)
+const hospStart = new Date("2023-05-01");
+const hospEnd   = new Date("2026-07-01");
+const hospMonths = Math.round((hospEnd.getTime() - hospStart.getTime()) / (1000 * 60 * 60 * 24 * 30.44));
+const hospYears  = Math.floor(hospMonths / 12);
+const hospRem    = hospMonths % 12;
+const hospLabel  = hospRem > 0 ? `${hospYears} years ${hospRem} months` : `${hospYears} years`;
+
 const journey = [
   {
     year: "2022",
@@ -30,10 +38,10 @@ const journey = [
     image: "ch indoors.jpg",
   },
   {
-    year: "2024 →",
+    year: "2024–2026",
     place: "Adare Manor",
     role: "Junior Sommelier",
-    note: "Wine list, pairings, event planning. Studying for the next certification tier.",
+    note: "Wine list, pairings, event planning for international clientele. Two and a half years building the craft at one of Europe's finest five-star properties.",
     image: "cellar.jpg",
   },
 ];
@@ -85,8 +93,8 @@ const gallery = [
           >
             A side hustle at a country-house restaurant turned into a sommelier
             kit, a trip to Madrid for the CMS Intro, and a WSET Level 2 pass
-            with merit. Software engineering by day, wine list by evening — they
-            ask for the same kind of attention.
+            with merit. {hospLabel} at Adare Manor — and two trades that ask for
+            the same kind of attention.
           </p>
           <div class="flex flex-wrap gap-3 pt-2">
             <Button href="#pairing-tool" arrow>Try the pairing tool</Button>
@@ -164,7 +172,7 @@ const gallery = [
     <SectionHeader
       eyebrow="Credentials"
       title="The qualifications"
-      subtitle="Working through the formal ladder while pouring."
+      subtitle={`${hospLabel} on the floor at Adare Manor — and the certifications to show for it.`}
     />
     <div class="mt-10 grid gap-5 md:grid-cols-2">
       {wineCerts.map((cert) => (

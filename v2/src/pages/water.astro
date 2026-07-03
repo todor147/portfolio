@@ -13,6 +13,10 @@ const safetyCerts = certifications
   .filter((c) => c.data.category === "safety")
   .sort((a, b) => b.data.issued.localeCompare(a.data.issued));
 
+// Auto-calculate months swimming since adult lessons (Oct 2024)
+const swimStart = new Date("2024-10-01");
+const monthsSwimming = Math.floor((Date.now() - swimStart.getTime()) / (1000 * 60 * 60 * 24 * 30.44));
+
 const journey = [
   {
     year: "Late 2024",
@@ -33,15 +37,15 @@ const journey = [
   {
     year: "Oct 2025 → now",
     place: "Beach + Askeaton + Portugal",
-    role: "Beach-qualified, swim teacher, training camp",
-    note: "Beach Lifeguard Qualification in October. Lifeguard and Swim Teacher at Askeaton Pool & Leisure since December. UL Swim Club training camp at Vila Real de Santo António, Portugal, in January 2026. Cardiac First Response — Advanced in February.",
+    role: "Beach-qualified, swim teacher, Duty Manager",
+    note: "Beach Lifeguard Qualification in October. Lifeguard and Swim Teacher at Askeaton since December 2025. UL Swim Club training camp in Portugal in January 2026. Promoted to Duty Manager at Askeaton Pool & Leisure in June 2026 — coordinating lifeguards, swim teachers and day-to-day operations.",
     icon: "Swim-Ireland.png",
     iconAlt: "Swim Ireland",
   },
 ];
 
 const stats = [
-  { value: "18", label: "months swimming", suffix: "mo", sub: "since adult lessons, Oct 2024" },
+  { value: monthsSwimming.toString(), label: "months swimming", suffix: "mo", sub: "since adult lessons, Oct 2024" },
   { value: safetyCerts.length.toString(), label: "active safety certs", suffix: "", sub: "across 5 issuing bodies" },
   { value: "1", label: "UL Swim Club", suffix: "", sub: "Portugal training camp '26" },
   { value: "0", label: "fatal incidents on watch", suffix: "", sub: "the only one that matters" },
@@ -50,7 +54,7 @@ const stats = [
 
 <BaseLayout
   title="On Water — Todor Aleksandrov"
-  description="Learned to swim properly in 2024. Eighteen months later: certified beach lifeguard, swim teacher, eleven safety certifications, UL Swim Club member. The shortest path I've walked from learner to teacher."
+  description="Learned to swim properly in 2024. Now Duty Manager at Askeaton Pool & Leisure, certified beach lifeguard, swim teacher, and UL Swim Club member. The shortest path I've walked from learner to teacher."
 >
   <!-- HERO -->
   <section class="relative overflow-hidden">
@@ -83,9 +87,9 @@ const stats = [
             class="text-lg md:text-xl leading-relaxed max-w-xl"
             style="color:var(--text-soft)"
           >
-            Adult lessons completed around Halloween 2024. Eighteen months later: pool
-            and beach lifeguard certified, swim teacher at Askeaton, UL Swim Club
-            member, eleven current safety qualifications. The shortest path I've ever
+            Adult lessons completed around Halloween 2024. {monthsSwimming} months later: pool
+            and beach lifeguard certified, Duty Manager at Askeaton Pool &amp; Leisure, UL Swim Club
+            member, {safetyCerts.length} current safety qualifications. The shortest path I've ever
             walked from learner to teacher.
           </p>
           <div class="flex flex-wrap gap-3 pt-2">
@@ -238,7 +242,7 @@ const stats = [
   <Container size="wide" class="pb-(--spacing-section)">
     <SectionHeader
       eyebrow="Credentials"
-      title="Eleven certifications, five issuing bodies"
+      title={`${safetyCerts.length} certifications, five issuing bodies`}
       subtitle="PHECC, RLSS UK, Swim Ireland, Water Safety Ireland and Irish Red Cross. All current."
     />
     <div class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -288,7 +292,10 @@ const stats = [
           The advantage is that I remember how it felt to be afraid in the deep
           end. Most of teaching swim is reassurance, and most of lifeguarding is
           noticing when reassurance has run out for someone in the lane next to
-          you. Coming late made me better at both.
+          you. Coming late made me better at both. Now as Duty Manager I spend
+          as much time coordinating the people on deck as I do watching the water
+          — and the learner's perspective still matters there, because the staff
+          you're developing started exactly where you did.
         </p>
         <p>
           The same is true of software incident response — the engineers who've
