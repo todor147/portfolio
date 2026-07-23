@@ -299,6 +299,7 @@ const vintageYears    = bottles
 const oldestYear      = vintageYears.length ? Math.min(...vintageYears) : null;
 const bulgariaCount   = bottles.filter((b) => b.location === "bulgaria").length;
 const styles          = Object.keys(styleConfig) as Style[];
+const locationKeys: Location[] = ["home", "limerick", "bulgaria"];
 ---
 
 <BaseLayout
@@ -439,7 +440,7 @@ const styles          = Object.keys(styleConfig) as Style[];
           >
             All locations
           </button>
-          {(["home", "limerick", "bulgaria"] as Location[]).map((loc) => (
+          {locationKeys.map((loc) => (
             <button
               class="cellar-loc-btn px-3 py-1 rounded-full text-xs font-medium border transition-colors"
               data-location={loc}
