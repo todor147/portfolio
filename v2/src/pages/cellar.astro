@@ -293,13 +293,25 @@ const bottles: Bottle[] = [
 ];
 
 const uniqueProducers = new Set(bottles.map((b) => b.producer)).size;
-const vintageYears    = bottles
-  .filter((b) => b.vintage && /^\d{4}$/.test(b.vintage))
-  .map((b) => parseInt(b.vintage!));
-const oldestYear      = vintageYears.length ? Math.min(...vintageYears) : null;
 const bulgariaCount   = bottles.filter((b) => b.location === "bulgaria").length;
-const styles          = Object.keys(styleConfig) as Style[];
-const locationKeys: Location[] = ["home", "limerick", "bulgaria"];
+const vintageYears    = bottles.flatMap((b) =>
+  b.vintage && /^\d{4}$/.test(b.vintage) ? [parseInt(b.vintage)] : []
+);
+const oldestYear      = vintageYears.length ? Math.min(...vintageYears) : null;
+
+// Pre-compute per-bottle display data so the template stays type-cast-free
+const bottlesWithMeta = bottles.map((b, i) => ({
+  ...b,
+  styleLabel:    styleConfig[b.style].label,
+  styleColor:    styleConfig[b.style].color,
+  locationLabel: locationConfig[b.location],
+  vintageSort:   b.vintage && /^\d{4}$/.test(b.vintage) ? b.vintage : "0",
+  idx:           i,
+}));
+
+// Flat arrays for filter buttons — Object.entries preserves insertion order
+const styleEntries    = Object.entries(styleConfig);
+const locationEntries = Object.entries(locationConfig);
 ---
 
 <BaseLayout
@@ -415,15 +427,15 @@ const locationKeys: Location[] = ["home", "limerick", "bulgaria"];
           >
             All styles
           </button>
-          {styles.map((s) => (
+          {styleEntries.map(([key, cfg]) => (
             <button
               class="cellar-style-btn inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border transition-colors"
-              data-style={s}
+              data-style={key}
               aria-pressed="false"
-              style={`border-color: ${styleConfig[s].color}22; color: ${styleConfig[s].color};`}
+              style={`border-color: ${cfg.color}22; color: ${cfg.color};`}
             >
-              <span class="inline-block w-1.5 h-1.5 rounded-full" style={`background:${styleConfig[s].color};`}></span>
-              {styleConfig[s].label}
+              <span class="inline-block w-1.5 h-1.5 rounded-full" style={`background:${cfg.color};`}></span>
+              {cfg.label}
             </button>
           ))}
         </div>
@@ -440,14 +452,14 @@ const locationKeys: Location[] = ["home", "limerick", "bulgaria"];
           >
             All locations
           </button>
-          {locationKeys.map((loc) => (
+          {locationEntries.map(([key, label]) => (
             <button
               class="cellar-loc-btn px-3 py-1 rounded-full text-xs font-medium border transition-colors"
-              data-location={loc}
+              data-location={key}
               aria-pressed="false"
               style="border-color: color-mix(in oklab, var(--text) 12%, transparent); color: var(--text-soft);"
             >
-              {locationConfig[loc]}
+              {label}
             </button>
           ))}
         </div>
@@ -467,16 +479,16 @@ const locationKeys: Location[] = ["home", "limerick", "bulgaria"];
   <!-- GRID -->
   <Container size="wide" class="py-(--spacing-section)">
     <div id="cellar-grid" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {bottles.map((bottle, i) => (
+      {bottlesWithMeta.map((bottle) => (
         <article
-          data-index={i}
+          data-index={bottle.idx}
           data-name={bottle.name.toLowerCase()}
           data-producer={bottle.producer.toLowerCase()}
           data-region={bottle.region.toLowerCase()}
           data-variety={bottle.variety.join(" ").toLowerCase()}
           data-style={bottle.style}
           data-location={bottle.location}
-          data-vintage={bottle.vintage && /^\d{4}$/.test(bottle.vintage) ? bottle.vintage : "0"}
+          data-vintage={bottle.vintageSort}
         >
           <Card variant="outline" padding="md" class="h-full flex flex-col gap-4">
             <!-- Header row: style dot + name + vintage -->
@@ -485,19 +497,19 @@ const locationKeys: Location[] = ["home", "limerick", "bulgaria"];
                 <div class="flex flex-wrap items-center gap-2">
                   <span
                     class="inline-flex items-center gap-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.14em]"
-                    style={`color: ${styleConfig[bottle.style].color};`}
+                    style={`color: ${bottle.styleColor};`}
                   >
                     <span
                       class="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0"
-                      style={`background: ${styleConfig[bottle.style].color};`}
+                      style={`background: ${bottle.styleColor};`}
                     ></span>
-                    {styleConfig[bottle.style].label}
+                    {bottle.styleLabel}
                   </span>
                   <span
                     class="text-[0.6rem] px-1.5 py-0.5 rounded tracking-[0.08em]"
                     style="background: color-mix(in oklab, var(--text) 7%, transparent); color: var(--text-soft);"
                   >
-                    {locationConfig[bottle.location]}
+                    {bottle.locationLabel}
                   </span>
                 </div>
                 <h3 class="font-display text-[1.05rem] tracking-[-0.01em] leading-tight mt-2">
