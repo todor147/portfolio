@@ -1,0 +1,431 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/Container.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import Card from "../components/Card.astro";
+
+type Style = "red" | "white" | "rosé" | "orange" | "sweet" | "spirit";
+type Location = "limerick" | "bulgaria";
+
+interface Bottle {
+  name: string;
+  producer: string;
+  vintage?: string;
+  grapes: string[];
+  region: string;
+  style: Style;
+  abv?: string;
+  note: string;
+  awards?: string;
+  location: Location;
+  special?: boolean;
+}
+
+const styleConfig: Record<Style, { label: string; color: string }> = {
+  red:    { label: "Red",    color: "#9f1239" },
+  white:  { label: "White",  color: "#b45309" },
+  rosé:   { label: "Rosé",   color: "#db2777" },
+  orange: { label: "Orange", color: "#c2410c" },
+  sweet:  { label: "Sweet",  color: "#a16207" },
+  spirit: { label: "Spirit", color: "#78350f" },
+};
+
+const bottles: Bottle[] = [
+  // ── In Limerick ─────────────────────────────────────────────────────────
+  {
+    name: "Troyanska Slivova Special Reserva",
+    producer: "Vinprom Troyan",
+    vintage: "25-year-old",
+    grapes: ["Plum"],
+    region: "Troyan, Bulgaria",
+    style: "spirit",
+    abv: "40%",
+    note: "Twenty-five years in 500 L oak. Caramelised plum, dried stone fruit, integrated warmth — closer to Cognac territory than any slivovitz has a right to be.",
+    location: "limerick",
+  },
+  {
+    name: "Mavrud Reserva",
+    producer: "Edoardo Miroglio",
+    vintage: "2022",
+    grapes: ["Mavrud"],
+    region: "PDO Nova Zagora · Thracian Valley",
+    style: "red",
+    abv: "14.5%",
+    note: "24 months in 500 L Bulgarian oak. Ripe cherry, dry leaves, mushroom, walnut. Supple tannins, long smoky finish — clay-slate estate soils above Elenovo.",
+    location: "limerick",
+  },
+  // ── Still in Bulgaria ────────────────────────────────────────────────────
+  {
+    name: "DOGMA Mavrud Barrel Aged",
+    producer: "Zaara Estate",
+    grapes: ["Mavrud"],
+    region: "Sakar · Thracian Valley",
+    style: "red",
+    note: "Boutique Sakar estate, Italian oenologist Giovanni Colugnati. Dense and harmonious — blackberry, mulberry, powerful Mavrud tannins with an earthy, savoury edge.",
+    location: "bulgaria",
+  },
+  {
+    name: "DOGMA Misket",
+    producer: "Zaara Estate",
+    grapes: ["Misket"],
+    region: "Sakar · Thracian Valley",
+    style: "white",
+    note: "Aromatic white from the Sakar foothills. White flowers, green apple, citrus zest, a delicate muscat note — built on freshness.",
+    location: "bulgaria",
+  },
+  {
+    name: "Cabernet Sauvignon Special Reserva",
+    producer: "Vinex Slavyantsi",
+    vintage: "2007",
+    grapes: ["Cabernet Sauvignon"],
+    region: "Thracian Valley",
+    style: "red",
+    note: "Almost two decades of age. Tertiary territory: leather, tobacco, dried herbs, mellow tannins. A Thracian Cabernet in full autumn — a time capsule.",
+    location: "bulgaria",
+  },
+  {
+    name: "Shiroka Melnishka Loza Rosé",
+    producer: "Logodaj Winery",
+    vintage: "2024",
+    grapes: ["Shiroka Melnishka Loza"],
+    region: "Struma River Valley",
+    style: "rosé",
+    note: "From one of the world's rarest indigenous varieties, grown only around Melnik. Lychee-pink, berry-forward, elegant and fine.",
+    location: "bulgaria",
+  },
+  {
+    name: "Wine Museum Melnik",
+    producer: "Museum of Wine, Melnik",
+    grapes: ["Shiroka Melnishka Loza"],
+    region: "Melnik · Struma Valley",
+    style: "red",
+    note: "Cave-cellar souvenir bottle — hand-filled from barrel, wax-sealed and personalised on-site in Melnik's old town. Exact vintage unknown.",
+    location: "bulgaria",
+    special: true,
+  },
+  {
+    name: "Grande Cuvée",
+    producer: "Bessa Valley",
+    vintage: "2020",
+    grapes: ["Cabernet Sauvignon", "Merlot", "Syrah", "Petit Verdot"],
+    region: "Thracian Valley",
+    style: "red",
+    note: "18 months in 100% new French oak. Blue plum, blackberry, cacao, velvety tannins. One of Bulgaria's most serious reds — built for the cellar.",
+    awards: "DiVino Top 50 Bulgaria 2024",
+    location: "bulgaria",
+  },
+  {
+    name: "Enira Reserva",
+    producer: "Bessa Valley",
+    vintage: "2018",
+    grapes: ["Merlot", "Syrah", "Petit Verdot", "Cabernet Sauvignon"],
+    region: "Thracian Valley",
+    style: "red",
+    note: "18 months French oak, 30% new. Plum, black cherry, violet, chocolate. Round and full with harmonious tannins — honoured at the 2023 London Wine Competition.",
+    location: "bulgaria",
+  },
+  {
+    name: "Gold Label Aszú 6 Puttonyos",
+    producer: "Royal Tokaji",
+    vintage: "2017",
+    grapes: ["Furmint"],
+    region: "Tokaj · Hungary",
+    style: "sweet",
+    abv: "10.5%",
+    note: "96 pts Wine Enthusiast. Dried apricot, honey, orange peel — vibrant acidity lifts the sweetness perfectly. A benchmark 6 Puttonyos from a great vintage.",
+    awards: "96 pts Wine Enthusiast",
+    location: "bulgaria",
+  },
+  {
+    name: "Sweet Wine Barrel Aged",
+    producer: "Villa Melnik",
+    grapes: ["Melnik 55"],
+    region: "Struma River Valley",
+    style: "sweet",
+    note: "Late-harvest grapes dried on racks post-harvest, then barrel-aged. 80 g/L RS, no added sugar. Caramelised nuts, fig jam, dark chocolate, coffee — a dessert in a glass.",
+    location: "bulgaria",
+  },
+  {
+    name: "AplauZ Melnik 55 Premium Reserve",
+    producer: "Villa Melnik",
+    grapes: ["Melnik 55"],
+    region: "PDO Melnik · Struma River Valley",
+    style: "red",
+    abv: "14.5%",
+    note: "18 months in Bulgarian oak. Dark plum, dried fruit, white pepper, spice, sandalwood — a refined expression of the Melnik terroir.",
+    awards: "Gold, Balkan IWC 2021",
+    location: "bulgaria",
+  },
+  {
+    name: "Orange Wine",
+    producer: "Villa Melnik",
+    grapes: ["Viognier", "Keratsuda"],
+    region: "Struma River Valley",
+    style: "orange",
+    note: "Two weeks on skins. Keratsuda — an ultra-rare indigenous variety grown only in Villa Melnik's own estate. Quince, pear, white cherry, tropical fruit, textured skin-contact grip.",
+    location: "bulgaria",
+  },
+  {
+    name: "Rare Varieties — Shiroka Melnik Bush Vine",
+    producer: "Villa Melnik",
+    grapes: ["Shiroka Melnishka Loza"],
+    region: "Struma River Valley",
+    style: "red",
+    abv: "14%",
+    note: "Single 0.1 ha plot, goblet-trained vines. The mother variety of Melnik 55, Melnik 1300, Ruen and Sandanski Misket. ~1,400 bottles per vintage. Tobacco, dried herbs, cherry, plum.",
+    location: "bulgaria",
+  },
+  {
+    name: "Rare Varieties — Melnik 1300 Jubilee",
+    producer: "Villa Melnik",
+    grapes: ["Melnik 1300"],
+    region: "Struma River Valley",
+    style: "red",
+    abv: "14.5%",
+    note: "Shiroka Melnishka Loza × Saperavi cross. Profoundly inky — blackberry, licorice, mocha, pomegranate freshness. 12 months in new Bulgarian oak.",
+    awards: "Gold, Balkans IWF 2024",
+    location: "bulgaria",
+  },
+];
+
+const inLimerick  = bottles.filter((b) => b.location === "limerick");
+const inBulgaria  = bottles.filter((b) => b.location === "bulgaria");
+const vintageYears = bottles
+  .filter((b) => b.vintage && /^\d{4}$/.test(b.vintage))
+  .map((b) => parseInt(b.vintage!));
+const oldestYear  = vintageYears.length ? Math.min(...vintageYears) : null;
+const uniqueProducers = new Set(bottles.map((b) => b.producer)).size;
+---
+
+<BaseLayout
+  title="The Cellar — Todor Aleksandrov"
+  description="A personal cellar inventory — wines and spirits collected from Bulgaria, the Melnik valley, and beyond. Fifteen bottles, ten producers, two countries."
+>
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <div
+      aria-hidden="true"
+      class="absolute inset-0 -z-10"
+      style="background:
+        radial-gradient(60% 50% at 80% 20%, color-mix(in oklab, var(--color-burgundy-600) 10%, transparent), transparent 70%),
+        radial-gradient(50% 40% at 10% 80%, color-mix(in oklab, var(--color-burgundy-300) 6%, transparent), transparent 70%);"
+    ></div>
+
+    <Container size="wide" class="pt-(--spacing-section) pb-16">
+      <p class="eyebrow">The cellar</p>
+      <h1
+        class="font-display tracking-[-0.03em] mt-4"
+        style="font-size:clamp(3rem, 8vw, 6.5rem); line-height:0.98;"
+      >
+        Bottles worth
+        <em
+          class="not-italic block mt-2"
+          style="font-style: italic; color: var(--accent);"
+        >
+          remembering.
+        </em>
+      </h1>
+      <p
+        class="mt-7 text-lg md:text-xl leading-relaxed max-w-2xl"
+        style="color:var(--text-soft)"
+      >
+        A personal inventory — wines and spirits collected, gifted, brought back from travels.
+        Mostly Bulgarian indigenous varieties. All with a story.
+      </p>
+
+      <!-- Stats bar -->
+      <dl
+        class="mt-10 flex flex-wrap gap-x-12 gap-y-5 border-t pt-8"
+        style="border-color: color-mix(in oklab, var(--text) 10%, transparent);"
+      >
+        <div>
+          <dt class="text-xs tracking-[0.16em] uppercase" style="color: var(--text-soft)">Bottles</dt>
+          <dd class="font-display text-4xl tracking-[-0.02em] mt-1" style="color: var(--accent)">{bottles.length}</dd>
+        </div>
+        <div>
+          <dt class="text-xs tracking-[0.16em] uppercase" style="color: var(--text-soft)">Producers</dt>
+          <dd class="font-display text-4xl tracking-[-0.02em] mt-1" style="color: var(--accent)">{uniqueProducers}</dd>
+        </div>
+        <div>
+          <dt class="text-xs tracking-[0.16em] uppercase" style="color: var(--text-soft)">Countries</dt>
+          <dd class="font-display text-4xl tracking-[-0.02em] mt-1" style="color: var(--accent)">2</dd>
+        </div>
+        {oldestYear && (
+          <div>
+            <dt class="text-xs tracking-[0.16em] uppercase" style="color: var(--text-soft)">Oldest vintage</dt>
+            <dd class="font-display text-4xl tracking-[-0.02em] mt-1" style="color: var(--accent)">{oldestYear}</dd>
+          </div>
+        )}
+      </dl>
+    </Container>
+  </section>
+
+  <!-- IN LIMERICK -->
+  <Container size="wide" class="py-(--spacing-section)">
+    <SectionHeader
+      eyebrow="In Limerick"
+      title="Brought back from Bulgaria"
+      subtitle="Two bottles that made the journey home."
+    />
+    <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:max-w-3xl">
+      {inLimerick.map((bottle) => (
+        <article>
+          <Card variant="surface" padding="lg" class="h-full flex flex-col gap-5">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <span
+                  class="inline-flex items-center gap-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.14em]"
+                  style={`color: ${styleConfig[bottle.style].color};`}
+                >
+                  <span
+                    class="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0"
+                    style={`background: ${styleConfig[bottle.style].color};`}
+                  ></span>
+                  {styleConfig[bottle.style].label}
+                </span>
+                <h3 class="font-display text-xl tracking-[-0.01em] leading-tight mt-2">
+                  {bottle.name}
+                </h3>
+              </div>
+              {bottle.vintage && (
+                <span class="font-mono text-sm flex-shrink-0 pt-0.5" style="color: var(--text-soft)">
+                  {bottle.vintage}
+                </span>
+              )}
+            </div>
+
+            <div>
+              <p class="text-sm font-medium">{bottle.producer}</p>
+              <p class="text-xs mt-0.5" style="color: var(--text-soft)">{bottle.region}</p>
+              {bottle.abv && (
+                <p class="text-[0.7rem] font-mono mt-1" style="color: var(--text-soft)">{bottle.abv} ABV</p>
+              )}
+            </div>
+
+            <div class="flex flex-wrap gap-1.5">
+              {bottle.grapes.map((g) => (
+                <span
+                  class="text-[0.65rem] px-2 py-0.5 rounded-full border"
+                  style="border-color: color-mix(in oklab, var(--text) 12%, transparent); color: var(--text-soft);"
+                >
+                  {g}
+                </span>
+              ))}
+            </div>
+
+            <p class="text-sm leading-relaxed flex-1" style="color: var(--text-soft)">
+              {bottle.note}
+            </p>
+
+            {bottle.awards && (
+              <p class="text-[0.65rem] font-mono uppercase tracking-[0.1em]" style="color: var(--accent)">
+                ★ {bottle.awards}
+              </p>
+            )}
+          </Card>
+        </article>
+      ))}
+    </div>
+  </Container>
+
+  <!-- IN BULGARIA -->
+  <Container size="wide" class="pb-(--spacing-section)">
+    <SectionHeader
+      eyebrow="Still in Sofia"
+      title="Waiting for the next trip"
+      subtitle={`${inBulgaria.length} bottles stored with family — some need a few more years in the dark.`}
+    />
+    <div class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {inBulgaria.map((bottle) => (
+        <article>
+          <Card variant="outline" padding="md" class="h-full flex flex-col gap-4">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span
+                    class="inline-flex items-center gap-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.14em]"
+                    style={`color: ${styleConfig[bottle.style].color};`}
+                  >
+                    <span
+                      class="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0"
+                      style={`background: ${styleConfig[bottle.style].color};`}
+                    ></span>
+                    {styleConfig[bottle.style].label}
+                  </span>
+                  {bottle.region.includes("Hungary") && (
+                    <span class="text-[0.65rem]" title="Hungary">🇭🇺</span>
+                  )}
+                  {bottle.special && (
+                    <span
+                      class="text-[0.6rem] uppercase tracking-[0.1em] px-1.5 py-0.5 rounded italic"
+                      style="background: color-mix(in oklab, var(--text) 7%, transparent); color: var(--text-soft);"
+                    >
+                      souvenir
+                    </span>
+                  )}
+                </div>
+                <h3 class="font-display text-[1.05rem] tracking-[-0.01em] leading-tight mt-2">
+                  {bottle.name}
+                </h3>
+              </div>
+              {bottle.vintage && /^\d{4}$/.test(bottle.vintage) && (
+                <span class="font-mono text-sm flex-shrink-0 pt-0.5" style="color: var(--text-soft)">
+                  {bottle.vintage}
+                </span>
+              )}
+            </div>
+
+            <div>
+              <p class="text-sm font-medium">{bottle.producer}</p>
+              <p class="text-xs mt-0.5" style="color: var(--text-soft)">{bottle.region}</p>
+              {bottle.abv && (
+                <p class="text-[0.7rem] font-mono mt-1" style="color: var(--text-soft)">{bottle.abv} ABV</p>
+              )}
+            </div>
+
+            <div class="flex flex-wrap gap-1.5">
+              {bottle.grapes.map((g) => (
+                <span
+                  class="text-[0.65rem] px-2 py-0.5 rounded-full border"
+                  style="border-color: color-mix(in oklab, var(--text) 12%, transparent); color: var(--text-soft);"
+                >
+                  {g}
+                </span>
+              ))}
+            </div>
+
+            <p class="text-sm leading-relaxed flex-1" style="color: var(--text-soft)">
+              {bottle.note}
+            </p>
+
+            {bottle.awards && (
+              <p class="text-[0.65rem] font-mono uppercase tracking-[0.1em]" style="color: var(--accent)">
+                ★ {bottle.awards}
+              </p>
+            )}
+          </Card>
+        </article>
+      ))}
+    </div>
+  </Container>
+
+  <!-- PULL QUOTE -->
+  <Container size="narrow" class="pb-(--spacing-section)">
+    <blockquote class="relative">
+      <span
+        aria-hidden="true"
+        class="absolute -top-12 -left-4 font-display select-none"
+        style="font-size:8rem; line-height:1; color: color-mix(in oklab, var(--accent) 25%, transparent);"
+      >"</span>
+      <p
+        class="font-display tracking-[-0.02em] relative"
+        style="font-size:clamp(1.75rem, 4vw, 2.75rem); line-height:1.15;"
+      >
+        A cellar is not a collection. It's a set of promises you made to yourself about who you'll be drinking with, and when.
+      </p>
+      <footer class="mt-6 text-sm" style="color:var(--text-soft)">
+        — A working note.
+      </footer>
+    </blockquote>
+  </Container>
+</BaseLayout>
