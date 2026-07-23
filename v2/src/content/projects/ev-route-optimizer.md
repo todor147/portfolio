@@ -2,7 +2,7 @@
 title: EV Route Optimizer
 tagline: A* routing for electric vehicles, with live charging stops
 description: An Android app that plans multi-stop EV road trips end-to-end — real-time charging station insertion via OpenChargeMap, GraphHopper road routing, Open-Meteo weather effects, OBD-II Bluetooth SoC reading, and turn-by-turn MapLibre navigation. Built with Jetpack Compose and a custom A* engine over a (waypoint × SoC) state space.
-image: ev-route-optimizer.png
+image: ev-route-optimizer.webp
 tags: ["kotlin", "android", "jetpack-compose", "maps", "ev", "routing"]
 stack: ["Kotlin 2.2", "Jetpack Compose", "Material 3", "MapLibre", "Room", "Koin", "Retrofit", "WorkManager"]
 githubUrl: https://github.com/todor147/ev-route-optimizer
@@ -17,9 +17,9 @@ learnings: "The routing problem is harder than it looks because SoC is not just 
 ## Screenshots
 
 <div class="screenshot-grid">
-  <img src="/assets/ev-route-optimizer-plan.png" alt="Plan Route — origin, destination, battery parameters and connector type" />
-  <img src="/assets/ev-route-optimizer-itinerary.png" alt="Route Itinerary — charging stops, durations, arrival SoC, and quality score" />
-  <img src="/assets/ev-route-optimizer.png" alt="Turn-by-turn Navigation — MapLibre map with route line and speed/ETA HUD" />
+  <img src="/assets/ev-route-optimizer-plan.webp" alt="Plan Route — origin, destination, battery parameters and connector type" />
+  <img src="/assets/ev-route-optimizer-itinerary.webp" alt="Route Itinerary — charging stops, durations, arrival SoC, and quality score" />
+  <img src="/assets/ev-route-optimizer.webp" alt="Turn-by-turn Navigation — MapLibre map with route line and speed/ETA HUD" />
 </div>
 
 > A multi-stop EV route planner that treats charging as a first-class citizen of the search — not a post-processing step bolted onto a road-distance result.
