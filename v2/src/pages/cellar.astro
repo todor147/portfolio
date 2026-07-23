@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Container from "../components/Container.astro";
-import SectionHeader from "../components/SectionHeader.astro";
 import Card from "../components/Card.astro";
 
 type Style = "red" | "white" | "rosé" | "orange" | "sweet" | "sparkling" | "spirit";
@@ -28,6 +27,12 @@ const styleConfig: Record<Style, { label: string; color: string }> = {
   sweet:     { label: "Sweet",     color: "#a16207" },
   sparkling: { label: "Sparkling", color: "#0369a1" },
   spirit:    { label: "Spirit",    color: "#78350f" },
+};
+
+const locationConfig: Record<Location, string> = {
+  home:     "Main collection",
+  limerick: "From Bulgaria",
+  bulgaria: "Still in Sofia",
 };
 
 const bottles: Bottle[] = [
@@ -231,7 +236,7 @@ const bottles: Bottle[] = [
     region: "Tokaj · Hungary",
     style: "sweet",
     abv: "10.5%",
-    note: "96 pts Wine Enthusiast. Dried apricot, honey, orange peel — the vintage's vibrant acidity lifts the sweetness perfectly. A benchmark 6 Puttonyos.",
+    note: "96 pts Wine Enthusiast. Dried apricot, honey, orange peel — vibrant acidity lifts the sweetness perfectly. A benchmark 6 Puttonyos.",
     awards: "96 pts Wine Enthusiast",
     location: "bulgaria",
   },
@@ -287,15 +292,13 @@ const bottles: Bottle[] = [
   },
 ];
 
-const homeBottles     = bottles.filter((b) => b.location === "home");
-const limerickBottles = bottles.filter((b) => b.location === "limerick");
-const bulgariaBottles = bottles.filter((b) => b.location === "bulgaria");
-
-const vintageYears = bottles
+const uniqueProducers = new Set(bottles.map((b) => b.producer)).size;
+const vintageYears    = bottles
   .filter((b) => b.vintage && /^\d{4}$/.test(b.vintage))
   .map((b) => parseInt(b.vintage!));
 const oldestYear      = vintageYears.length ? Math.min(...vintageYears) : null;
-const uniqueProducers = new Set(bottles.map((b) => b.producer)).size;
+const bulgariaCount   = bottles.filter((b) => b.location === "bulgaria").length;
+const styles          = Object.keys(styleConfig) as Style[];
 ---
 
 <BaseLayout
@@ -348,7 +351,7 @@ const uniqueProducers = new Set(bottles.map((b) => b.producer)).size;
         </div>
         <div>
           <dt class="text-xs tracking-[0.16em] uppercase" style="color: var(--text-soft)">Still in Bulgaria</dt>
-          <dd class="font-display text-4xl tracking-[-0.02em] mt-1" style="color: var(--accent)">{bulgariaBottles.length}</dd>
+          <dd class="font-display text-4xl tracking-[-0.02em] mt-1" style="color: var(--accent)">{bulgariaCount}</dd>
         </div>
         {oldestYear && (
           <div>
@@ -360,148 +363,125 @@ const uniqueProducers = new Set(bottles.map((b) => b.producer)).size;
     </Container>
   </section>
 
-  <!-- HOME CELLAR -->
+  <!-- CONTROLS -->
+  <div
+    class="sticky z-30 border-b py-4 backdrop-blur-md"
+    style="top: 65px; background: color-mix(in oklab, var(--bg) 85%, transparent); border-color: color-mix(in oklab, var(--text) 8%, transparent);"
+  >
+    <Container size="wide">
+      <!-- Search + sort row -->
+      <div class="flex gap-3 items-center">
+        <div class="relative flex-1">
+          <svg
+            class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+            style="color: var(--text-soft)"
+            fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24" aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input
+            id="cellar-search"
+            type="search"
+            placeholder="Search name, producer, grape, region…"
+            class="w-full pl-9 pr-4 py-2 rounded-xl text-sm border outline-none transition-colors"
+            style="background: color-mix(in oklab, var(--surface) 80%, transparent); border-color: color-mix(in oklab, var(--text) 12%, transparent); color: var(--text);"
+          />
+        </div>
+        <select
+          id="cellar-sort"
+          class="text-sm rounded-xl px-3 py-2 border outline-none cursor-pointer"
+          style="background: color-mix(in oklab, var(--surface) 80%, transparent); border-color: color-mix(in oklab, var(--text) 12%, transparent); color: var(--text);"
+          aria-label="Sort bottles"
+        >
+          <option value="default">Default order</option>
+          <option value="name-asc">Name A → Z</option>
+          <option value="name-desc">Name Z → A</option>
+          <option value="vintage-asc">Vintage — oldest first</option>
+          <option value="vintage-desc">Vintage — newest first</option>
+        </select>
+      </div>
+
+      <!-- Style + location filter row -->
+      <div class="mt-3 flex flex-wrap gap-2 items-center">
+        <!-- Style filters -->
+        <div class="flex flex-wrap gap-1.5" role="group" aria-label="Filter by style">
+          <button
+            class="cellar-style-btn px-3 py-1 rounded-full text-xs font-medium border transition-colors"
+            data-style=""
+            aria-pressed="true"
+            style="border-color: color-mix(in oklab, var(--text) 18%, transparent); color: var(--text);"
+          >
+            All styles
+          </button>
+          {styles.map((s) => (
+            <button
+              class="cellar-style-btn inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border transition-colors"
+              data-style={s}
+              aria-pressed="false"
+              style={`border-color: ${styleConfig[s].color}22; color: ${styleConfig[s].color};`}
+            >
+              <span class="inline-block w-1.5 h-1.5 rounded-full" style={`background:${styleConfig[s].color};`}></span>
+              {styleConfig[s].label}
+            </button>
+          ))}
+        </div>
+
+        <span class="hidden sm:block w-px h-4 mx-1" style="background: color-mix(in oklab, var(--text) 15%, transparent);"></span>
+
+        <!-- Location filters -->
+        <div class="flex flex-wrap gap-1.5" role="group" aria-label="Filter by location">
+          <button
+            class="cellar-loc-btn px-3 py-1 rounded-full text-xs font-medium border transition-colors"
+            data-location=""
+            aria-pressed="true"
+            style="border-color: color-mix(in oklab, var(--text) 18%, transparent); color: var(--text);"
+          >
+            All locations
+          </button>
+          {(["home", "limerick", "bulgaria"] as Location[]).map((loc) => (
+            <button
+              class="cellar-loc-btn px-3 py-1 rounded-full text-xs font-medium border transition-colors"
+              data-location={loc}
+              aria-pressed="false"
+              style="border-color: color-mix(in oklab, var(--text) 12%, transparent); color: var(--text-soft);"
+            >
+              {locationConfig[loc]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Result count -->
+      <p
+        id="cellar-count"
+        class="mt-2.5 text-xs font-mono"
+        style="color: var(--text-soft)"
+      >
+        {bottles.length} bottles
+      </p>
+    </Container>
+  </div>
+
+  <!-- GRID -->
   <Container size="wide" class="py-(--spacing-section)">
-    <SectionHeader
-      eyebrow="In Limerick"
-      title="The main collection"
-      subtitle="Champagne, Port, whiskey, and a few bottles that needed a decade to be ready."
-    />
-    <div class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {homeBottles.map((bottle) => (
-        <article>
-          <Card variant="surface" padding="md" class="h-full flex flex-col gap-4">
-            <div class="flex items-start justify-between gap-2">
-              <div class="flex-1 min-w-0">
-                <span
-                  class="inline-flex items-center gap-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.14em]"
-                  style={`color: ${styleConfig[bottle.style].color};`}
-                >
-                  <span
-                    class="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0"
-                    style={`background: ${styleConfig[bottle.style].color};`}
-                  ></span>
-                  {styleConfig[bottle.style].label}
-                </span>
-                <h3 class="font-display text-[1.05rem] tracking-[-0.01em] leading-tight mt-2">
-                  {bottle.name}
-                </h3>
-              </div>
-              {bottle.vintage && /^\d{4}$/.test(bottle.vintage) && (
-                <span class="font-mono text-sm flex-shrink-0 pt-0.5" style="color: var(--text-soft)">
-                  {bottle.vintage}
-                </span>
-              )}
-            </div>
-            <div>
-              <p class="text-sm font-medium">{bottle.producer}</p>
-              <p class="text-xs mt-0.5" style="color: var(--text-soft)">{bottle.region}</p>
-              {bottle.abv && (
-                <p class="text-[0.7rem] font-mono mt-1" style="color: var(--text-soft)">{bottle.abv} ABV</p>
-              )}
-            </div>
-            <div class="flex flex-wrap gap-1.5">
-              {bottle.variety.map((v) => (
-                <span
-                  class="text-[0.65rem] px-2 py-0.5 rounded-full border"
-                  style="border-color: color-mix(in oklab, var(--text) 12%, transparent); color: var(--text-soft);"
-                >
-                  {v}
-                </span>
-              ))}
-            </div>
-            <p class="text-sm leading-relaxed flex-1" style="color: var(--text-soft)">
-              {bottle.note}
-            </p>
-            {bottle.awards && (
-              <p class="text-[0.65rem] font-mono uppercase tracking-[0.1em]" style="color: var(--accent)">
-                ★ {bottle.awards}
-              </p>
-            )}
-          </Card>
-        </article>
-      ))}
-    </div>
-  </Container>
-
-  <!-- FROM BULGARIA -->
-  <Container size="wide" class="pb-(--spacing-section)">
-    <SectionHeader
-      eyebrow="Recent additions"
-      title="Brought back from Bulgaria"
-      subtitle="Two bottles that made the journey home from the July 2026 trip."
-    />
-    <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:max-w-3xl">
-      {limerickBottles.map((bottle) => (
-        <article>
-          <Card variant="surface" padding="lg" class="h-full flex flex-col gap-4">
-            <div class="flex items-start justify-between gap-2">
-              <div class="flex-1 min-w-0">
-                <span
-                  class="inline-flex items-center gap-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.14em]"
-                  style={`color: ${styleConfig[bottle.style].color};`}
-                >
-                  <span
-                    class="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0"
-                    style={`background: ${styleConfig[bottle.style].color};`}
-                  ></span>
-                  {styleConfig[bottle.style].label}
-                </span>
-                <h3 class="font-display text-xl tracking-[-0.01em] leading-tight mt-2">
-                  {bottle.name}
-                </h3>
-              </div>
-              {bottle.vintage && (
-                <span class="font-mono text-sm flex-shrink-0 pt-0.5" style="color: var(--text-soft)">
-                  {bottle.vintage}
-                </span>
-              )}
-            </div>
-            <div>
-              <p class="text-sm font-medium">{bottle.producer}</p>
-              <p class="text-xs mt-0.5" style="color: var(--text-soft)">{bottle.region}</p>
-              {bottle.abv && (
-                <p class="text-[0.7rem] font-mono mt-1" style="color: var(--text-soft)">{bottle.abv} ABV</p>
-              )}
-            </div>
-            <div class="flex flex-wrap gap-1.5">
-              {bottle.variety.map((v) => (
-                <span
-                  class="text-[0.65rem] px-2 py-0.5 rounded-full border"
-                  style="border-color: color-mix(in oklab, var(--text) 12%, transparent); color: var(--text-soft);"
-                >
-                  {v}
-                </span>
-              ))}
-            </div>
-            <p class="text-sm leading-relaxed flex-1" style="color: var(--text-soft)">
-              {bottle.note}
-            </p>
-            {bottle.awards && (
-              <p class="text-[0.65rem] font-mono uppercase tracking-[0.1em]" style="color: var(--accent)">
-                ★ {bottle.awards}
-              </p>
-            )}
-          </Card>
-        </article>
-      ))}
-    </div>
-  </Container>
-
-  <!-- STILL IN BULGARIA -->
-  <Container size="wide" class="pb-(--spacing-section)">
-    <SectionHeader
-      eyebrow="Still in Sofia"
-      title="Waiting for the next trip"
-      subtitle={`${bulgariaBottles.length} bottles stored with family — some need a few more years in the dark.`}
-    />
-    <div class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {bulgariaBottles.map((bottle) => (
-        <article>
+    <div id="cellar-grid" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {bottles.map((bottle, i) => (
+        <article
+          data-index={i}
+          data-name={bottle.name.toLowerCase()}
+          data-producer={bottle.producer.toLowerCase()}
+          data-region={bottle.region.toLowerCase()}
+          data-variety={bottle.variety.join(" ").toLowerCase()}
+          data-style={bottle.style}
+          data-location={bottle.location}
+          data-vintage={bottle.vintage && /^\d{4}$/.test(bottle.vintage) ? bottle.vintage : "0"}
+        >
           <Card variant="outline" padding="md" class="h-full flex flex-col gap-4">
+            <!-- Header row: style dot + name + vintage -->
             <div class="flex items-start justify-between gap-2">
               <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-2 flex-wrap">
+                <div class="flex flex-wrap items-center gap-2">
                   <span
                     class="inline-flex items-center gap-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.14em]"
                     style={`color: ${styleConfig[bottle.style].color};`}
@@ -512,9 +492,12 @@ const uniqueProducers = new Set(bottles.map((b) => b.producer)).size;
                     ></span>
                     {styleConfig[bottle.style].label}
                   </span>
-                  {bottle.region.includes("Hungary") && (
-                    <span class="text-[0.65rem]" title="Hungary">🇭🇺</span>
-                  )}
+                  <span
+                    class="text-[0.6rem] px-1.5 py-0.5 rounded tracking-[0.08em]"
+                    style="background: color-mix(in oklab, var(--text) 7%, transparent); color: var(--text-soft);"
+                  >
+                    {locationConfig[bottle.location]}
+                  </span>
                 </div>
                 <h3 class="font-display text-[1.05rem] tracking-[-0.01em] leading-tight mt-2">
                   {bottle.name}
@@ -525,7 +508,14 @@ const uniqueProducers = new Set(bottles.map((b) => b.producer)).size;
                   {bottle.vintage}
                 </span>
               )}
+              {bottle.vintage && !/^\d{4}$/.test(bottle.vintage) && (
+                <span class="font-mono text-xs flex-shrink-0 pt-1 text-right" style="color: var(--text-soft)">
+                  {bottle.vintage}
+                </span>
+              )}
             </div>
+
+            <!-- Producer + region + ABV -->
             <div>
               <p class="text-sm font-medium">{bottle.producer}</p>
               <p class="text-xs mt-0.5" style="color: var(--text-soft)">{bottle.region}</p>
@@ -533,6 +523,8 @@ const uniqueProducers = new Set(bottles.map((b) => b.producer)).size;
                 <p class="text-[0.7rem] font-mono mt-1" style="color: var(--text-soft)">{bottle.abv} ABV</p>
               )}
             </div>
+
+            <!-- Variety pills -->
             <div class="flex flex-wrap gap-1.5">
               {bottle.variety.map((v) => (
                 <span
@@ -543,9 +535,13 @@ const uniqueProducers = new Set(bottles.map((b) => b.producer)).size;
                 </span>
               ))}
             </div>
+
+            <!-- Tasting note -->
             <p class="text-sm leading-relaxed flex-1" style="color: var(--text-soft)">
               {bottle.note}
             </p>
+
+            <!-- Awards -->
             {bottle.awards && (
               <p class="text-[0.65rem] font-mono uppercase tracking-[0.1em]" style="color: var(--accent)">
                 ★ {bottle.awards}
@@ -554,6 +550,19 @@ const uniqueProducers = new Set(bottles.map((b) => b.producer)).size;
           </Card>
         </article>
       ))}
+    </div>
+
+    <!-- Empty state -->
+    <div id="cellar-empty" hidden class="py-24 text-center">
+      <p class="font-display text-2xl tracking-[-0.01em]" style="color: var(--text-soft)">No bottles match.</p>
+      <p class="mt-2 text-sm" style="color: var(--text-soft)">Try a different search or clear the filters.</p>
+      <button
+        id="cellar-reset"
+        class="mt-6 px-4 py-2 text-sm rounded-full border transition-colors hover:border-burgundy-600 hover:text-burgundy-600"
+        style="border-color: color-mix(in oklab, var(--text) 18%, transparent); color: var(--text-soft);"
+      >
+        Clear all filters
+      </button>
     </div>
   </Container>
 
@@ -577,3 +586,128 @@ const uniqueProducers = new Set(bottles.map((b) => b.producer)).size;
     </blockquote>
   </Container>
 </BaseLayout>
+
+<script is:inline>
+(function () {
+  const grid       = document.getElementById("cellar-grid");
+  const searchEl   = document.getElementById("cellar-search");
+  const sortEl     = document.getElementById("cellar-sort");
+  const countEl    = document.getElementById("cellar-count");
+  const emptyEl    = document.getElementById("cellar-empty");
+  const resetBtn   = document.getElementById("cellar-reset");
+  const styleBtns  = document.querySelectorAll(".cellar-style-btn");
+  const locBtns    = document.querySelectorAll(".cellar-loc-btn");
+
+  if (!grid || !searchEl || !sortEl) return;
+
+  // Cache original DOM order
+  const allCards = Array.from(grid.querySelectorAll("article"));
+  allCards.forEach((c, i) => (c.dataset.index = String(i)));
+
+  let activeStyle = "";
+  let activeLoc   = "";
+
+  function applyActiveStyle(btn, group) {
+    group.forEach((b) => {
+      const isActive = b === btn;
+      b.setAttribute("aria-pressed", isActive ? "true" : "false");
+      b.style.fontWeight = isActive ? "600" : "";
+      b.style.boxShadow  = isActive
+        ? "inset 0 0 0 1.5px currentColor"
+        : "";
+    });
+  }
+
+  function update() {
+    const q    = searchEl.value.toLowerCase().trim();
+    const sort = sortEl.value;
+
+    // Filter
+    const visible = allCards.filter((c) => {
+      const ds = c.dataset;
+      const styleOk = !activeStyle || ds.style === activeStyle;
+      const locOk   = !activeLoc   || ds.location === activeLoc;
+      const searchOk =
+        !q ||
+        ds.name.includes(q)     ||
+        ds.producer.includes(q) ||
+        ds.region.includes(q)   ||
+        ds.variety.includes(q);
+      return styleOk && locOk && searchOk;
+    });
+
+    // Sort
+    const sorted = [...visible].sort((a, b) => {
+      if (sort === "name-asc")
+        return a.dataset.name.localeCompare(b.dataset.name);
+      if (sort === "name-desc")
+        return b.dataset.name.localeCompare(a.dataset.name);
+      if (sort === "vintage-asc") {
+        const av = parseInt(a.dataset.vintage) || 9999;
+        const bv = parseInt(b.dataset.vintage) || 9999;
+        return av - bv;
+      }
+      if (sort === "vintage-desc") {
+        const av = parseInt(a.dataset.vintage) || 0;
+        const bv = parseInt(b.dataset.vintage) || 0;
+        return bv - av;
+      }
+      // default: original order
+      return parseInt(a.dataset.index) - parseInt(b.dataset.index);
+    });
+
+    // Hide all, then show sorted
+    allCards.forEach((c) => (c.hidden = true));
+    sorted.forEach((c) => {
+      c.hidden = false;
+      grid.appendChild(c);
+    });
+
+    // Count + empty state
+    const total = allCards.length;
+    countEl.textContent =
+      sorted.length === total
+        ? `${total} bottle${total !== 1 ? "s" : ""}`
+        : `${sorted.length} of ${total} bottle${total !== 1 ? "s" : ""}`;
+    emptyEl.hidden = sorted.length > 0;
+  }
+
+  // Style filter buttons
+  styleBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      activeStyle = btn.dataset.style || "";
+      applyActiveStyle(btn, Array.from(styleBtns));
+      update();
+    });
+  });
+
+  // Location filter buttons
+  locBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      activeLoc = btn.dataset.location || "";
+      applyActiveStyle(btn, Array.from(locBtns));
+      update();
+    });
+  });
+
+  // Search and sort
+  searchEl.addEventListener("input", update);
+  sortEl.addEventListener("change", update);
+
+  // Reset button
+  if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+      searchEl.value = "";
+      sortEl.value   = "default";
+      activeStyle    = "";
+      activeLoc      = "";
+      applyActiveStyle(styleBtns[0], Array.from(styleBtns));
+      applyActiveStyle(locBtns[0],   Array.from(locBtns));
+      update();
+    });
+  }
+
+  // Initial render
+  update();
+})();
+</script>
