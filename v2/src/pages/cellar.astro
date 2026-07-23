@@ -4,7 +4,7 @@ import Container from "../components/Container.astro";
 import Card from "../components/Card.astro";
 
 type Style = "red" | "white" | "rosé" | "orange" | "sweet" | "sparkling" | "spirit";
-type Location = "home" | "limerick" | "bulgaria";
+type Location = "ireland" | "bulgaria";
 
 interface Bottle {
   name: string;
@@ -30,9 +30,8 @@ const styleConfig: Record<Style, { label: string; color: string }> = {
 };
 
 const locationConfig: Record<Location, string> = {
-  home:     "Main collection",
-  limerick: "From Bulgaria",
-  bulgaria: "Still in Shumen",
+  ireland:  "In Ireland",
+  bulgaria: "In Bulgaria",
 };
 
 const bottles: Bottle[] = [
@@ -46,7 +45,7 @@ const bottles: Bottle[] = [
     region: "Rioja, Spain",
     style: "red",
     note: "Rioja Gran Reserva in magnum. Extended oak ageing — the format slows evolution and gives more to look forward to.",
-    location: "home",
+    location: "ireland",
   },
   {
     name: "Vintage Brut",
@@ -56,7 +55,7 @@ const bottles: Bottle[] = [
     region: "Champagne",
     style: "sparkling",
     note: "Nearly thirty years on the cork. Toasty, oxidative, complex — a benchmark for what aged Champagne becomes.",
-    location: "home",
+    location: "ireland",
   },
   {
     name: "La Grande Année",
@@ -66,7 +65,7 @@ const bottles: Bottle[] = [
     region: "Champagne",
     style: "sparkling",
     note: "One of Bollinger's finest recent vintages. Pinot Noir-dominant, structured, built for the long haul.",
-    location: "home",
+    location: "ireland",
   },
   {
     name: "Vintage Port",
@@ -76,7 +75,7 @@ const bottles: Bottle[] = [
     region: "Douro, Portugal",
     style: "sweet",
     note: "A quarter-century of bottle age. Douro at its richest — dark fruit giving way to dried fig and walnut.",
-    location: "home",
+    location: "ireland",
   },
   {
     name: "21 Year Old Single Malt",
@@ -86,7 +85,7 @@ const bottles: Bottle[] = [
     style: "spirit",
     abv: "40%",
     note: "Triple-distilled, finished in Oloroso, Bourbon and Madeira casks. The longest-aged standard expression in the range.",
-    location: "home",
+    location: "ireland",
   },
   {
     name: "Very Rare 200th Anniversary 28 Year Old",
@@ -95,7 +94,7 @@ const bottles: Bottle[] = [
     region: "County Cork, Ireland",
     style: "spirit",
     note: "Special edition celebrating Midleton Distillery's bicentenary (est. 1825). 28 years old — one of the most significant Irish whiskey releases in memory.",
-    location: "home",
+    location: "ireland",
   },
   {
     name: "Eiswein",
@@ -105,7 +104,7 @@ const bottles: Bottle[] = [
     region: "Burgenland, Austria",
     style: "sweet",
     note: "Grapes harvested frozen at natural temperatures, producing intensely concentrated sweetness with firm acidity to balance.",
-    location: "home",
+    location: "ireland",
   },
   {
     name: "Rosé Brut NV",
@@ -114,7 +113,7 @@ const bottles: Bottle[] = [
     region: "Champagne",
     style: "sparkling",
     note: "Pale salmon, delicate red fruit. Chardonnay-dominant with a proportion of still Pinot Noir — lighter and more elegant than most Champagne rosés.",
-    location: "home",
+    location: "ireland",
   },
   {
     name: "Demi-Sec NV",
@@ -123,7 +122,7 @@ const bottles: Bottle[] = [
     region: "Champagne",
     style: "sparkling",
     note: "Off-dry with noticeable dosage. Far better with a fruit tart or soft cheese than a dry Brut — the underrated style.",
-    location: "home",
+    location: "ireland",
   },
   {
     name: "Etichetta Nera",
@@ -132,7 +131,7 @@ const bottles: Bottle[] = [
     region: "Emilia-Romagna, Italy",
     style: "spirit",
     note: "Italy's most iconic brandy, aged in Slovenian oak. The Black Label — richer and more structured than the standard range, thoroughly underrated outside Italy.",
-    location: "home",
+    location: "ireland",
   },
   {
     name: "Laieta Rosé Gran Reserva Brut Nature",
@@ -141,7 +140,7 @@ const bottles: Bottle[] = [
     region: "DO Alella, Catalonia",
     style: "sparkling",
     note: "Made from a rare local pink-skinned grape with extended lees ageing and zero dosage. Bone dry, complex, completely under the radar.",
-    location: "home",
+    location: "ireland",
   },
 
   // ── Brought from Bulgaria ────────────────────────────────────────────────
@@ -154,7 +153,7 @@ const bottles: Bottle[] = [
     style: "spirit",
     abv: "40%",
     note: "Twenty-five years in 500 L oak. Caramelised plum, dried stone fruit, integrated warmth — closer to Cognac territory than any slivovitz has a right to be.",
-    location: "limerick",
+    location: "ireland",
   },
   {
     name: "Mavrud Reserva",
@@ -165,7 +164,7 @@ const bottles: Bottle[] = [
     style: "red",
     abv: "14.5%",
     note: "24 months in 500 L Bulgarian oak. Ripe cherry, dry leaves, mushroom, walnut. Supple tannins, long smoky finish — clay-slate estate soils above Elenovo.",
-    location: "limerick",
+    location: "ireland",
   },
 
   // ── Still in Bulgaria ────────────────────────────────────────────────────
@@ -302,11 +301,14 @@ const oldestYear      = vintageYears.length ? Math.min(...vintageYears) : null;
 // Pre-compute per-bottle display data so the template stays type-cast-free
 const bottlesWithMeta = bottles.map((b, i) => ({
   ...b,
-  styleLabel:    styleConfig[b.style].label,
-  styleColor:    styleConfig[b.style].color,
-  locationLabel: locationConfig[b.location],
-  vintageSort:   b.vintage && /^\d{4}$/.test(b.vintage) ? b.vintage : "0",
-  idx:           i,
+  styleLabel:         styleConfig[b.style].label,
+  styleColor:         styleConfig[b.style].color,
+  locationLabel:      locationConfig[b.location],
+  locationBadgeStyle: b.location === "bulgaria"
+    ? "background: color-mix(in oklab, #92400e 15%, transparent); color: #92400e;"
+    : "background: color-mix(in oklab, var(--text) 7%, transparent); color: var(--text-soft);",
+  vintageSort:        b.vintage && /^\d{4}$/.test(b.vintage) ? b.vintage : "0",
+  idx:                i,
 }));
 
 // Flat arrays for filter buttons — Object.entries preserves insertion order
@@ -507,7 +509,7 @@ const locationEntries = Object.entries(locationConfig);
                   </span>
                   <span
                     class="text-[0.6rem] px-1.5 py-0.5 rounded tracking-[0.08em]"
-                    style="background: color-mix(in oklab, var(--text) 7%, transparent); color: var(--text-soft);"
+                    style={bottle.locationBadgeStyle}
                   >
                     {bottle.locationLabel}
                   </span>
