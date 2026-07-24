@@ -147,22 +147,22 @@ external.forEach((e) =>
 );
 ---
 
-<!-- Trigger pill (desktop only) -->
+<!-- Trigger pill — icon-only on mobile, full pill w/ shortcut hint on desktop -->
 <button
   id="cmdk-trigger"
   type="button"
-  class="hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs transition-colors hover:border-burgundy-600 hover:text-burgundy-600 fixed bottom-6 right-6 z-30 backdrop-blur-md"
+  class="inline-flex items-center justify-center gap-2 w-11 h-11 md:w-auto md:h-auto md:px-3 md:py-1.5 rounded-full border text-xs transition-colors hover:border-burgundy-600 hover:text-burgundy-600 fixed bottom-6 right-6 z-30 backdrop-blur-md shadow-lg md:shadow-none"
   style="
     border-color: color-mix(in oklab, var(--text) 18%, transparent);
     background: color-mix(in oklab, var(--bg) 85%, transparent);
     color: var(--text-soft);
   "
-  aria-label="Open command palette (Ctrl/Cmd + K)"
+  aria-label="Open search (Ctrl/Cmd + K)"
 >
-  <span aria-hidden="true">⌕</span>
-  <span>Search</span>
+  <span aria-hidden="true" class="text-base md:text-sm">⌕</span>
+  <span class="hidden md:inline">Search</span>
   <kbd
-    class="ml-1 px-1.5 py-0.5 rounded text-[0.65rem] font-mono"
+    class="hidden md:inline ml-1 px-1.5 py-0.5 rounded text-[0.65rem] font-mono"
     style="background: color-mix(in oklab, var(--text) 10%, transparent);"
   >⌘K</kbd>
 </button>
@@ -229,7 +229,7 @@ external.forEach((e) =>
             style={i === 0 ? "background: color-mix(in oklab, var(--accent) 10%, transparent);" : ""}
           >
             <div class="min-w-0 flex-1">
-              <p class="font-medium text-sm truncate">{item.label}</p>
+              <p class="font-medium text-sm truncate" data-cmdk-label>{item.label}</p>
               {item.hint && (
                 <p class="text-xs truncate" style="color: var(--text-soft);">
                   {item.hint}
@@ -309,15 +309,77 @@ external.forEach((e) =>
 
     function applyFilter() {
       const q = input.value.trim().toLowerCase();
-      visible = [];
+      const tokens = q.split(/\s+/).filter(Boolean);
+      const scored = [];
       allItems.forEach((el) => {
-        const match = !q || el.dataset.key.includes(q);
+        const key = el.dataset.key;
+        const match = tokens.length === 0 || tokens.every((t) => key.includes(t));
         el.hidden = !match;
-        if (match) visible.push(el);
+        if (match) {
+          // Rank items where the query matches the start of the label above
+          // mid-string / hint-only matches, so "wat" surfaces "Water" first.
+          const label = (el.querySelector("[data-cmdk-label]")?.textContent ?? "").toLowerCase();
+          const rank = q && label.startsWith(q) ? 0 : q && label.includes(q) ? 1 : 2;
+          scored.push({ el, rank });
+        }
       });
+      scored.sort((a, b) => a.rank - b.rank);
+      scored.forEach(({ el }) => list.appendChild(el));
+      visible = scored.map((s) => s.el);
       cursor = 0;
       if (empty) empty.hidden = visible.length > 0;
       updateSelection();
+      highlightMatches(tokens);
+    }
+
+    function highlightMatches(tokens) {
+      allItems.forEach((el) => {
+        const labelEl = el.querySelector("[data-cmdk-label]");
+        if (!labelEl) return;
+        const text = labelEl.dataset.text ?? labelEl.textContent ?? "";
+        if (!labelEl.dataset.text) labelEl.dataset.text = text;
+        if (tokens.length === 0) {
+          labelEl.textContent = text;
+          return;
+        }
+        const lower = text.toLowerCase();
+        const ranges = [];
+        tokens.forEach((t) => {
+          let start = 0;
+          let idx;
+          while ((idx = lower.indexOf(t, start)) !== -1) {
+            ranges.push([idx, idx + t.length]);
+            start = idx + t.length;
+          }
+        });
+        if (ranges.length === 0) {
+          labelEl.textContent = text;
+          return;
+        }
+        ranges.sort((a, b) => a[0] - b[0]);
+        const merged = [ranges[0]];
+        for (const r of ranges.slice(1)) {
+          const last = merged[merged.length - 1];
+          if (r[0] <= last[1]) last[1] = Math.max(last[1], r[1]);
+          else merged.push(r);
+        }
+        let html = "";
+        let pos = 0;
+        merged.forEach(([s, e]) => {
+          html += escapeHtml(text.slice(pos, s));
+          html +=
+            "<mark style=\"background: color-mix(in oklab, var(--accent) 35%, transparent); color: inherit; border-radius: 2px;\">" +
+            escapeHtml(text.slice(s, e)) +
+            "</mark>";
+          pos = e;
+        });
+        html += escapeHtml(text.slice(pos));
+        labelEl.innerHTML = html;
+      });
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
     }
 
     function openPalette() {
@@ -387,6 +449,17 @@ external.forEach((e) =>
     list.addEventListener("click", (e) => {
       const li = e.target.closest("[data-cmdk-item]");
       if (li) activate(li);
+    });
+
+    // Hovering an item keeps keyboard cursor in sync
+    list.addEventListener("mousemove", (e) => {
+      const li = e.target.closest("[data-cmdk-item]");
+      if (!li) return;
+      const idx = visible.indexOf(li);
+      if (idx !== -1 && idx !== cursor) {
+        cursor = idx;
+        updateSelection();
+      }
     });
 
     // Click on backdrop closes
