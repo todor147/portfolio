@@ -1,315 +1,31 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Container from "../components/Container.astro";
 import Card from "../components/Card.astro";
+import { styleConfig, locationConfig } from "../lib/cellar";
 
-type Style = "red" | "white" | "rosé" | "orange" | "sweet" | "sparkling" | "spirit";
-type Location = "bulgaria" | "france" | "spain" | "ireland" | "portugal" | "austria" | "italy" | "hungary";
+const bottlesRaw = (await getCollection("cellar")).sort((a, b) => a.data.order - b.data.order);
 
-interface Bottle {
-  name: string;
-  producer: string;
-  vintage?: string;
-  variety: string[];
-  region: string;
-  style: Style;
-  abv?: string;
-  note: string;
-  awards?: string;
-  location: Location;
-}
-
-const styleConfig: Record<Style, { label: string; color: string }> = {
-  red:       { label: "Red",       color: "#9f1239" },
-  white:     { label: "White",     color: "#b45309" },
-  rosé:      { label: "Rosé",      color: "#db2777" },
-  orange:    { label: "Orange",    color: "#c2410c" },
-  sweet:     { label: "Sweet",     color: "#a16207" },
-  sparkling: { label: "Sparkling", color: "#0369a1" },
-  spirit:    { label: "Spirit",    color: "#78350f" },
-};
-
-const locationConfig: Record<Location, string> = {
-  bulgaria: "Bulgaria",
-  france:   "France",
-  spain:    "Spain",
-  ireland:  "Ireland",
-  portugal: "Portugal",
-  austria:  "Austria",
-  italy:    "Italy",
-  hungary:  "Hungary",
-};
-
-const bottles: Bottle[] = [
-
-  {
-    name: "Gran Reserva (Magnum)",
-    producer: "Bodegas Riojanas",
-    vintage: "2017",
-    variety: ["Tempranillo", "Graciano"],
-    region: "Rioja, Spain",
-    style: "red",
-    note: "Rioja Gran Reserva in magnum. Extended oak ageing — the format slows evolution and gives more to look forward to.",
-    location: "spain",
-  },
-  {
-    name: "Vintage Brut",
-    producer: "Veuve Clicquot Ponsardin",
-    vintage: "1996",
-    variety: ["Pinot Noir", "Chardonnay", "Pinot Meunier"],
-    region: "Champagne",
-    style: "sparkling",
-    note: "Nearly thirty years on the cork. Toasty, oxidative, complex — a benchmark for what aged Champagne becomes.",
-    location: "france",
-  },
-  {
-    name: "La Grande Année",
-    producer: "Bollinger",
-    vintage: "2014",
-    variety: ["Pinot Noir", "Chardonnay"],
-    region: "Champagne",
-    style: "sparkling",
-    note: "One of Bollinger's finest recent vintages. Pinot Noir-dominant, structured, built for the long haul.",
-    location: "france",
-  },
-  {
-    name: "Vintage Port",
-    producer: "Kopke",
-    vintage: "1999",
-    variety: ["Touriga Nacional", "Touriga Franca", "Tinta Roriz"],
-    region: "Douro, Portugal",
-    style: "sweet",
-    note: "A quarter-century of bottle age. Douro at its richest — dark fruit giving way to dried fig and walnut.",
-    location: "portugal",
-  },
-  {
-    name: "21 Year Old Single Malt",
-    producer: "Bushmills",
-    variety: ["Single Malt Irish Whiskey"],
-    region: "County Antrim, Ireland",
-    style: "spirit",
-    abv: "40%",
-    note: "Triple-distilled, finished in Oloroso, Bourbon and Madeira casks. The longest-aged standard expression in the range.",
-    location: "ireland",
-  },
-  {
-    name: "Very Rare 200th Anniversary 28 Year Old",
-    producer: "Midleton",
-    variety: ["Single Pot Still Irish Whiskey"],
-    region: "County Cork, Ireland",
-    style: "spirit",
-    note: "Special edition celebrating Midleton Distillery's bicentenary (est. 1825). 28 years old — one of the most significant Irish whiskey releases in memory.",
-    location: "ireland",
-  },
-  {
-    name: "Eiswein",
-    producer: "Zantho",
-    vintage: "2020",
-    variety: ["Welschriesling"],
-    region: "Burgenland, Austria",
-    style: "sweet",
-    note: "Grapes harvested frozen at natural temperatures, producing intensely concentrated sweetness with firm acidity to balance.",
-    location: "austria",
-  },
-  {
-    name: "Rosé Brut NV",
-    producer: "Taittinger",
-    variety: ["Chardonnay", "Pinot Noir"],
-    region: "Champagne",
-    style: "sparkling",
-    note: "Pale salmon, delicate red fruit. Chardonnay-dominant with a proportion of still Pinot Noir — lighter and more elegant than most Champagne rosés.",
-    location: "france",
-  },
-  {
-    name: "Demi-Sec NV",
-    producer: "Taittinger",
-    variety: ["Chardonnay", "Pinot Noir"],
-    region: "Champagne",
-    style: "sparkling",
-    note: "Off-dry with noticeable dosage. Far better with a fruit tart or soft cheese than a dry Brut — the underrated style.",
-    location: "france",
-  },
-  {
-    name: "Etichetta Nera",
-    producer: "Vecchia Romagna",
-    variety: ["Italian Brandy"],
-    region: "Emilia-Romagna, Italy",
-    style: "spirit",
-    note: "Italy's most iconic brandy, aged in Slovenian oak. The Black Label — richer and more structured than the standard range, thoroughly underrated outside Italy.",
-    location: "italy",
-  },
-  {
-    name: "Laieta Rosé Gran Reserva Brut Nature",
-    producer: "Alta Alella",
-    variety: ["Pansa Rosada"],
-    region: "DO Alella, Catalonia",
-    style: "sparkling",
-    note: "Made from a rare local pink-skinned grape with extended lees ageing and zero dosage. Bone dry, complex, completely under the radar.",
-    location: "spain",
-  },
-
-  {
-    name: "Troyanska Slivova Special Reserva",
-    producer: "Vinprom Troyan",
-    vintage: "25-year-old",
-    variety: ["Plum Distillate"],
-    region: "Troyan, Bulgaria",
-    style: "spirit",
-    abv: "40%",
-    note: "Twenty-five years in 500 L oak. Caramelised plum, dried stone fruit, integrated warmth — closer to Cognac territory than any slivovitz has a right to be.",
-    location: "bulgaria",
-  },
-  {
-    name: "Mavrud Reserva",
-    producer: "Edoardo Miroglio",
-    vintage: "2022",
-    variety: ["Mavrud"],
-    region: "PDO Nova Zagora · Thracian Valley",
-    style: "red",
-    abv: "14.5%",
-    note: "24 months in 500 L Bulgarian oak. Ripe cherry, dry leaves, mushroom, walnut. Supple tannins, long smoky finish — clay-slate estate soils above Elenovo.",
-    location: "bulgaria",
-  },
-
-  {
-    name: "DOGMA Mavrud Barrel Aged",
-    producer: "Zaara Estate",
-    variety: ["Mavrud"],
-    region: "Sakar · Thracian Valley",
-    style: "red",
-    note: "Boutique Sakar estate, Italian oenologist Giovanni Colugnati. Dense and harmonious — blackberry, mulberry, powerful Mavrud tannins with an earthy, savoury edge.",
-    location: "bulgaria",
-  },
-  {
-    name: "DOGMA Misket",
-    producer: "Zaara Estate",
-    variety: ["Misket"],
-    region: "Sakar · Thracian Valley",
-    style: "white",
-    note: "Aromatic white from the Sakar foothills. White flowers, green apple, citrus zest, a delicate muscat note — built on freshness.",
-    location: "bulgaria",
-  },
-  {
-    name: "Cabernet Sauvignon Special Reserva",
-    producer: "Vinex Slavyantsi",
-    vintage: "2007",
-    variety: ["Cabernet Sauvignon"],
-    region: "Thracian Valley",
-    style: "red",
-    note: "Almost two decades of age. Tertiary territory: leather, tobacco, dried herbs, mellow tannins. A Thracian Cabernet in full autumn — a time capsule.",
-    location: "bulgaria",
-  },
-  {
-    name: "Shiroka Melnishka Loza Rosé",
-    producer: "Museum of Wine, Melnik",
-    vintage: "2024",
-    variety: ["Shiroka Melnishka Loza"],
-    region: "Melnik · Struma Valley",
-    style: "rosé",
-    note: "Filled and wax-sealed on-site at Melnik's cave-cellar wine museum. From one of the world's rarest indigenous varieties — grown only in a small zone around Melnik.",
-    location: "bulgaria",
-  },
-  {
-    name: "Grande Cuvée",
-    producer: "Bessa Valley",
-    vintage: "2020",
-    variety: ["Cabernet Sauvignon", "Merlot", "Syrah", "Petit Verdot"],
-    region: "Thracian Valley",
-    style: "red",
-    note: "18 months in 100% new French oak. Blue plum, blackberry, cacao, velvety tannins. One of Bulgaria's most serious reds — built for the cellar.",
-    awards: "DiVino Top 50 Bulgaria 2024",
-    location: "bulgaria",
-  },
-  {
-    name: "Enira Reserva",
-    producer: "Bessa Valley",
-    vintage: "2018",
-    variety: ["Merlot", "Syrah", "Petit Verdot", "Cabernet Sauvignon"],
-    region: "Thracian Valley",
-    style: "red",
-    note: "18 months French oak, 30% new. Plum, black cherry, violet, chocolate. Round and full with harmonious tannins — honoured at the 2023 London Wine Competition.",
-    location: "bulgaria",
-  },
-  {
-    name: "Gold Label Aszú 6 Puttonyos",
-    producer: "Royal Tokaji",
-    vintage: "2017",
-    variety: ["Furmint"],
-    region: "Tokaj · Hungary",
-    style: "sweet",
-    abv: "10.5%",
-    note: "96 pts Wine Enthusiast. Dried apricot, honey, orange peel — vibrant acidity lifts the sweetness perfectly. A benchmark 6 Puttonyos.",
-    awards: "96 pts Wine Enthusiast",
-    location: "hungary",
-  },
-  {
-    name: "Sweet Wine Barrel Aged",
-    producer: "Villa Melnik",
-    variety: ["Melnik 55"],
-    region: "Struma River Valley",
-    style: "sweet",
-    note: "Late-harvest grapes dried on racks post-harvest, then barrel-aged. 80 g/L RS, no added sugar. Caramelised nuts, fig jam, dark chocolate, coffee.",
-    location: "bulgaria",
-  },
-  {
-    name: "AplauZ Melnik 55 Premium Reserve",
-    producer: "Villa Melnik",
-    variety: ["Melnik 55"],
-    region: "PDO Melnik · Struma River Valley",
-    style: "red",
-    abv: "14.5%",
-    note: "18 months in Bulgarian oak. Dark plum, dried fruit, white pepper, spice, sandalwood — a refined expression of the Melnik terroir.",
-    awards: "Gold, Balkan IWC 2021",
-    location: "bulgaria",
-  },
-  {
-    name: "Orange Wine",
-    producer: "Villa Melnik",
-    variety: ["Viognier", "Keratsuda"],
-    region: "Struma River Valley",
-    style: "orange",
-    note: "Two weeks on skins. Keratsuda — an ultra-rare indigenous variety grown only in Villa Melnik's estate. Quince, pear, white cherry, tropical fruit, textured skin-contact grip.",
-    location: "bulgaria",
-  },
-  {
-    name: "Rare Varieties — Shiroka Melnik Bush Vine",
-    producer: "Villa Melnik",
-    variety: ["Shiroka Melnishka Loza"],
-    region: "Struma River Valley",
-    style: "red",
-    abv: "14%",
-    note: "Single 0.1 ha plot, goblet-trained vines. The mother variety of Melnik 55, Melnik 1300, Ruen and Sandanski Misket. ~1,400 bottles per vintage. Tobacco, dried herbs, cherry.",
-    location: "bulgaria",
-  },
-  {
-    name: "Rare Varieties — Melnik 1300 Jubilee",
-    producer: "Villa Melnik",
-    variety: ["Melnik 1300"],
-    region: "Struma River Valley",
-    style: "red",
-    abv: "14.5%",
-    note: "Shiroka Melnishka Loza × Saperavi cross. Profoundly inky — blackberry, licorice, mocha, pomegranate freshness. 12 months in new Bulgarian oak.",
-    awards: "Gold, Balkans IWF 2024",
-    location: "bulgaria",
-  },
-];
-
-const uniqueProducers = new Set(bottles.map((b) => b.producer)).size;
-const countryCount    = new Set(bottles.map((b) => b.location)).size;
-const vintageYears    = bottles.flatMap((b) =>
-  b.vintage && /^\d{4}$/.test(b.vintage) ? [parseInt(b.vintage)] : []
+const uniqueProducers = new Set(bottlesRaw.map((b) => b.data.producer)).size;
+const countryCount    = new Set(bottlesRaw.map((b) => b.data.location)).size;
+const vintageYears    = bottlesRaw.flatMap((b) =>
+  b.data.vintage && /^\d{4}$/.test(b.data.vintage) ? [parseInt(b.data.vintage)] : []
 );
 const oldestYear      = vintageYears.length ? Math.min(...vintageYears) : null;
 
 // Pre-compute per-bottle display data so the template stays type-cast-free
-const bottlesWithMeta = bottles.map((b, i) => ({
-  ...b,
-  styleLabel:    styleConfig[b.style].label,
-  styleColor:    styleConfig[b.style].color,
-  locationLabel: locationConfig[b.location],
-  vintageSort:   b.vintage && /^\d{4}$/.test(b.vintage) ? b.vintage : "0",
+const bottlesWithMeta = bottlesRaw.map((b, i) => ({
+  ...b.data,
+  slug:          b.id,
+  styleLabel:    styleConfig[b.data.style].label,
+  styleColor:    styleConfig[b.data.style].color,
+  locationLabel: locationConfig[b.data.location],
+  vintageSort:   b.data.vintage && /^\d{4}$/.test(b.data.vintage) ? b.data.vintage : "0",
   idx:           i,
 }));
+
+const bottles = bottlesWithMeta;
 
 // Flat arrays for filter buttons — Object.entries preserves insertion order
 const styleEntries    = Object.entries(styleConfig);
@@ -492,7 +208,14 @@ const locationEntries = Object.entries(locationConfig);
           data-location={bottle.location}
           data-vintage={bottle.vintageSort}
         >
-          <Card variant="outline" padding="md" class="h-full flex flex-col gap-4">
+          <Card
+            href={`/cellar/${bottle.slug}`}
+            hover
+            variant="outline"
+            padding="md"
+            class="h-full flex flex-col gap-4"
+            aria-label={`${bottle.name} — ${bottle.producer}`}
+          >
             <!-- Header row: style dot + name + vintage -->
             <div class="flex items-start justify-between gap-2">
               <div class="flex-1 min-w-0">

@@ -146,6 +146,32 @@ const phrases = defineCollection({
   }),
 });
 
+const cellar = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/cellar" }),
+  schema: z.object({
+    name: z.string(),
+    producer: z.string(),
+    vintage: z.string().optional(),
+    variety: z.array(z.string()),
+    region: z.string(),
+    style: z.enum(["red", "white", "rosé", "orange", "sweet", "sparkling", "spirit"]),
+    abv: z.string().optional(),
+    note: z.string(),
+    awards: z.string().optional(),
+    location: z.enum([
+      "bulgaria",
+      "france",
+      "spain",
+      "ireland",
+      "portugal",
+      "austria",
+      "italy",
+      "hungary",
+    ]),
+    order: z.number().default(100),
+  }),
+});
+
 export const collections = {
   experience,
   certifications,
@@ -156,4 +182,5 @@ export const collections = {
   pairings,
   scenarios,
   phrases,
+  cellar,
 };
