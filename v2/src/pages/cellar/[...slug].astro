@@ -1,0 +1,175 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Container from "../../components/Container.astro";
+import { styleConfig, locationConfig } from "../../lib/cellar";
+
+export async function getStaticPaths() {
+  const bottles = await getCollection("cellar");
+  const sorted = bottles.sort((a, b) => a.data.order - b.data.order);
+
+  return sorted.map((bottle, index) => ({
+    params: { slug: bottle.id },
+    props: {
+      bottle,
+      prev: index > 0 ? sorted[index - 1] : sorted[sorted.length - 1],
+      next: index < sorted.length - 1 ? sorted[index + 1] : sorted[0],
+    },
+  }));
+}
+
+const { bottle, prev, next } = Astro.props;
+const { data } = bottle;
+const { Content, headings } = await render(bottle);
+
+const sections = headings.filter((h) => h.depth === 2);
+const hasVintage = data.vintage && /^\d{4}$/.test(data.vintage);
+const styleCfg = styleConfig[data.style];
+const locationLabel = locationConfig[data.location];
+---
+
+<BaseLayout
+  title={`${data.name} — ${data.producer} · The Cellar · Todor Aleksandrov`}
+  description={data.note}
+>
+  <Container size="narrow" class="pt-12 md:pt-16">
+    <a
+      href="/cellar"
+      class="inline-flex items-center gap-2 text-sm tracking-wide hover:text-burgundy-600 transition-colors"
+      style="color:var(--text-soft)"
+    >
+      <span aria-hidden="true">←</span> The cellar
+    </a>
+
+    <!-- HEADER -->
+    <header class="mt-10 space-y-5">
+      <p class="eyebrow inline-flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5" style={`color: ${styleCfg.color};`}>
+          <span class="inline-block w-1.5 h-1.5 rounded-full" style={`background: ${styleCfg.color};`}></span>
+          {styleCfg.label}
+        </span>
+        <span style="color: color-mix(in oklab, var(--text) 30%, transparent);">·</span>
+        {locationLabel}
+      </p>
+      <h1
+        class="font-display tracking-[-0.03em]"
+        style="font-size:clamp(2.5rem, 6vw, 4.5rem); line-height:1.02;"
+      >
+        {data.name}
+      </h1>
+      <p class="text-lg md:text-xl leading-relaxed max-w-2xl" style="color:var(--text-soft)">
+        {data.producer} — {data.region}
+        {hasVintage && ` · ${data.vintage}`}
+      </p>
+
+      <!-- Snapshot facts -->
+      <dl
+        class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-5 border-t pt-6"
+        style="border-color: color-mix(in oklab, var(--text) 10%, transparent);"
+      >
+        <div>
+          <dt class="text-[0.65rem] tracking-[0.14em] uppercase" style="color: var(--text-soft)">Grape(s)</dt>
+          <dd class="text-sm mt-1.5 leading-snug">{data.variety.join(", ")}</dd>
+        </div>
+        {data.abv && (
+          <div>
+            <dt class="text-[0.65rem] tracking-[0.14em] uppercase" style="color: var(--text-soft)">ABV</dt>
+            <dd class="text-sm mt-1.5 font-mono">{data.abv}</dd>
+          </div>
+        )}
+        {data.vintage && (
+          <div>
+            <dt class="text-[0.65rem] tracking-[0.14em] uppercase" style="color: var(--text-soft)">Vintage</dt>
+            <dd class="text-sm mt-1.5 font-mono">{data.vintage}</dd>
+          </div>
+        )}
+        {data.awards && (
+          <div>
+            <dt class="text-[0.65rem] tracking-[0.14em] uppercase" style="color: var(--text-soft)">Recognition</dt>
+            <dd class="text-sm mt-1.5" style="color: var(--accent)">★ {data.awards}</dd>
+          </div>
+        )}
+      </dl>
+    </header>
+  </Container>
+
+  <!-- STICKY JUMP NAV -->
+  {sections.length > 0 && (
+    <div
+      class="sticky z-20 border-y mt-12 md:mt-16 backdrop-blur-md overflow-x-auto"
+      style="top: 65px; background: color-mix(in oklab, var(--bg) 85%, transparent); border-color: color-mix(in oklab, var(--text) 8%, transparent);"
+    >
+      <Container size="narrow">
+        <nav aria-label="Sections" class="flex gap-5 py-3 text-sm whitespace-nowrap">
+          {sections.map((s) => (
+            <a
+              href={`#${s.slug}`}
+              class="hover:text-burgundy-600 transition-colors"
+              style="color: var(--text-soft)"
+            >
+              {s.text}
+            </a>
+          ))}
+        </nav>
+      </Container>
+    </div>
+  )}
+
+  <!-- BODY -->
+  <Container size="narrow" class={sections.length > 0 ? "mt-10 md:mt-14" : "mt-16 md:mt-24"}>
+    {sections.length > 0 ? (
+      <div class="prose-content cellar-content text-lg leading-relaxed space-y-6" style="color: var(--text-soft)">
+        <Content />
+      </div>
+    ) : (
+      <div
+        class="rounded-2xl border p-8 text-center"
+        style="border-color: color-mix(in oklab, var(--text) 10%, transparent); background: color-mix(in oklab, var(--text) 3%, transparent);"
+      >
+        <p class="font-display text-xl tracking-[-0.01em]">{data.note}</p>
+        <p class="mt-4 text-sm" style="color: var(--text-soft)">
+          The full history and tasting write-up for this bottle isn't written yet — check back soon.
+        </p>
+      </div>
+    )}
+  </Container>
+
+  <!-- PREV / NEXT NAVIGATION -->
+  <Container size="wide" class="mt-24 mb-(--spacing-section)">
+    <hr class="rule mb-10" />
+    <nav aria-label="Cellar navigation" class="grid sm:grid-cols-2 gap-4">
+      <a
+        href={`/cellar/${prev.id}`}
+        class="group/nav rounded-2xl p-6 border hover:border-burgundy-600 transition-colors"
+        style="border-color: color-mix(in oklab, var(--text) 10%, transparent);"
+      >
+        <p class="eyebrow mb-2">← Previous</p>
+        <p class="font-display text-2xl tracking-[-0.01em] group-hover/nav:text-burgundy-600 transition-colors">
+          {prev.data.name}
+        </p>
+        <p class="text-sm mt-1" style="color:var(--text-soft)">
+          {prev.data.producer}
+        </p>
+      </a>
+      <a
+        href={`/cellar/${next.id}`}
+        class="group/nav rounded-2xl p-6 border text-right hover:border-burgundy-600 transition-colors"
+        style="border-color: color-mix(in oklab, var(--text) 10%, transparent);"
+      >
+        <p class="eyebrow mb-2">Next →</p>
+        <p class="font-display text-2xl tracking-[-0.01em] group-hover/nav:text-burgundy-600 transition-colors">
+          {next.data.name}
+        </p>
+        <p class="text-sm mt-1" style="color:var(--text-soft)">
+          {next.data.producer}
+        </p>
+      </a>
+    </nav>
+  </Container>
+</BaseLayout>
+
+<style is:global>
+  .cellar-content h2 {
+    scroll-margin-top: 6.5rem;
+  }
+</style>
