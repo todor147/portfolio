@@ -4,6 +4,7 @@ import satori from "satori";
 import { Resvg } from "@resvg/resvg-js";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { styleImageFile } from "../../lib/cellar";
 
 const inter = readFileSync(
   resolve("node_modules/@fontsource/inter/files/inter-latin-400-normal.woff"),
@@ -34,16 +35,6 @@ const PAGES: Record<string, Page> = {
   gallery:        { title: "Gallery",              description: "Photos from service, travel, and sport" },
 };
 
-const STYLE_IMAGE_FILE: Record<string, string> = {
-  red: "red.jpg",
-  white: "white.jpg",
-  "rosé": "rose.jpg",
-  orange: "orange.jpg",
-  sweet: "sweet.jpg",
-  sparkling: "sparkling.jpg",
-  spirit: "spirit.jpg",
-};
-
 export const getStaticPaths: GetStaticPaths = async () => {
   const pagePaths = Object.entries(PAGES).map(([slug, props]) => ({ params: { slug }, props }));
 
@@ -53,7 +44,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     props: {
       title: b.data.name,
       description: `${b.data.producer} — ${b.data.note}`,
-      image: `assets/cellar-og/${STYLE_IMAGE_FILE[b.data.style]}`,
+      image: `assets/cellar-og/${styleImageFile[b.data.style]}`,
     } satisfies Page,
   }));
 

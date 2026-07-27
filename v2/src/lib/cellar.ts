@@ -34,3 +34,31 @@ export const locationConfig: Record<Location, string> = {
   italy:    "Italy",
   hungary:  "Hungary",
 };
+
+/**
+ * Filename (under public/assets/cellar-og/ and public/assets/cellar-hero/)
+ * for each style's representative photo. Keyed separately from Style since
+ * "rosé" isn't a safe bare filename.
+ */
+export const styleImageFile: Record<Style, string> = {
+  red: "red.jpg",
+  white: "white.jpg",
+  "rosé": "rose.jpg",
+  orange: "orange.jpg",
+  sweet: "sweet.jpg",
+  sparkling: "sparkling.jpg",
+  spirit: "spirit.jpg",
+};
+
+/** Whether the hero photo should fill the banner (cover) or sit inset on
+ * its own background (contain) — the whisky pour shot has a white backdrop
+ * that looks best contained rather than cropped edge-to-edge. */
+export const styleImageFit: Record<Style, "cover" | "contain"> = {
+  red: "cover",
+  white: "cover",
+  "rosé": "cover",
+  orange: "cover",
+  sweet: "cover",
+  sparkling: "cover",
+  spirit: "contain",
+};

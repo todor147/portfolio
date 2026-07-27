@@ -2,7 +2,7 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Container from "../../components/Container.astro";
-import { styleConfig, locationConfig } from "../../lib/cellar";
+import { styleConfig, locationConfig, styleImageFile, styleImageFit } from "../../lib/cellar";
 
 export async function getStaticPaths() {
   const bottles = await getCollection("cellar");
@@ -29,6 +29,8 @@ const sections = headings.filter((h) => h.depth === 2);
 const hasVintage = data.vintage && /^\d{4}$/.test(data.vintage);
 const styleCfg = styleConfig[data.style];
 const locationLabel = locationConfig[data.location];
+const heroImage = `/assets/cellar-hero/${styleImageFile[data.style]}`;
+const heroFit = styleImageFit[data.style];
 ---
 
 <BaseLayout
@@ -95,6 +97,23 @@ const locationLabel = locationConfig[data.location];
         )}
       </dl>
     </header>
+  </Container>
+
+  <!-- HERO IMAGE -->
+  <Container size="wide" class="mt-10 md:mt-14">
+    <div
+      class="aspect-[21/9] rounded-3xl overflow-hidden border-2"
+      style={`border-color: ${heroFit === "cover" ? "color-mix(in oklab, var(--text) 10%, transparent)" : "color-mix(in oklab, var(--accent) 25%, transparent)"}; background: ${heroFit === "cover" ? "color-mix(in oklab, var(--text) 4%, transparent)" : "#F1E9DC"};`}
+    >
+      <img
+        src={heroImage}
+        alt=""
+        aria-hidden="true"
+        class:list={["w-full h-full", heroFit === "cover" ? "object-cover" : "object-contain p-10 md:p-14"]}
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
   </Container>
 
   <!-- STICKY JUMP NAV -->
