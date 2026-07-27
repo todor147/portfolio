@@ -169,6 +169,11 @@ const cellar = defineCollection({
       "hungary",
     ]),
     order: z.number().default(100),
+    // Real photo of this exact bottle, when one exists under a licence that
+    // permits reuse — falls back to the generic per-style photo otherwise.
+    heroImage: z.string().optional(),
+    heroCredit: z.string().optional(),
+    heroCreditUrl: z.string().url().optional(),
   }),
 });
 
