@@ -7,6 +7,9 @@ style: "spirit"
 note: "Special edition celebrating Midleton Distillery's bicentenary (est. 1825). 28 years old — one of the most significant Irish whiskey releases in memory."
 location: "ireland"
 order: 60
+heroImage: "/assets/cellar-bottles/midleton-very-rare-200th-anniversary-28yo.jpg"
+heroCredit: "Photo: Midleton Very Rare (official site) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://www.midletonveryrare.com/en/shop/midleton-very-rare-200th-anniversary-edition"
 ---
 
 Two hundred years is a genuinely rare claim to make honestly, and this bottle is careful about exactly what it's claiming. It's not two hundred years of one distillery building — it's two hundred years of distilling continuing on one site, which turns out to be a more interesting story anyway.

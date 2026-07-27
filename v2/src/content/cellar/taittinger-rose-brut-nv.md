@@ -7,6 +7,9 @@ style: "sparkling"
 note: "Pale salmon, delicate red fruit. Chardonnay-dominant with a proportion of still Pinot Noir — lighter and more elegant than most Champagne rosés."
 location: "france"
 order: 80
+heroImage: "/assets/cellar-bottles/taittinger-rose-brut-nv.jpg"
+heroCredit: "Photo: Taittinger (official site) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://www.taittinger.com/en/prestige-rose"
 ---
 
 Rosé Champagne has a reputation for being the showy one — the bottle you reach for because of the colour before you've thought about what's actually in the glass. This one is a useful corrective to that: still recognisably a serious Champagne first, pink second.

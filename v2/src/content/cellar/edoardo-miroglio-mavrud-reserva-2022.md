@@ -9,6 +9,9 @@ abv: "14.5%"
 note: "24 months in 500 L Bulgarian oak. Ripe cherry, dry leaves, mushroom, walnut. Supple tannins, long smoky finish — clay-slate estate soils above Elenovo."
 location: "bulgaria"
 order: 130
+heroImage: "/assets/cellar-bottles/edoardo-miroglio-mavrud-reserva-2022.jpg"
+heroCredit: "Photo: Edoardo Miroglio (official shop) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://shop.emiroglio-wine.com/shop/elenovo-reserve-wines/elenovo-mavrud/"
 ---
 
 Mavrud has a traditional home, and this isn't it. That's most of what makes this bottle interesting — a grape planted somewhere it isn't supposed to be, by someone who wasn't from here either.

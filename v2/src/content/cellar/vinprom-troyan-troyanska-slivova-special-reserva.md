@@ -9,6 +9,9 @@ abv: "40%"
 note: "Twenty-five years in 500 L oak. Caramelised plum, dried stone fruit, integrated warmth — closer to Cognac territory than any slivovitz has a right to be."
 location: "bulgaria"
 order: 120
+heroImage: "/assets/cellar-bottles/vinprom-troyan-troyanska-slivova-special-reserva.jpg"
+heroCredit: "Photo: Bulgaria-Shop.de (retailer) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://www.bulgaria-shop.de/en/artikel/troyan-troyanska-slivova-special-reserve-slivovitz-25-yo/"
 ---
 
 Most rakia is drunk within a year or two of being distilled, straight and unaged, at a village table rather than out of a considered glass. This bottle is the exception that proves the rule wrong — a spirit that spent a quarter of a century deciding it wanted to be something closer to Cognac.

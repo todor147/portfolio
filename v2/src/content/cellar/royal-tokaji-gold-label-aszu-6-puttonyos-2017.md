@@ -10,6 +10,9 @@ note: "96 pts Wine Enthusiast. Dried apricot, honey, orange peel — vibrant aci
 awards: "96 pts Wine Enthusiast"
 location: "hungary"
 order: 200
+heroImage: "/assets/cellar-bottles/royal-tokaji-gold-label-aszu-6-puttonyos-2017.jpg"
+heroCredit: "Photo: Royal Tokaji (official site) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://royal-tokaji.com/portfolio/gold-label-tokaji-aszu-6-puttonyos-2018/"
 ---
 
 Some wines are ordered by the glass. This one is ordered by the barrel, the harvest pass, the individually shriveled berry — a level of deliberateness that shows up the moment you pour it.

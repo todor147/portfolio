@@ -8,6 +8,9 @@ abv: "40%"
 note: "Triple-distilled, finished in Oloroso, Bourbon and Madeira casks. The longest-aged standard expression in the range."
 location: "ireland"
 order: 50
+heroImage: "/assets/cellar-bottles/bushmills-21-year-old.jpg"
+heroCredit: "Photo: Bushmills (official shop) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://shop.bushmills.com/products/21-year-old-single-malt-new-bottle"
 ---
 
 Every bottle of Bushmills carries the number 1608 somewhere on its packaging, and every bottle is, strictly speaking, telling a slightly simplified version of its own history. That doesn't make it any less worth having in the cellar — it just makes the real story more interesting than the label.

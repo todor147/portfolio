@@ -8,6 +8,9 @@ abv: "14%"
 note: "Single 0.1 ha plot, goblet-trained vines. The mother variety of Melnik 55, Melnik 1300, Ruen and Sandanski Misket. ~1,400 bottles per vintage. Tobacco, dried herbs, cherry."
 location: "bulgaria"
 order: 240
+heroImage: "/assets/cellar-bottles/villa-melnik-rare-varieties-shiroka-melnik-bush-vine.jpg"
+heroCredit: "Photo: Villa Melnik (official site) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://villamelnik.com/en/vinen-magazin/rare-varieties-en/rare-varieties-shiroka-melnik-bush-vine/"
 ---
 
 Every modern Melnik grape traces back to this one, and this bottle is the only chance to taste where the whole family actually started — grown the old way, on a plot small enough to walk across in a minute.

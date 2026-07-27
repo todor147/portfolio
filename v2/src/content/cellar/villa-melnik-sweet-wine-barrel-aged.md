@@ -7,6 +7,9 @@ style: "sweet"
 note: "Late-harvest grapes dried on racks post-harvest, then barrel-aged. 80 g/L RS, no added sugar. Caramelised nuts, fig jam, dark chocolate, coffee."
 location: "bulgaria"
 order: 210
+heroImage: "/assets/cellar-bottles/villa-melnik-sweet-wine-barrel-aged.jpg"
+heroCredit: "Photo: Villa Melnik (official site) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://villamelnik.com/en/vinen-magazin/limited-edition/sweet-wine-barrel-aged/"
 ---
 
 Bulgaria's most interesting wine story right now isn't happening in its most famous region — it's happening in the Struma Valley, on a grape that was engineered on purpose rather than discovered by accident.

@@ -8,6 +8,9 @@ style: "sparkling"
 note: "Nearly thirty years on the cork. Toasty, oxidative, complex — a benchmark for what aged Champagne becomes."
 location: "france"
 order: 20
+heroImage: "/assets/cellar-bottles/veuve-clicquot-vintage-brut-1996.jpg"
+heroCredit: "Photo: Veuve Clicquot (official site) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://www.veuveclicquot.com/en-us/veuve-clicquot-vintage-brut-2012-111111700.html"
 ---
 
 Champagne this old stops being a drink you compare to other Champagnes and starts being its own category. This one has spent nearly three decades doing something a young bottle simply can't: becoming quieter, deeper, and stranger, in the best sense.

@@ -9,6 +9,9 @@ note: "18 months in 100% new French oak. Blue plum, blackberry, cacao, velvety t
 awards: "DiVino Top 50 Bulgaria 2024"
 location: "bulgaria"
 order: 180
+heroImage: "/assets/cellar-bottles/bessa-valley-grande-cuvee-2020.jpg"
+heroCredit: "Photo: Bessa Valley (official site) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://bessavalley.com/product/grande-cuvee-2020/"
 ---
 
 Bordeaux expertise doesn't often travel well — the whole point of terroir is that it's specific. This bottle is one of the better arguments that it can travel anyway, if the person bringing it takes the new place seriously enough.
