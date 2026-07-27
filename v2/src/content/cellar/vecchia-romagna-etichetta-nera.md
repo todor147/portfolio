@@ -7,6 +7,9 @@ style: "spirit"
 note: "Italy's most iconic brandy, aged in Slavonian oak. The Black Label — richer and more structured than the standard range, thoroughly underrated outside Italy."
 location: "italy"
 order: 100
+heroImage: "/assets/cellar-bottles/vecchia-romagna-etichetta-nera.jpg"
+heroCredit: "Photo: Beemwej / Wikimedia Commons, CC BY-SA 3.0 (resized)"
+heroCreditUrl: "https://commons.wikimedia.org/wiki/File:Brandy_Vecchia_Romagna_PL.JPG"
 ---
 
 Brandy has an image problem outside Italy — treated as an afterthought next to Cognac, when the better Italian houses have been doing something genuinely different for two centuries rather than a cheaper version of the same thing.
