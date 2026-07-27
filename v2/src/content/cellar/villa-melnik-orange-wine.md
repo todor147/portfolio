@@ -7,6 +7,9 @@ style: "orange"
 note: "Two weeks on skins. Keratsuda — an ultra-rare indigenous variety from the Struma Valley. Quince, pear, white cherry, tropical fruit, textured skin-contact grip."
 location: "bulgaria"
 order: 230
+heroImage: "/assets/cellar-bottles/villa-melnik-orange-wine.jpg"
+heroCredit: "Photo: Villa Melnik (official site) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://villamelnik.com/en/vinen-magazin/limited-edition/orange-wine__en/"
 ---
 
 Orange wine gets treated as a trend everywhere else. Here it's closer to a rescue mission — a way of keeping an almost-vanished grape relevant by doing something more interesting with it than anyone had tried before.

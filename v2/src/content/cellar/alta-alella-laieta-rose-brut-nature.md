@@ -7,6 +7,9 @@ style: "sparkling"
 note: "Made from a rare local pink-skinned grape with extended lees ageing and zero dosage. Bone dry, complex, completely under the radar."
 location: "spain"
 order: 110
+heroImage: "/assets/cellar-bottles/alta-alella-laieta-rose-brut-nature.jpg"
+heroCredit: "Photo: Art Laietà d'Alta Alella (official site) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://artlaieta.wine/producto/laieta-rose-gran-reserva/"
 ---
 
 Some of the best sparkling wine in Spain comes from places nobody thinks to look. This is a bottle from a ten-hectare appellation most wine drinkers couldn't place on a map, made from a grape that barely exists outside it.

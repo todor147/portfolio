@@ -9,6 +9,9 @@ note: "Shiroka Melnishka Loza × Saperavi cross. Profoundly inky — blackberry,
 awards: "Gold, Balkans IWF 2024"
 location: "bulgaria"
 order: 250
+heroImage: "/assets/cellar-bottles/villa-melnik-rare-varieties-melnik-1300-jubilee.jpg"
+heroCredit: "Photo: Villa Melnik (official site) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://villamelnik.com/en/vinen-magazin/rare-varieties-en/rare-varieties-melnik-jubilee-1300/"
 ---
 
 Some grapes get named after where they're from. This one is named after a whole country's history — a deliberate, symbolic naming that most bottles never get to carry.

@@ -8,6 +8,9 @@ style: "red"
 note: "18 months French oak, 30% new. Plum, black cherry, violet, chocolate. Round and full with harmonious tannins — honoured at the 2023 London Wine Competition."
 location: "bulgaria"
 order: 190
+heroImage: "/assets/cellar-bottles/bessa-valley-enira-reserva-2018.jpg"
+heroCredit: "Photo: Bessa Valley (official site) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://bessavalley.com/product/enira-reserva-2019/"
 ---
 
 Every serious estate needs a wine that lets more people in the door, and Enira is Bessa Valley's version of that — the same Bordeaux ambition as its flagship, made to be opened a few years sooner.

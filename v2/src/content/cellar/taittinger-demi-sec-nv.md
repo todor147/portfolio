@@ -7,6 +7,9 @@ style: "sparkling"
 note: "Off-dry with noticeable dosage. Far better with a fruit tart or soft cheese than a dry Brut — the underrated style."
 location: "france"
 order: 90
+heroImage: "/assets/cellar-bottles/taittinger-demi-sec-nv.jpg"
+heroCredit: "Photo: Champagne Season (retailer) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://champagne-season.com/en-no/products/taittinger-demi-sec"
 ---
 
 Demi-Sec is the Champagne style most people have never actually chosen — it gets served by accident at brunch, or dismissed as "sweet Champagne" before it's been tasted properly. It deserves better than either.

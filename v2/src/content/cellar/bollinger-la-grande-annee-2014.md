@@ -8,6 +8,9 @@ style: "sparkling"
 note: "One of Bollinger's finest recent vintages. Pinot Noir-dominant, structured, built for the long haul."
 location: "france"
 order: 30
+heroImage: "/assets/cellar-bottles/bollinger-la-grande-annee-2014.jpg"
+heroCredit: "Photo: Champagne Bollinger (official site) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://www.champagne-bollinger.com/en/wine/grande-annee-2014/"
 ---
 
 Some bottles get bought for an occasion. This one got bought because I couldn't walk past it. Bollinger doesn't release a vintage every year — only when the harvest earns it — and 2014 was one of the years it did. That restraint is most of why it's in the cellar at all.

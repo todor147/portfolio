@@ -8,6 +8,9 @@ style: "sweet"
 note: "A quarter-century of bottle age. Douro at its richest — dark fruit giving way to dried fig and walnut."
 location: "portugal"
 order: 40
+heroImage: "/assets/cellar-bottles/kopke-vintage-port-1999.jpg"
+heroCredit: "Photo: Kopke 1638 (official shop) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://kopke1638.com/store/category/port-wines/vintage/"
 ---
 
 A quarter century is long enough for a wine to stop being about the vintage it was made in and start being about everything that's happened to it since. This one has had twenty-five years to work that out.

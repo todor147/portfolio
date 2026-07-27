@@ -8,6 +8,9 @@ style: "sweet"
 note: "Grapes harvested frozen at natural temperatures, producing intensely concentrated sweetness with firm acidity to balance."
 location: "austria"
 order: 70
+heroImage: "/assets/cellar-bottles/zantho-eiswein-2020.jpg"
+heroCredit: "Photo: Zantho (official site) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://www.zantho.com/en/produkt/zantho-icewine-2020/"
 ---
 
 There's something almost stubborn about Eiswein. It exists because a grower decided not to pick a perfectly good crop of grapes in October, left them hanging through frost after frost, and gambled on a hard enough freeze before rot or birds took the lot. This bottle is what that gamble looks like when it pays off.

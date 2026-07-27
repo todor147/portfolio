@@ -9,6 +9,9 @@ note: "18 months in Bulgarian oak. Dark plum, dried fruit, white pepper, spice, 
 awards: "Gold, Balkan IWC 2021"
 location: "bulgaria"
 order: 220
+heroImage: "/assets/cellar-bottles/villa-melnik-aplauz-melnik-55-premium-reserve.jpg"
+heroCredit: "Photo: Villa Melnik (official site) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://villamelnik.com/en/vinen-magazin/aplauz-en/aplauz-melnik-55/"
 ---
 
 This is the same grape as the sweet barrel-aged bottle a few shelves over, taken in the opposite direction entirely — dry, structured, and built to show what Melnik 55 does when the goal is depth rather than sweetness.

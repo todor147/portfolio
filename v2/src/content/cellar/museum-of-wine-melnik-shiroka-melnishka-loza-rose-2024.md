@@ -8,6 +8,9 @@ style: "rosé"
 note: "Filled and wax-sealed on-site at Melnik's cave-cellar wine museum. From one of the world's rarest indigenous varieties — grown only in a small zone around Melnik."
 location: "bulgaria"
 order: 170
+heroImage: "/assets/cellar-bottles/museum-of-wine-melnik-shiroka-melnishka-loza-rose-2024.jpg"
+heroCredit: "Photo: Bulgaria Travel News — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://travelbulgaria.news/museum-wine-melnik/"
 ---
 
 Some bottles come from a winery. This one comes from a cave underneath Bulgaria's southernmost town, filled and sealed by hand in the exact kind of sandstone cellar this grape has been kept in for centuries.

@@ -8,6 +8,9 @@ style: "red"
 note: "Rioja Gran Reserva in magnum. Extended oak ageing — the format slows evolution and gives more to look forward to."
 location: "spain"
 order: 10
+heroImage: "/assets/cellar-bottles/bodegas-riojanas-gran-reserva-magnum.jpg"
+heroCredit: "Photo: Bodegas Riojanas — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://www.bodegasriojanas.com/nuestros-vinos/vina-albina-gran-reserva/"
 ---
 
 A magnum isn't just a bigger bottle — it's a decision to make a wine wait even longer than it already was going to. This one is a Gran Reserva, which already means years of patience before release, poured into a format that asks for still more.

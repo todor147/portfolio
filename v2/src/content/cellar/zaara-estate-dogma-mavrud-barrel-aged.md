@@ -7,6 +7,9 @@ style: "red"
 note: "Boutique Sakar estate, Italian oenologist Giovanni Colugnati. Dense and harmonious — blackberry, mulberry, powerful Mavrud tannins with an earthy, savoury edge."
 location: "bulgaria"
 order: 140
+heroImage: "/assets/cellar-bottles/zaara-estate-dogma-mavrud-barrel-aged.jpg"
+heroCredit: "Photo: CASAVINO (retailer) — TEMPORARY local reference, not licensed for publication"
+heroCreditUrl: "https://casavino.bg/zaara-dogma-mavrud-barel-0-75-l"
 ---
 
 Sakar isn't a name most people outside Bulgaria will recognise, and that's exactly the appeal of a bottle like this — a small estate making a serious case for a region nobody's heard of yet.
