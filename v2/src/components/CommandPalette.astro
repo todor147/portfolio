@@ -17,6 +17,7 @@ const pairings = await getCollection("pairings");
 const scenarios = await getCollection("scenarios");
 const phrases = await getCollection("phrases");
 const education = await getCollection("education");
+const cellar = await getCollection("cellar");
 
 type Item = {
   kind: string;
@@ -105,6 +106,17 @@ pairings.forEach((p) =>
     hint: `→ ${p.data.wine}`,
     href: `/sommelier#pairing-tool`,
     searchKey: `${p.data.dish} ${p.data.wine} ${p.data.grape} ${p.data.region ?? ""}`.toLowerCase(),
+  }),
+);
+
+// Cellar bottles
+cellar.forEach((b) =>
+  items.push({
+    kind: "Bottle",
+    label: b.data.name,
+    hint: `${b.data.producer} · ${b.data.region}`,
+    href: `/cellar/${b.id}`,
+    searchKey: `${b.data.name} ${b.data.producer} ${b.data.region} ${b.data.variety.join(" ")} ${b.data.style}`.toLowerCase(),
   }),
 );
 

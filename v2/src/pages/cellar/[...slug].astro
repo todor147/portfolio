@@ -14,11 +14,14 @@ export async function getStaticPaths() {
       bottle,
       prev: index > 0 ? sorted[index - 1] : sorted[sorted.length - 1],
       next: index < sorted.length - 1 ? sorted[index + 1] : sorted[0],
+      siblings: sorted.filter(
+        (b) => b.data.producer === bottle.data.producer && b.id !== bottle.id,
+      ),
     },
   }));
 }
 
-const { bottle, prev, next } = Astro.props;
+const { bottle, prev, next, siblings } = Astro.props;
 const { data } = bottle;
 const { Content, headings } = await render(bottle);
 
@@ -31,6 +34,7 @@ const locationLabel = locationConfig[data.location];
 <BaseLayout
   title={`${data.name} — ${data.producer} · The Cellar · Todor Aleksandrov`}
   description={data.note}
+  ogImage={`/og/cellar-${bottle.id}.png`}
 >
   <Container size="narrow" class="pt-12 md:pt-16">
     <a
@@ -100,11 +104,12 @@ const locationLabel = locationConfig[data.location];
       style="top: 65px; background: color-mix(in oklab, var(--bg) 85%, transparent); border-color: color-mix(in oklab, var(--text) 8%, transparent);"
     >
       <Container size="narrow">
-        <nav aria-label="Sections" class="flex gap-5 py-3 text-sm whitespace-nowrap">
+        <nav id="cellar-jump-nav" aria-label="Sections" class="flex gap-5 py-3 text-sm whitespace-nowrap">
           {sections.map((s) => (
             <a
               href={`#${s.slug}`}
-              class="hover:text-burgundy-600 transition-colors"
+              data-slug={s.slug}
+              class="cellar-jump-link transition-colors"
               style="color: var(--text-soft)"
             >
               {s.text}
@@ -133,6 +138,35 @@ const locationLabel = locationConfig[data.location];
       </div>
     )}
   </Container>
+
+  <!-- MORE FROM THIS PRODUCER -->
+  {siblings.length > 0 && (
+    <Container size="wide" class="mt-24">
+      <p class="eyebrow mb-5">More from {bottle.data.producer}</p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {siblings.map((sib) => (
+          <a
+            href={`/cellar/${sib.id}`}
+            class="group/sib rounded-2xl p-5 border hover:border-burgundy-600 transition-colors"
+            style="border-color: color-mix(in oklab, var(--text) 10%, transparent);"
+          >
+            <p
+              class="text-[0.65rem] font-semibold uppercase tracking-[0.14em]"
+              style={`color: ${styleConfig[sib.data.style].color};`}
+            >
+              {styleConfig[sib.data.style].label}
+            </p>
+            <p class="font-display text-lg tracking-[-0.01em] mt-1.5 group-hover/sib:text-burgundy-600 transition-colors">
+              {sib.data.name}
+            </p>
+            <p class="text-xs mt-1" style="color:var(--text-soft)">
+              {sib.data.region}
+            </p>
+          </a>
+        ))}
+      </div>
+    </Container>
+  )}
 
   <!-- PREV / NEXT NAVIGATION -->
   <Container size="wide" class="mt-24 mb-(--spacing-section)">
@@ -172,4 +206,44 @@ const locationLabel = locationConfig[data.location];
   .cellar-content h2 {
     scroll-margin-top: 6.5rem;
   }
+  .cellar-jump-link:hover {
+    color: var(--color-burgundy-600);
+  }
+  .cellar-jump-link.is-active {
+    color: var(--color-burgundy-600);
+    font-weight: 600;
+  }
 </style>
+
+{sections.length > 0 && (
+  <script is:inline>
+    (function () {
+      const nav = document.getElementById("cellar-jump-nav");
+      if (!nav) return;
+      const links = Array.from(nav.querySelectorAll(".cellar-jump-link"));
+      const headings = links
+        .map((link) => document.getElementById(link.dataset.slug || ""))
+        .filter((el) => el !== null);
+      if (headings.length === 0) return;
+
+      function setActive(slug) {
+        links.forEach((link) => {
+          link.classList.toggle("is-active", link.dataset.slug === slug);
+        });
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((e) => e.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          if (visible[0]) setActive(visible[0].target.id);
+        },
+        { rootMargin: "-100px 0px -70% 0px", threshold: 0 },
+      );
+
+      headings.forEach((h) => observer.observe(h));
+      setActive(headings[0].id);
+    })();
+  </script>
+)}
