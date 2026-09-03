@@ -37,10 +37,10 @@ const latestCert = [...certifications].sort((a, b) =>
   b.data.issued.localeCompare(a.data.issued),
 )[0];
 const ulBSc = education.find(
-  (e) => e.data.status === "current" && e.data.degree.includes("Bachelor"),
+  (e) => e.data.status === "completed" && e.data.degree.includes("Bachelor"),
 );
 const ulMSc = education.find(
-  (e) => e.data.status === "upcoming" && e.data.degree.includes("Master"),
+  (e) => e.data.status === "current" && e.data.degree.includes("Master"),
 );
 const educationJourney = [...education].sort((a, b) => a.data.order - b.data.order);
 
@@ -166,8 +166,8 @@ const currentSoftwareRole = experience
         <div class="grid md:grid-cols-2 gap-6 md:gap-10 max-w-none">
           <p class="font-display text-xl md:text-2xl leading-snug tracking-[-0.01em]">
             Born in Bulgaria, moved to Ireland in 2015, now an Irish citizen and
-            BSc Computer Science graduate (University of Limerick, 2026), starting
-            MSc AI &amp; Machine Learning at UL in September — with a sommelier's apron in the wardrobe.
+            BSc Computer Science graduate (University of Limerick, 2026), now
+            studying MSc AI &amp; Machine Learning at UL — with a sommelier's apron in the wardrobe.
           </p>
           <p class="text-base leading-relaxed" style="color:var(--text-soft)">
             By day I'm a Junior Software Engineer at VMotion IT Solutions, an
@@ -175,8 +175,8 @@ const currentSoftwareRole = experience
             programming a real part of how I write production code. Two and a
             half years as Junior Sommelier at Adare Manor's Carriage House —
             now part-time Duty Manager at Aura Leisure Grove Island, after a
-            stint at Askeaton Pool &amp; Leisure. Starting an MSc in AI
-            &amp; Machine Learning at UL in September 2026.
+            stint at Askeaton Pool &amp; Leisure. Now studying an MSc in AI
+            &amp; Machine Learning at UL.
           </p>
         </div>
       </Card>
@@ -230,7 +230,7 @@ const currentSoftwareRole = experience
 
         {ulBSc && (
           <div class="flex items-start gap-3">
-            <Tag variant="soft">Now</Tag>
+            <Tag variant="soft">Done</Tag>
             <div class="flex-1 min-w-0">
               <h3 class="font-display text-xl tracking-[-0.01em] leading-tight">
                 {ulBSc.data.degree}
@@ -249,13 +249,13 @@ const currentSoftwareRole = experience
 
         {ulMSc && (
           <div class="flex items-start gap-3 pt-4 border-t" style="border-color: color-mix(in oklab, var(--text) 8%, transparent);">
-            <Tag variant="accent">Next</Tag>
+            <Tag variant="accent">Now</Tag>
             <div class="flex-1 min-w-0">
               <h3 class="font-display text-xl tracking-[-0.01em] leading-tight">
                 {ulMSc.data.degree}
               </h3>
               <p class="text-sm mt-1" style="color:var(--text-soft)">
-                {ulMSc.data.institution} · starting {formatMonthYear(ulMSc.data.start, true)}
+                {ulMSc.data.institution} · since {formatMonthYear(ulMSc.data.start, true)}
               </p>
               <p class="text-xs mt-2" style="color:var(--accent)">
                 AI pair programming · model training · the deeper stack
@@ -396,7 +396,7 @@ const currentSoftwareRole = experience
           <p class="eyebrow" style="color: var(--accent);">Trade · 01</p>
           <h3 class="font-display text-2xl tracking-[-0.01em]">Wine</h3>
           <p class="text-sm leading-relaxed" style="color: var(--text-soft)">
-            Junior Sommelier at Adare Manor. CMS Intro · WSET Level 2 Merit. A
+            Former Junior Sommelier at Adare Manor. CMS Intro · WSET Level 2 Merit. A
             33-dish pairing tool inside.
           </p>
           <p class="mt-auto pt-3 text-sm font-medium inline-flex items-center gap-1" style="color: var(--accent)">

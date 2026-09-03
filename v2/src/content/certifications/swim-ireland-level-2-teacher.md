@@ -8,4 +8,4 @@ category: safety
 icon: Swim-Ireland.png
 ---
 
-Swim Ireland's Level 2 Swimming Teacher qualification — the formal teaching credential underpinning the swim-instruction side of the role at Askeaton Pool & Leisure.
+Swim Ireland's Level 2 Swimming Teacher qualification — the formal teaching credential underpinning the swim-instruction side of the Lifeguard and Swim Teacher role at Askeaton Pool & Leisure.

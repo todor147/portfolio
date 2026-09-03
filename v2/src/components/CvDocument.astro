@@ -26,7 +26,7 @@ const allEducation = (await getCollection("education")).sort(
 const education =
   variant.id === "general"
     ? allEducation.filter((e) => e.data.order <= 3) // higher ed + Leaving Cert
-    : allEducation.filter((e) => e.data.status !== "completed"); // degree + MSc
+    : allEducation.filter((e) => e.data.order <= 2); // degree + MSc
 
 const volunteering = variant.showVolunteering
   ? (await getCollection("volunteering")).sort((a, b) =>
