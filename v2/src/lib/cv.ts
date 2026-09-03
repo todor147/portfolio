@@ -74,7 +74,7 @@ export const cvVariants: CvVariant[] = [
     headline: "Junior Software Engineer",
     blurb: "The complete picture — software, hospitality, language and aquatics in one document.",
     profile:
-      "BSc Computer Science graduate (University of Limerick, 2026), now a Junior Software Engineer at VMotion IT Solutions while continuing to MSc AI & Machine Learning at UL from September 2026. Two years of hands-on software experience at AMCS Group before that, spanning test automation, CI/CD, and release management on a large enterprise platform. I build full-stack web applications end to end, and complement that with first-line IT support, high-end hospitality, lifeguarding, and Bulgarian–English interpreting. Comfortable shipping code, leading on the ground, and communicating clearly with people from every background.",
+      "BSc Computer Science graduate (University of Limerick, 2026), now a Junior Software Engineer at VMotion IT Solutions while studying MSc AI & Machine Learning at UL. Two years of hands-on software experience at AMCS Group before that, spanning test automation, CI/CD, and release management on a large enterprise platform. I build full-stack web applications end to end, and complement that with first-line IT support, high-end hospitality, lifeguarding, and Bulgarian–English interpreting. Comfortable shipping code, leading on the ground, and communicating clearly with people from every background.",
     experienceCategories: ["software", "hospitality", "education", "lifeguarding", "interpretation", "delivery", "other"],
     certCategories: ["tech", "hospitality", "safety", "language", "other"],
     showProjects: true,
@@ -88,7 +88,7 @@ export const cvVariants: CvVariant[] = [
     headline: "Junior Software Engineer",
     blurb: "Focused on engineering — VMotion IT Solutions, AMCS Platform work, full-stack projects and the technical stack.",
     profile:
-      "BSc Computer Science graduate (University of Limerick, 2026), now a Junior Software Engineer at VMotion IT Solutions (an Atlassian Gold Solution Partner) while continuing to MSc AI & Machine Learning at UL from September 2026. Two years of hands-on software experience at AMCS Group before that — test automation with Cypress and Fiddler, CI/CD on Azure DevOps, and release management across a large enterprise platform. I build and ship full-stack web applications end to end, from a solo re-engineered coaching marketplace to this portfolio.",
+      "BSc Computer Science graduate (University of Limerick, 2026), now a Junior Software Engineer at VMotion IT Solutions (an Atlassian Gold Solution Partner) while studying MSc AI & Machine Learning at UL. Two years of hands-on software experience at AMCS Group before that — test automation with Cypress and Fiddler, CI/CD on Azure DevOps, and release management across a large enterprise platform. I build and ship full-stack web applications end to end, from a solo re-engineered coaching marketplace to this portfolio.",
     experienceCategories: ["software"],
     experienceIncludeSlugs: ["ul-ict-tutor-2025-26", "ul-pslg-tutor"],
     certCategories: ["tech", "language"],
