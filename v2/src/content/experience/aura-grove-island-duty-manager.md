@@ -7,7 +7,7 @@ category: lifeguarding
 start: "2026-09"
 current: true
 summary: Part-time Duty Manager overseeing pool operations, staff and safety standards at the Grove Island leisure centre.
-icon: Swim-Ireland.png
+icon: aura.png
 featured: true
 ---
 

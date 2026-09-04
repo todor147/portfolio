@@ -13,21 +13,24 @@ const experience = await getCollection("experience");
 const certifications = await getCollection("certifications");
 const education = await getCollection("education");
 
-function earliestStartIn(category: string): string | undefined {
-  return experience
-    .filter((e) => e.data.category === category)
-    .map((e) => e.data.start)
-    .sort()[0];
+function monthsBetween(startYm: string, endYm: string): number {
+  const [sy, sm] = startYm.split("-").map(Number);
+  const [ey, em] = endYm.split("-").map(Number);
+  return (ey - sy) * 12 + (em - sm);
 }
 
-function yearsSince(yyyymm: string | undefined): number {
-  if (!yyyymm) return 0;
-  const [y, m] = yyyymm.split("-");
-  const start = new Date(Number(y), Number(m) - 1, 1);
-  const months =
-    (new Date().getFullYear() - start.getFullYear()) * 12 +
-    (new Date().getMonth() - start.getMonth());
-  return Math.round((months / 12) * 10) / 10;
+/** Years spent in a category — to now if still active there, otherwise
+ * frozen at the last end date so a wrapped-up trade stops accruing time. */
+function categoryYears(category: string): number {
+  const entries = experience.filter((e) => e.data.category === category);
+  if (entries.length === 0) return 0;
+  const start = entries.map((e) => e.data.start).sort()[0];
+  const ongoing = entries.some((e) => e.data.current);
+  const now = new Date();
+  const end = ongoing
+    ? `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`
+    : entries.map((e) => e.data.end ?? e.data.start).sort().at(-1)!;
+  return Math.round((monthsBetween(start, end) / 12) * 10) / 10;
 }
 
 const sommelierRole = experience.find(
@@ -44,8 +47,8 @@ const ulMSc = education.find(
 );
 const educationJourney = [...education].sort((a, b) => a.data.order - b.data.order);
 
-const hospitalityYears = yearsSince(earliestStartIn("hospitality"));
-const softwareYears = yearsSince(earliestStartIn("software"));
+const hospitalityYears = categoryYears("hospitality");
+const softwareYears = categoryYears("software");
 
 const funFacts = [
   "Builds PCs for fun",
