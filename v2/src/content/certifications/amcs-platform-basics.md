@@ -3,6 +3,7 @@ title: Basic Concepts of AMCS Platform
 issuer: AMCS Group
 issuerUrl: https://www.amcsgroup.com/
 issued: "2026-05"
+credentialId: "oqmyw7pinvn2"
 category: tech
 icon: amcs.jpg
 ---
