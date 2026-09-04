@@ -4,6 +4,7 @@ institution: University of Limerick
 institutionUrl: https://www.ul.ie/
 location: Limerick, Ireland
 start: "2026-09"
+end: "2027-08"
 status: current
 order: 1
 note: Started September 2026 — directly extending the BSc into the AI / ML side. The current trade getting a deeper stack.

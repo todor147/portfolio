@@ -3,6 +3,7 @@ title: "Customer Service: Managing Payments & Invoicing"
 issuer: AMCS Group
 issuerUrl: https://www.amcsgroup.com/
 issued: "2026-05"
+credentialId: "jhx8d82bs2at"
 category: other
 icon: amcs.jpg
 ---

@@ -1,9 +1,10 @@
 ---
 title: Certificate of Language Ability - C2
-issuer: Language Certification
+issuer: TRANSLIT
+issuerUrl: https://translit.com/
 issued: "2026-05"
 category: language
-icon: ef set.jpg
+icon: translit.jpg
 ---
 
 C2 (Proficient) language ability certification.
