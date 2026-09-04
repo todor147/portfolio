@@ -1,5 +1,5 @@
 ---
-title: Level 2 Swimming Teacher (Virtual — Askeaton)
+title: Level 2 Swimming Teacher
 issuer: Swim Ireland
 issuerUrl: https://www.swimireland.ie/
 issued: "2025-11"

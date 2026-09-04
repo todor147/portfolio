@@ -3,22 +3,22 @@ import Container from "./Container.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 
 const primaryLinks = [
-  { href: "/about",      label: "About"      },
-  { href: "/experience", label: "Experience" },
-  { href: "/projects",   label: "Projects"   },
-  { href: "/sommelier",  label: "Wine"       },
-  { href: "/water",      label: "Water"      },
-  { href: "/language",   label: "Language"   },
-  { href: "/cv",         label: "CV"         },
+  { href: "/about",          label: "About"          },
+  { href: "/experience",     label: "Experience"     },
+  { href: "/projects",       label: "Projects"       },
+  { href: "/sommelier",      label: "Wine"           },
+  { href: "/water",          label: "Water"          },
+  { href: "/language",       label: "Language"       },
+  { href: "/cv",             label: "CV"             },
+  { href: "/certifications", label: "Certifications" },
 ];
 
 const moreLinks = [
-  { href: "/gallery",        label: "Gallery",        note: "Photos from service, travel & sport"       },
-  { href: "/cellar",         label: "Cellar",         note: "Personal wine and spirit inventory"         },
-  { href: "/now",            label: "Now",             note: "What I'm currently working on"             },
-  { href: "/uses",           label: "Uses",            note: "Tools, hardware, and daily carry"          },
-  { href: "/transcript",     label: "Transcript",      note: "Full BSc academic record"                  },
-  { href: "/certifications", label: "Certifications",  note: "WSET, PHECC, and professional quals"       },
+  { href: "/gallery",    label: "Gallery",    note: "Photos from service, travel & sport" },
+  { href: "/cellar",     label: "Cellar",     note: "Personal wine and spirit inventory"  },
+  { href: "/now",        label: "Now",         note: "What I'm currently working on"       },
+  { href: "/uses",       label: "Uses",        note: "Tools, hardware, and daily carry"    },
+  { href: "/transcript", label: "Transcript",  note: "Full BSc academic record"            },
 ];
 
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";

@@ -35,12 +35,20 @@ const journey = [
     iconAlt: "West Lake Aqua Park",
   },
   {
-    year: "Oct 2025 → now",
+    year: "Oct 2025 – Sep 2026",
     place: "Beach + Askeaton + Portugal",
     role: "Beach-qualified, swim teacher, Duty Manager",
-    note: "Beach Lifeguard Qualification in October. Lifeguard and Swim Teacher at Askeaton since December 2025. UL Swim Club training camp in Portugal in January 2026. Promoted to Duty Manager at Askeaton Pool & Leisure in June 2026 — coordinating lifeguards, swim teachers and day-to-day operations. Moved to a part-time Duty Manager role at Aura Leisure Grove Island from September 2026.",
+    note: "Beach Lifeguard Qualification in October. Lifeguard and Swim Teacher at Askeaton since December 2025. UL Swim Club training camp in Portugal in January 2026. Promoted to Duty Manager at Askeaton Pool & Leisure in June 2026 — coordinating lifeguards, swim teachers and day-to-day operations. Left Askeaton in September 2026.",
     icon: "Swim-Ireland.png",
     iconAlt: "Swim Ireland",
+  },
+  {
+    year: "Sep 2026 → now",
+    place: "Aura Leisure Grove Island",
+    role: "Duty Manager (Part-Time)",
+    note: "Moved to a part-time Duty Manager role at Aura Leisure Grove Island in Limerick, running pool operations and safety standards there — now alongside a Junior Software Engineer role at VMotion IT Solutions and the MSc in AI & Machine Learning.",
+    icon: "aura.png",
+    iconAlt: "Aura Leisure",
   },
 ];
 
@@ -139,9 +147,9 @@ const stats = [
     <SectionHeader
       eyebrow="The path"
       title="Pool → beach → instructor"
-      subtitle="The three steps that turned a summer job into a discipline."
+      subtitle="The steps that turned a summer job into a discipline."
     />
-    <ol class="mt-12 grid gap-5 md:grid-cols-3">
+    <ol class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
       {journey.map((step, i) => (
         <li>
           <Card variant="surface" padding="none" class="h-full flex flex-col">
