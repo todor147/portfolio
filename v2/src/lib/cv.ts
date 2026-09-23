@@ -90,7 +90,7 @@ export const cvVariants: CvVariant[] = [
     profile:
       "BSc Computer Science graduate (University of Limerick, 2026), now a Junior Software Engineer at VMotion IT Solutions (an Atlassian Gold Solution Partner) while studying MSc AI & Machine Learning at UL. Two years of hands-on software experience at AMCS Group before that — test automation with Cypress and Fiddler, CI/CD on Azure DevOps, and release management across a large enterprise platform. I build and ship full-stack web applications end to end, from a solo re-engineered coaching marketplace to this portfolio.",
     experienceCategories: ["software"],
-    experienceIncludeSlugs: ["ul-ict-tutor-2025-26", "ul-pslg-tutor"],
+    experienceIncludeSlugs: ["ul-ict-tutor-2026", "ul-ict-tutor-2025-26", "ul-pslg-tutor"],
     certCategories: ["tech", "language"],
     showProjects: true,
     showVolunteering: false,
