@@ -6,8 +6,8 @@ location: Limerick, Ireland
 category: education
 start: "2025-09"
 end: "2026-05"
-summary: Tutoring first-year Computer Science students in Java fundamentals.
+summary: Weekly Peer-Supported Learning Groups, drop-ins and Prepare-and-Repeat sessions for first-year Computer Science.
 icon: ul.png
 ---
 
-Guiding first-year students through Java programming fundamentals during interactive lab sessions. Supporting struggling students one-to-one, collaborating with lecturers on engaging exercises, and hosting drop-in hours for programming help.
+Supported first-year Computer Science students in consolidating course material through weekly Peer-Supported Learning Group sessions, separate drop-in hours and Prepare-and-Repeat sessions. Created interactive slides and discussion questions, kept students actively engaged during sessions, and contributed to a supportive peer-learning environment.
