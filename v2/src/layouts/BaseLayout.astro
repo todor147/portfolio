@@ -37,7 +37,7 @@ const ogImage = ogImageProp ?? `/og/${KNOWN_OG_SLUGS.has(_autoSlug) ? _autoSlug 
 const siteUrl = Astro.site ?? new URL("https://todors-portfolio.netlify.app");
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
 const ogImageUrl = new URL(ogImage, siteUrl).href;
-const ogImageAlt = `${title} — Todor Aleksandrov`;
+const ogImageAlt = title;
 const isHome = _pathname === "/";
 const personId = new URL("/#person", siteUrl).href;
 

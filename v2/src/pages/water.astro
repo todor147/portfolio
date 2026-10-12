@@ -62,7 +62,7 @@ const stats = [
 
 <BaseLayout
   title="On Water — Todor Aleksandrov"
-  description="Learned to swim properly in 2024. Now part-time Duty Manager at Aura's Grove Island leisure centre, certified beach lifeguard, swim teacher, and UL Swim Club member. The shortest path I've walked from learner to teacher."
+  description="Learned to swim properly in 2024. Now a part-time Duty Manager at Aura's Grove Island, certified beach lifeguard, swim teacher and UL Swim Club member."
 >
   <!-- HERO -->
   <section class="relative overflow-hidden">
@@ -102,7 +102,7 @@ const stats = [
           </p>
           <div class="flex flex-wrap gap-3 pt-2">
             <Button href="#scenarios-tool" arrow magnetic>What would you do?</Button>
-            <Button href="/certifications#cat-safety" variant="outline">All credentials</Button>
+            <Button href="/certifications/#cat-safety" variant="outline">All credentials</Button>
           </div>
         </div>
 
@@ -155,7 +155,7 @@ const stats = [
           <Card variant="surface" padding="none" class="h-full flex flex-col">
             <div class="p-6 flex items-center gap-4 border-b" style="border-color: color-mix(in oklab, var(--text) 8%, transparent);">
               <img
-                src={`/assets/${step.icon}`}
+                src={encodeURI(`/assets/${step.icon}`)}
                 alt={step.iconAlt}
                 class="w-14 h-14 rounded-xl object-contain bg-cream p-1.5 shrink-0"
               />
@@ -258,7 +258,7 @@ const stats = [
         <Card variant="outline" padding="md" class="flex gap-4 items-start">
           {cert.data.icon && (
             <img
-              src={`/assets/${cert.data.icon}`}
+              src={encodeURI(`/assets/${cert.data.icon}`)}
               alt={cert.data.issuer}
               class="w-12 h-12 rounded-lg object-contain bg-cream p-1.5 shrink-0"
               loading="lazy"

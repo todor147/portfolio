@@ -3,28 +3,29 @@ import Container from "./Container.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 
 const primaryLinks = [
-  { href: "/about",      label: "About"      },
-  { href: "/experience", label: "Experience" },
-  { href: "/projects",   label: "Projects"   },
-  { href: "/cv",         label: "CV"         },
-  { href: "/sommelier",  label: "Wine"       },
-  { href: "/water",      label: "Water"      },
-  { href: "/language",   label: "Language"   },
+  { href: "/about/",      label: "About"      },
+  { href: "/experience/", label: "Experience" },
+  { href: "/projects/",   label: "Projects"   },
+  { href: "/cv/",         label: "CV"         },
+  { href: "/sommelier/",  label: "Wine"       },
+  { href: "/water/",      label: "Water"      },
+  { href: "/language/",   label: "Language"   },
 ];
 
 const moreLinks = [
-  { href: "/certifications", label: "Certifications", note: "Qualifications across five areas"    },
-  { href: "/gallery",        label: "Gallery",        note: "Photos from service, travel & sport" },
-  { href: "/cellar",         label: "Cellar",         note: "Personal wine and spirit inventory"  },
-  { href: "/transcript",     label: "Transcript",     note: "Full BSc academic record"            },
-  { href: "/now",            label: "Now",            note: "What I'm currently working on"       },
-  { href: "/uses",           label: "Uses",           note: "Tools, hardware, and daily carry"    },
+  { href: "/certifications/", label: "Certifications", note: "Qualifications across five areas"    },
+  { href: "/gallery/",        label: "Gallery",        note: "Photos from service, travel & sport" },
+  { href: "/cellar/",         label: "Cellar",         note: "Personal wine and spirit inventory"  },
+  { href: "/transcript/",     label: "Transcript",     note: "Full BSc academic record"            },
+  { href: "/now/",            label: "Now",            note: "What I'm currently working on"       },
+  { href: "/uses/",           label: "Uses",           note: "Tools, hardware, and daily carry"    },
 ];
 
 // Mobile: CV + Contact pinned as buttons, then everything else.
-const mobileRest = primaryLinks.filter((l) => l.href !== "/cv");
+const mobileRest = primaryLinks.filter((l) => l.href !== "/cv/");
 
-const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+// Normalise to a trailing slash so it compares equal to the link hrefs.
+const path = Astro.url.pathname.replace(/\/?$/, "/");
 const moreActive = moreLinks.some((l) => path === l.href);
 const activeCue = "underline decoration-2 underline-offset-[6px]";
 ---
@@ -157,11 +158,11 @@ const activeCue = "underline decoration-2 underline-offset-[6px]";
       </button>
 
       <a
-        href="/contact"
-        aria-current={path === "/contact" ? "page" : undefined}
+        href="/contact/"
+        aria-current={path === "/contact/" ? "page" : undefined}
         class:list={[
           "hidden lg:inline-flex items-center px-5 py-2 text-sm font-medium tracking-wide rounded-full transition-opacity hover:opacity-90",
-          path === "/contact" && "underline decoration-2 underline-offset-4",
+          path === "/contact/" && "underline decoration-2 underline-offset-4",
         ]}
         style="background: var(--accent); color: var(--on-accent)"
       >
@@ -192,16 +193,16 @@ const activeCue = "underline decoration-2 underline-offset-[6px]";
       <nav aria-label="Mobile" class="flex flex-col">
         <div class="grid grid-cols-2 gap-3 pb-3">
           <a
-            href="/cv"
-            aria-current={path === "/cv" ? "page" : undefined}
+            href="/cv/"
+            aria-current={path === "/cv/" ? "page" : undefined}
             class="inline-flex items-center justify-center rounded-full border border-(--accent) px-4 py-3 text-base font-medium"
             style="color: var(--accent)"
           >
             CV
           </a>
           <a
-            href="/contact"
-            aria-current={path === "/contact" ? "page" : undefined}
+            href="/contact/"
+            aria-current={path === "/contact/" ? "page" : undefined}
             class="inline-flex items-center justify-center rounded-full px-4 py-3 text-base font-medium"
             style="background: var(--accent); color: var(--on-accent)"
           >

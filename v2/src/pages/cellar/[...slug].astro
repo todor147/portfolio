@@ -3,7 +3,7 @@ import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Container from "../../components/Container.astro";
 import Picture from "../../components/Picture.astro";
-import { styleConfig, locationConfig, styleImageFile, styleImageFit } from "../../lib/cellar";
+import { styleConfig, locationConfig, styleImageFile, styleImageFit, styleColorVar, styleColorCss } from "../../lib/cellar";
 
 export async function getStaticPaths() {
   const bottles = await getCollection("cellar");
@@ -29,6 +29,13 @@ const { Content, headings } = await render(bottle);
 const sections = headings.filter((h) => h.depth === 2);
 const hasVintage = data.vintage && /^\d{4}$/.test(data.vintage);
 const styleCfg = styleConfig[data.style];
+const clip = (t: string, max = 160) => {
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max - 6);
+  return cut.slice(0, cut.lastIndexOf(" ")).replace(/[\s,;:.\-–—]+$/, "") + "…";
+};
+const styleColor = styleColorVar(data.style);
+const pageTitle = `${data.name} — Todor's Cellar`.length <= 60 ? `${data.name} — Todor's Cellar` : data.name;
 const locationLabel = locationConfig[data.location];
 const hasRealPhoto = Boolean(data.heroImage);
 const heroImage = data.heroImage ?? `/assets/cellar-hero/${styleImageFile[data.style]}`;
@@ -36,14 +43,15 @@ const heroFit = hasRealPhoto ? "contain" : styleImageFit[data.style];
 ---
 
 <BaseLayout
-  title={`${data.name} — ${data.producer} · The Cellar · Todor Aleksandrov`}
-  description={data.note}
+  title={pageTitle}
+  description={clip(data.note)}
   ogImage={`/og/cellar-${bottle.id}.png`}
 >
+  <Fragment set:html={`<style>${styleColorCss}</style>`} />
   <Container size="narrow" class="pt-12 md:pt-16">
     <a
-      href="/cellar"
-      class="inline-flex items-center gap-2 text-sm tracking-wide hover:text-burgundy-600 transition-colors"
+      href="/cellar/"
+      class="inline-flex items-center gap-2 text-sm tracking-wide hover:text-(--accent) transition-colors"
       style="color:var(--text-soft)"
     >
       <span aria-hidden="true">←</span> The cellar
@@ -52,8 +60,8 @@ const heroFit = hasRealPhoto ? "contain" : styleImageFit[data.style];
     <!-- HEADER -->
     <header class="mt-10 space-y-5">
       <p class="eyebrow inline-flex items-center gap-2">
-        <span class="inline-flex items-center gap-1.5" style={`color: ${styleCfg.color};`}>
-          <span class="inline-block w-1.5 h-1.5 rounded-full" style={`background: ${styleCfg.color};`}></span>
+        <span class="inline-flex items-center gap-1.5" style={`color: ${styleColor};`}>
+          <span class="inline-block w-1.5 h-1.5 rounded-full" style={`background: ${styleColor};`}></span>
           {styleCfg.label}
         </span>
         <span style="color: color-mix(in oklab, var(--text) 30%, transparent);">·</span>
@@ -111,6 +119,7 @@ const heroFit = hasRealPhoto ? "contain" : styleImageFit[data.style];
         src={heroImage}
         alt={hasRealPhoto ? `${data.name} by ${data.producer}` : ""}
         class={`w-full h-full ${heroFit === "cover" ? "object-cover" : "object-contain p-10 md:p-14"}`}
+        sizes="(min-width: 1280px) 1200px, 100vw"
         loading="eager"
         fetchpriority="high"
       />
@@ -180,17 +189,17 @@ const heroFit = hasRealPhoto ? "contain" : styleImageFit[data.style];
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {siblings.map((sib) => (
           <a
-            href={`/cellar/${sib.id}`}
-            class="group/sib rounded-2xl p-5 border hover:border-burgundy-600 transition-colors"
+            href={`/cellar/${sib.id}/`}
+            class="group/sib rounded-2xl p-5 border hover:border-(--accent) transition-colors"
             style="border-color: color-mix(in oklab, var(--text) 10%, transparent);"
           >
             <p
               class="text-[0.65rem] font-semibold uppercase tracking-[0.14em]"
-              style={`color: ${styleConfig[sib.data.style].color};`}
+              style={`color: ${styleColorVar(sib.data.style)};`}
             >
               {styleConfig[sib.data.style].label}
             </p>
-            <p class="font-display text-lg tracking-[-0.01em] mt-1.5 group-hover/sib:text-burgundy-600 transition-colors">
+            <p class="font-display text-lg tracking-[-0.01em] mt-1.5 group-hover/sib:text-(--accent) transition-colors">
               {sib.data.name}
             </p>
             <p class="text-xs mt-1" style="color:var(--text-soft)">
@@ -207,12 +216,12 @@ const heroFit = hasRealPhoto ? "contain" : styleImageFit[data.style];
     <hr class="rule mb-10" />
     <nav aria-label="Cellar navigation" class="grid sm:grid-cols-2 gap-4">
       <a
-        href={`/cellar/${prev.id}`}
-        class="group/nav rounded-2xl p-6 border hover:border-burgundy-600 transition-colors"
+        href={`/cellar/${prev.id}/`}
+        class="group/nav rounded-2xl p-6 border hover:border-(--accent) transition-colors"
         style="border-color: color-mix(in oklab, var(--text) 10%, transparent);"
       >
         <p class="eyebrow mb-2">← Previous</p>
-        <p class="font-display text-2xl tracking-[-0.01em] group-hover/nav:text-burgundy-600 transition-colors">
+        <p class="font-display text-2xl tracking-[-0.01em] group-hover/nav:text-(--accent) transition-colors">
           {prev.data.name}
         </p>
         <p class="text-sm mt-1" style="color:var(--text-soft)">
@@ -220,12 +229,12 @@ const heroFit = hasRealPhoto ? "contain" : styleImageFit[data.style];
         </p>
       </a>
       <a
-        href={`/cellar/${next.id}`}
-        class="group/nav rounded-2xl p-6 border text-right hover:border-burgundy-600 transition-colors"
+        href={`/cellar/${next.id}/`}
+        class="group/nav rounded-2xl p-6 border text-right hover:border-(--accent) transition-colors"
         style="border-color: color-mix(in oklab, var(--text) 10%, transparent);"
       >
         <p class="eyebrow mb-2">Next →</p>
-        <p class="font-display text-2xl tracking-[-0.01em] group-hover/nav:text-burgundy-600 transition-colors">
+        <p class="font-display text-2xl tracking-[-0.01em] group-hover/nav:text-(--accent) transition-colors">
           {next.data.name}
         </p>
         <p class="text-sm mt-1" style="color:var(--text-soft)">
@@ -241,10 +250,10 @@ const heroFit = hasRealPhoto ? "contain" : styleImageFit[data.style];
     scroll-margin-top: 6.5rem;
   }
   .cellar-jump-link:hover {
-    color: var(--color-burgundy-600);
+    color: var(--accent);
   }
   .cellar-jump-link.is-active {
-    color: var(--color-burgundy-600);
+    color: var(--accent);
     font-weight: 600;
   }
 </style>

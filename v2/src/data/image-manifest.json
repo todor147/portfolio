@@ -67,18 +67,6 @@
     "webpWidth": 256,
     "variants": []
   },
-  "arrow.jpg": {
-    "width": 980,
-    "height": 980,
-    "webp": "arrow.webp",
-    "webpWidth": 980,
-    "variants": [
-      {
-        "src": "arrow-640.webp",
-        "width": 640
-      }
-    ]
-  },
   "aura.png": {
     "width": 85,
     "height": 84,
@@ -316,31 +304,12 @@
     "webpWidth": 249,
     "variants": []
   },
-  "cnt.png": {
-    "width": 512,
-    "height": 512,
-    "webp": "cnt.webp",
-    "webpWidth": 512,
-    "variants": []
-  },
   "devon inn.jpg": {
     "width": 256,
     "height": 256,
     "webp": "devon inn.webp",
     "webpWidth": 256,
     "variants": []
-  },
-  "education.png": {
-    "width": 1300,
-    "height": 1390,
-    "webp": "education.webp",
-    "webpWidth": 1300,
-    "variants": [
-      {
-        "src": "education-640.webp",
-        "width": 640
-      }
-    ]
   },
   "educoach.png": {
     "width": 1919,
@@ -359,20 +328,6 @@
     "height": 180,
     "webp": "ef set.webp",
     "webpWidth": 180,
-    "variants": []
-  },
-  "email.jpg": {
-    "width": 225,
-    "height": 225,
-    "webp": "email.webp",
-    "webpWidth": 225,
-    "variants": []
-  },
-  "enactus.jpg": {
-    "width": 866,
-    "height": 650,
-    "webp": "enactus.webp",
-    "webpWidth": 866,
     "variants": []
   },
   "ev-route-optimizer-itinerary.webp": {
@@ -394,25 +349,6 @@
     "height": 2400,
     "webp": "ev-route-optimizer.webp",
     "webpWidth": 1080,
-    "variants": []
-  },
-  "experience.jpg": {
-    "width": 980,
-    "height": 917,
-    "webp": "experience.webp",
-    "webpWidth": 980,
-    "variants": [
-      {
-        "src": "experience-640.webp",
-        "width": 640
-      }
-    ]
-  },
-  "github.png": {
-    "width": 3840,
-    "height": 2160,
-    "webp": null,
-    "webpWidth": 0,
     "variants": []
   },
   "graduation.jpg": {
@@ -445,20 +381,6 @@
         "width": 640
       }
     ]
-  },
-  "linkedin.png": {
-    "width": 225,
-    "height": 225,
-    "webp": null,
-    "webpWidth": 0,
-    "variants": []
-  },
-  "milford.png": {
-    "width": 1200,
-    "height": 675,
-    "webp": null,
-    "webpWidth": 0,
-    "variants": []
   },
   "mustard seed.jpg": {
     "width": 750,

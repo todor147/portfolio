@@ -37,7 +37,7 @@ const styleColors     = Object.fromEntries(
 
 <BaseLayout
   title="The Cellar — Todor Aleksandrov"
-  description={`A personal cellar inventory — ${bottles.length} bottles across ${uniqueProducers} producers. Champagne, Port, Bulgarian indigenous varieties, and a few Irish whiskies that had no business being bought on a student budget.`}
+  description={`A personal cellar inventory — ${bottles.length} bottles across ${uniqueProducers} producers. Champagne, Port, Bulgarian varieties and a few Irish whiskies.`}
 >
   <Fragment set:html={`<style>${styleColorCss}</style>`} />
   <!-- HERO -->
@@ -221,7 +221,7 @@ const styleColors     = Object.fromEntries(
           data-vintage={bottle.vintageSort}
         >
           <Card
-            href={`/cellar/${bottle.slug}`}
+            href={`/cellar/${bottle.slug}/`}
             hover
             variant="outline"
             padding="md"

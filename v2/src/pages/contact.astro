@@ -6,7 +6,7 @@ import Card from "../components/Card.astro";
 import Button from "../components/Button.astro";
 
 const siteUrl = Astro.site ?? new URL("https://todors-portfolio.netlify.app");
-const successUrl = new URL("/contact/success", siteUrl).href;
+const successUrl = new URL("/contact/success/", siteUrl).href;
 
 // Web3Forms — free unlimited form-to-email forwarding. The page also shows
 // a direct mailto: link as a fallback.
@@ -40,7 +40,7 @@ const directEmail = "todor_147@abv.bg";
           Use the form below, or
           <a
             href={`mailto:${directEmail}?subject=From%20your%20portfolio`}
-            class="font-medium underline decoration-burgundy-300 underline-offset-4 hover:decoration-burgundy-600 transition-colors"
+            class="font-medium underline decoration-burgundy-300 underline-offset-4 hover:decoration-(--accent) transition-colors"
             style="color: var(--accent)"
           >email me directly</a>
           — either reaches me.
@@ -170,7 +170,7 @@ const directEmail = "todor_147@abv.bg";
             </li>
             <li>
               <a
-                href="/cv"
+                href="/cv/"
                 class="flex items-baseline justify-between gap-3 group/link"
               >
                 <span class="text-sm font-medium group-hover/link:text-(--accent) transition-colors">CV — view or download</span>

@@ -35,7 +35,7 @@ import Picture from "./Picture.astro";
             class="font-display italic text-xl md:text-2xl"
             style="color:var(--text-soft)"
           >
-            Software Engineer <span style="color:var(--accent)">·</span> Sommelier
+            <span class="whitespace-nowrap">Software Engineer</span> <span class="whitespace-nowrap"><span style="color:var(--accent)">·</span> Sommelier</span>
           </p>
         </div>
 
@@ -44,23 +44,23 @@ import Picture from "./Picture.astro";
           style="color:var(--text)"
         >
           Currently a Junior Software Engineer at <a
-            href="/experience#vmotion-junior-software-engineer"
+            href="/experience/#vmotion-junior-software-engineer"
             class="underline decoration-[color-mix(in_oklab,var(--accent)_45%,transparent)] underline-offset-4 hover:decoration-(--accent) transition-colors">VMotion IT Solutions</a
           > and part-time Duty Manager at
           <a
-            href="/water"
+            href="/water/"
             class="underline decoration-[color-mix(in_oklab,var(--accent)_45%,transparent)] underline-offset-4 hover:decoration-(--accent) transition-colors">Aura — Grove Island</a
           >. Former <a
-            href="/sommelier"
+            href="/sommelier/"
             class="underline decoration-[color-mix(in_oklab,var(--accent)_45%,transparent)] underline-offset-4 hover:decoration-(--accent) transition-colors">Junior Sommelier at Adare Manor</a
           >. BSc Computer Science graduate (UL, 2026), now studying MSc AI &amp; Machine Learning at UL.
         </p>
 
         <div class="flex flex-wrap items-center gap-3 pt-2">
-          <Button href="/projects" arrow magnetic>View work</Button>
-          <Button href="/contact" variant="outline">Get in touch</Button>
+          <Button href="/projects/" arrow magnetic>View work</Button>
+          <Button href="/contact/" variant="outline">Get in touch</Button>
           <Button
-            href="/cv"
+            href="/cv/"
             variant="ghost"
             ariaLabel="View and download Todor Aleksandrov's CV"
           >View CV</Button>
@@ -113,6 +113,7 @@ import Picture from "./Picture.astro";
             src="profile pic.jpg"
             alt="Todor Aleksandrov"
             class="w-full h-full object-cover"
+            sizes="(min-width: 768px) 448px, 288px"
             loading="eager"
             fetchpriority="high"
           />

@@ -103,7 +103,7 @@ const counts = groupOrder.map((key) => ({
               <Card variant="surface" padding="md" class="flex gap-4 items-start">
                 {cert.data.icon && (
                   <img
-                    src={`/assets/${cert.data.icon}`}
+                    src={encodeURI(`/assets/${cert.data.icon}`)}
                     alt=""
                     class="w-14 h-14 rounded-xl object-contain bg-cream p-1.5 shrink-0"
                     loading="lazy"

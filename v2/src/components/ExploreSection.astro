@@ -3,19 +3,19 @@ import Container from "./Container.astro";
 
 const trades = [
   {
-    href: "/sommelier",
+    href: "/sommelier/",
     sublabel: "Sommelier",
     label: "Wine",
     note: "Former Junior Sommelier at Adare Manor. WSET Level 2 certified, CMS Introductory passed. Wine service, cellar management, and table-side decanting.",
   },
   {
-    href: "/water",
+    href: "/water/",
     sublabel: "Lifeguard",
     label: "Water",
     note: "PHECC FAR qualified. Pool deck and open-water experience. Emergency first response trained to national standard.",
   },
   {
-    href: "/language",
+    href: "/language/",
     sublabel: "Interpreter",
     label: "Language",
     note: "English and Bulgarian at C2 / native level. Community interpreting across medical, social-service and government settings with TRANSLIT and translation.ie.",
@@ -23,12 +23,12 @@ const trades = [
 ];
 
 const extras = [
-  { href: "/gallery",        label: "Gallery",        note: "Photos from service, travel, and sport." },
-  { href: "/cellar",         label: "Cellar",         note: "Personal wine and spirit inventory."       },
-  { href: "/now",            label: "Now",             note: "What I'm currently working on." },
-  { href: "/uses",           label: "Uses",            note: "Tools, hardware, and daily carry." },
-  { href: "/transcript",     label: "Transcript",      note: "Full BSc academic record, searchable." },
-  { href: "/certifications", label: "Certifications",  note: "WSET, PHECC, and professional qualifications." },
+  { href: "/gallery/",        label: "Gallery",        note: "Photos from service, travel, and sport." },
+  { href: "/cellar/",         label: "Cellar",         note: "Personal wine and spirit inventory."       },
+  { href: "/now/",            label: "Now",             note: "What I'm currently working on." },
+  { href: "/uses/",           label: "Uses",            note: "Tools, hardware, and daily carry." },
+  { href: "/transcript/",     label: "Transcript",      note: "Full BSc academic record, searchable." },
+  { href: "/certifications/", label: "Certifications",  note: "WSET, PHECC, and professional qualifications." },
 ];
 ---
 
@@ -51,7 +51,7 @@ const extras = [
       {trades.map((p) => (
         <a
           href={p.href}
-          class="group flex flex-col justify-between rounded-2xl border p-6 transition-all duration-200 hover:border-burgundy-600 hover:shadow-sm"
+          class="group flex flex-col justify-between rounded-2xl border p-6 transition-all duration-200 hover:border-(--accent) hover:shadow-sm"
           style="border-color: color-mix(in oklab, var(--text) 12%, transparent); background: var(--bg-soft);"
         >
           <div>
@@ -72,7 +72,7 @@ const extras = [
       {extras.map((p) => (
         <a
           href={p.href}
-          class="group rounded-xl border px-4 py-4 transition-all duration-200 hover:border-burgundy-600"
+          class="group rounded-xl border px-4 py-4 transition-all duration-200 hover:border-(--accent)"
           style="border-color: color-mix(in oklab, var(--text) 10%, transparent);"
         >
           <p class="font-display text-base tracking-[-0.01em]">{p.label}</p>

@@ -100,8 +100,8 @@ const gallery = [
           </p>
           <div class="flex flex-wrap gap-3 pt-2">
             <Button href="#pairing-tool" arrow>Try the pairing tool</Button>
-            <Button href="/cellar" variant="outline">The cellar</Button>
-            <Button href="/contact" variant="ghost">Talk wine</Button>
+            <Button href="/cellar/" variant="outline">The cellar</Button>
+            <Button href="/contact/" variant="ghost">Talk wine</Button>
           </div>
         </div>
 
@@ -120,6 +120,7 @@ const gallery = [
               src="cellar.jpg"
               alt="The wine cellar at Adare Manor"
               class="w-full h-full object-cover"
+              sizes="(min-width: 1024px) 480px, 100vw"
               loading="eager"
               fetchpriority="high"
             />
@@ -145,6 +146,7 @@ const gallery = [
                 src={step.image}
                 alt={step.place}
                 class="w-full h-full object-cover"
+                sizes="(min-width: 768px) 33vw, 100vw"
               />
             </div>
             <div class="p-6 flex flex-col flex-1">
@@ -182,7 +184,7 @@ const gallery = [
         <Card variant="outline" padding="lg" class="flex items-start gap-5">
           {cert.data.icon && (
             <img
-              src={`/assets/${cert.data.icon}`}
+              src={encodeURI(`/assets/${cert.data.icon}`)}
               alt={cert.data.issuer}
               class="w-16 h-16 rounded-xl object-contain bg-cream p-2 shrink-0"
             />

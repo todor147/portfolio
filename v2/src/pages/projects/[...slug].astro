@@ -23,6 +23,14 @@ const { project, prev, next } = Astro.props;
 const { data } = project;
 const { Content } = await render(project);
 
+const metaDescription = (() => {
+  if (data.tagline && data.tagline.length <= 160) return data.tagline;
+  const d = data.description;
+  if (d.length <= 155) return d;
+  const cut = d.slice(0, 155);
+  return cut.slice(0, cut.lastIndexOf(" ")).replace(/[\s,;:.\-–—]+$/, "") + "…";
+})();
+
 const sections = [
   data.problem && { num: "01", label: "The problem", body: data.problem },
   data.approach && { num: "02", label: "The approach", body: data.approach },
@@ -33,12 +41,12 @@ const sections = [
 
 <BaseLayout
   title={`${data.title} — Project · Todor Aleksandrov`}
-  description={data.description}
+  description={metaDescription}
 >
   <Container size="narrow" class="pt-12 md:pt-16">
     <a
-      href="/projects"
-      class="inline-flex items-center gap-2 text-sm tracking-wide hover:text-burgundy-600 transition-colors"
+      href="/projects/"
+      class="inline-flex items-center gap-2 text-sm tracking-wide hover:text-(--accent) transition-colors"
       style="color:var(--text-soft)"
     >
       <span aria-hidden="true">←</span> All projects
@@ -82,7 +90,7 @@ const sections = [
         style="border-color: color-mix(in oklab, var(--text) 10%, transparent); background: color-mix(in oklab, var(--text) 4%, transparent);"
       >
         <img
-          src={`/assets/${data.image}`}
+          src={encodeURI(`/assets/${data.image}`)}
           alt={data.title}
           class="w-full h-full object-cover"
           fetchpriority="high"
@@ -132,12 +140,12 @@ const sections = [
       class="grid sm:grid-cols-2 gap-4"
     >
       <a
-        href={`/projects/${prev.id}`}
-        class="group/nav rounded-2xl p-6 border hover:border-burgundy-600 transition-colors"
+        href={`/projects/${prev.id}/`}
+        class="group/nav rounded-2xl p-6 border hover:border-(--accent) transition-colors"
         style="border-color: color-mix(in oklab, var(--text) 10%, transparent);"
       >
         <p class="eyebrow mb-2">← Previous</p>
-        <p class="font-display text-2xl tracking-[-0.01em] group-hover/nav:text-burgundy-600 transition-colors">
+        <p class="font-display text-2xl tracking-[-0.01em] group-hover/nav:text-(--accent) transition-colors">
           {prev.data.title}
         </p>
         <p class="text-sm mt-1" style="color:var(--text-soft)">
@@ -145,12 +153,12 @@ const sections = [
         </p>
       </a>
       <a
-        href={`/projects/${next.id}`}
-        class="group/nav rounded-2xl p-6 border text-right hover:border-burgundy-600 transition-colors"
+        href={`/projects/${next.id}/`}
+        class="group/nav rounded-2xl p-6 border text-right hover:border-(--accent) transition-colors"
         style="border-color: color-mix(in oklab, var(--text) 10%, transparent);"
       >
         <p class="eyebrow mb-2">Next →</p>
-        <p class="font-display text-2xl tracking-[-0.01em] group-hover/nav:text-burgundy-600 transition-colors">
+        <p class="font-display text-2xl tracking-[-0.01em] group-hover/nav:text-(--accent) transition-colors">
           {next.data.title}
         </p>
         <p class="text-sm mt-1" style="color:var(--text-soft)">

@@ -241,7 +241,10 @@ if (dialog && input && list && status && message) {
   });
 
   input.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowDown") {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      closePalette(); // native <dialog> restores focus to the opener
+    } else if (e.key === "ArrowDown") {
       e.preventDefault();
       setActive(cursor + 1);
     } else if (e.key === "ArrowUp") {

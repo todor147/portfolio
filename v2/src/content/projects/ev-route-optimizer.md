@@ -17,9 +17,9 @@ learnings: "The routing problem is harder than it looks because SoC is not just 
 ## Screenshots
 
 <div class="screenshot-grid">
-  <img src="/assets/ev-route-optimizer-plan.webp" alt="Plan Route — origin, destination, battery parameters and connector type" />
-  <img src="/assets/ev-route-optimizer-itinerary.webp" alt="Route Itinerary — charging stops, durations, arrival SoC, and quality score" />
-  <img src="/assets/ev-route-optimizer.webp" alt="Turn-by-turn Navigation — MapLibre map with route line and speed/ETA HUD" />
+  <img src="/assets/ev-route-optimizer-plan.webp" width="1080" height="2400" loading="lazy" decoding="async" alt="Plan Route — origin, destination, battery parameters and connector type" />
+  <img src="/assets/ev-route-optimizer-itinerary.webp" width="1080" height="2400" loading="lazy" decoding="async" alt="Route Itinerary — charging stops, durations, arrival SoC, and quality score" />
+  <img src="/assets/ev-route-optimizer.webp" width="1080" height="2400" loading="lazy" decoding="async" alt="Turn-by-turn Navigation — MapLibre map with route line and speed/ETA HUD" />
 </div>
 
 > A multi-stop EV route planner that treats charging as a first-class citizen of the search — not a post-processing step bolted onto a road-distance result.

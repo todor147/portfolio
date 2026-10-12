@@ -87,6 +87,7 @@ const currentSoftwareRole = experience
           src="about.jpg"
           alt="Todor Aleksandrov"
           class="absolute inset-0 w-full h-full object-cover"
+          sizes="(min-width: 1280px) 830px, (min-width: 768px) 66vw, 100vw"
           loading="eager"
           fetchpriority="high"
         />
@@ -154,7 +155,7 @@ const currentSoftwareRole = experience
           Wine pairing, upselling, strategic wine planning for events.
         </p>
         <a
-          href="/sommelier"
+          href="/sommelier/"
           class="mt-auto pt-3 text-sm font-medium inline-flex items-center gap-1"
           style="color:var(--accent)"
         >
@@ -206,7 +207,7 @@ const currentSoftwareRole = experience
           across 5 areas
         </p>
         <a
-          href="/certifications"
+          href="/certifications/"
           class="mt-3 text-xs font-medium inline-flex items-center gap-1"
           style="color:var(--accent)"
         >
@@ -395,7 +396,7 @@ const currentSoftwareRole = experience
         subtitle="Three identities that keep showing up alongside the software work — each with its own page."
       />
       <div class="mt-10 grid gap-4 md:grid-cols-3">
-        <Card href="/sommelier" hover padding="lg" class="flex flex-col gap-3">
+        <Card href="/sommelier/" hover padding="lg" class="flex flex-col gap-3">
           <p class="eyebrow" style="color: var(--accent);">Trade · 01</p>
           <h3 class="font-display text-2xl tracking-[-0.01em]">Wine</h3>
           <p class="text-sm leading-relaxed" style="color: var(--text-soft)">
@@ -406,7 +407,7 @@ const currentSoftwareRole = experience
             Open <span aria-hidden="true">→</span>
           </p>
         </Card>
-        <Card href="/water" hover padding="lg" class="flex flex-col gap-3">
+        <Card href="/water/" hover padding="lg" class="flex flex-col gap-3">
           <p class="eyebrow" style="color: var(--accent);">Trade · 02</p>
           <h3 class="font-display text-2xl tracking-[-0.01em]">Water</h3>
           <p class="text-sm leading-relaxed" style="color: var(--text-soft)">
@@ -418,7 +419,7 @@ const currentSoftwareRole = experience
             Open <span aria-hidden="true">→</span>
           </p>
         </Card>
-        <Card href="/language" hover padding="lg" class="flex flex-col gap-3">
+        <Card href="/language/" hover padding="lg" class="flex flex-col gap-3">
           <p class="eyebrow" style="color: var(--accent);">Trade · 03</p>
           <h3 class="font-display text-2xl tracking-[-0.01em]">Language</h3>
           <p class="text-sm leading-relaxed" style="color: var(--text-soft)">
@@ -474,9 +475,9 @@ const currentSoftwareRole = experience
 
     <!-- ACTION ROW -->
     <div class="flex flex-wrap gap-3 pt-4">
-      <Button href="/experience" arrow>Full experience</Button>
-      <Button href="/projects" variant="outline" arrow>See my work</Button>
-      <Button href="/contact" variant="ghost" arrow>Get in touch</Button>
+      <Button href="/experience/" arrow>Full experience</Button>
+      <Button href="/projects/" variant="outline" arrow>See my work</Button>
+      <Button href="/contact/" variant="ghost" arrow>Get in touch</Button>
     </div>
   </Container>
 </BaseLayout>
