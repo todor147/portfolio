@@ -1,7 +1,7 @@
 ---
 title: Emergency First Response
 issuer: PHECC
-issuerUrl: https://www.phecit.ie/
+issuerUrl: https://phecc.ie/
 issued: "2026-03"
 expires: "2029-03"
 credentialId: "110654-04-2026"

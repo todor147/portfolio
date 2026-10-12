@@ -4,6 +4,7 @@ issuer: AMCS Group
 issuerUrl: https://www.amcsgroup.com/
 issued: "2026-05"
 credentialId: "9z74wt3bt6ms"
+credentialUrl: https://verify.skilljar.com/c/9z74wt3bt6ms
 category: tech
 icon: amcs.jpg
 ---

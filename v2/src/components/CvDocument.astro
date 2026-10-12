@@ -4,9 +4,10 @@ import {
   CONTACT,
   selectExperience,
   selectCerts,
+  formatCvRange,
+  formatPeriods,
   type CvVariant,
 } from "../lib/cv";
-import { formatRange } from "../lib/dates";
 
 interface Props {
   variant: CvVariant;
@@ -88,7 +89,7 @@ const contactLinks = [
           <div class="flex flex-wrap items-baseline justify-between gap-x-4">
             <h3 class="font-display text-lg tracking-[-0.01em]">{r.title}</h3>
             <span class="text-sm whitespace-nowrap" style="color: var(--text-soft)">
-              {formatRange(r.start, r.end, r.current)}
+              {formatPeriods(r.periods)}
             </span>
           </div>
           <p class="text-sm font-medium" style="color: var(--accent)">
@@ -133,7 +134,7 @@ const contactLinks = [
           <div class="flex flex-wrap items-baseline justify-between gap-x-4">
             <h3 class="font-display text-lg tracking-[-0.01em]">{e.data.degree}</h3>
             <span class="text-sm whitespace-nowrap" style="color: var(--text-soft)">
-              {formatRange(e.data.start, e.data.end, e.data.status === "current")}
+              {formatCvRange(e.data.start, e.data.end, e.data.status === "current")}
             </span>
           </div>
           <p class="text-sm font-medium" style="color: var(--accent)">{e.data.institution}</p>
@@ -187,7 +188,7 @@ const contactLinks = [
             <div class="flex flex-wrap items-baseline justify-between gap-x-4">
               <h3 class="text-sm font-medium" style="color: var(--text)">{vv.data.title}</h3>
               <span class="text-sm whitespace-nowrap" style="color: var(--text-soft)">
-                {formatRange(vv.data.start, vv.data.end, !vv.data.end)}
+                {formatCvRange(vv.data.start, vv.data.end, !vv.data.end)}
               </span>
             </div>
             <p class="text-sm" style="color: var(--text-soft)">{vv.data.organization}</p>

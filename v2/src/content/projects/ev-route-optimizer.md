@@ -7,7 +7,7 @@ tags: ["kotlin", "android", "jetpack-compose", "maps", "ev", "routing"]
 stack: ["Kotlin 2.2", "Jetpack Compose", "Material 3", "MapLibre", "Room", "Koin", "Retrofit", "WorkManager"]
 githubUrl: https://github.com/todor147/ev-route-optimizer
 featured: true
-order: 4
+order: 1
 problem: "Every popular EV navigation app treats charging stops as an afterthought — they slot in a single stop along the fastest road, ignoring your current battery level, your charger type, real-time station availability, ambient temperature effects on range, and the compound cost of going above 80% SoC on a tapered charge curve. The result is routes that look fast on paper but leave you range-anxious on the motorway."
 approach: "Built a custom A* search engine over a two-dimensional state space: (waypoint index × state-of-charge). Each node is a (location, SoC) pair; edges are road segments whose energy cost comes from a physics model accounting for speed-dependent aerodynamic drag, rolling resistance, elevation gradient, temperature derating, and HVAC overhead. The charging model applies a non-linear taper above 80% SoC. Four optimisation modes (Fastest, Fewest Stops, Balanced, Eco) weight the heuristic differently. The engine dominance-prunes states, so it never expands a node if a cheaper path to the same location at higher SoC already exists."
 contribution: "Sole developer — A* engine, energy and charging models, all four API integrations (GraphHopper, OpenChargeMap, Open-Meteo, Photon), OBD-II Bluetooth SoC reader, Room caching, WorkManager prefetch, calendar integration, and the full Compose UI with MapLibre navigation."

@@ -7,17 +7,19 @@ import Card from "../components/Card.astro";
 import Button from "../components/Button.astro";
 import PairingTool from "../components/PairingTool.astro";
 import Picture from "../components/Picture.astro";
-import { formatMonthYear } from "../lib/dates";
+import { diffMonths, formatMonthYear } from "../lib/dates";
 
 const certifications = await getCollection("certifications");
 const wineCerts = certifications
   .filter((c) => c.data.category === "hospitality")
   .sort((a, b) => b.data.issued.localeCompare(a.data.issued));
 
-// Hospitality tenure: Adare Manor May 2023 – July 2026 (closed period)
-const hospStart = new Date("2023-05-01");
-const hospEnd   = new Date("2026-07-01");
-const hospMonths = Math.round((hospEnd.getTime() - hospStart.getTime()) / (1000 * 60 * 60 * 24 * 30.44));
+// Hospitality tenure: derived from the Adare Manor experience entries
+// (May 2023 – July 2026, inclusive of both months).
+const adareRoles = (await getCollection("experience")).filter((e) => e.id.startsWith("adare-"));
+const hospStart = adareRoles.map((e) => e.data.start).sort()[0];
+const hospEnd = adareRoles.map((e) => e.data.end ?? e.data.start).sort().at(-1)!;
+const hospMonths = diffMonths(hospStart, hospEnd);
 const hospYears  = Math.floor(hospMonths / 12);
 const hospRem    = hospMonths % 12;
 const hospLabel  = hospRem > 0 ? `${hospYears} years ${hospRem} months` : `${hospYears} years`;
@@ -58,7 +60,7 @@ const gallery = [
 
 <BaseLayout
   title="On Wine — Todor Aleksandrov"
-  description="How a Computer Science student ended up in the cellars of Adare Manor. The journey, certifications, and a pairing tool with 33 dishes."
+  description="How a Computer Science graduate ended up in the cellars of Adare Manor. The journey, certifications, and a pairing tool with 33 dishes."
 >
   <!-- HERO -->
   <section class="relative overflow-hidden">
@@ -199,7 +201,7 @@ const gallery = [
       <Card variant="subtle" padding="lg" class="md:col-span-2">
         <p class="eyebrow mb-2">Next on the list</p>
         <p class="font-display text-xl tracking-[-0.01em]">
-          WSET Level 3 in Wines — booked for late 2026.
+          WSET Level 3 in Wines is the next step.
         </p>
       </Card>
     </div>

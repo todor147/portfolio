@@ -1,8 +1,8 @@
 ---
 degree: Leaving Certificate (Established, incl. Transition Year)
-institution: Colàiste na Tròcaire
+institution: Coláiste na Trócaire
 institutionUrl: https://mercycc.ie/
-location: Templeglantine, Co. Limerick, Ireland
+location: Rathkeale, Co. Limerick, Ireland
 start: "2016-09"
 end: "2022-06"
 grade: "578 points"
@@ -12,4 +12,4 @@ order: 3
 note: Six years of Irish secondary including Transition Year. Where the foundation work for CS, the certifications appetite, and the love of structured study took shape.
 ---
 
-Leaving Certificate (Established) at Colàiste na Tròcaire — 578 points, athletics club member and multiple academic awards through the years.
+Leaving Certificate (Established) at Coláiste na Trócaire — 578 points, athletics club member and multiple academic awards through the years.

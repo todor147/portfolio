@@ -4,7 +4,7 @@
  * focused views (software, wine, customer service) pull only the relevant
  * roles, certifications and skills.
  */
-import { byMostRecent } from "./dates";
+import { byMostRecent, diffMonths, formatRange } from "./dates";
 
 /** The designed, downloadable general CV (served from /public). */
 export const GENERAL_PDF = "/assets/Todor_Aleksandrov_CV_General.pdf";
@@ -90,7 +90,7 @@ export const cvVariants: CvVariant[] = [
     profile:
       "BSc Computer Science graduate (University of Limerick, 2026), now a Junior Software Engineer at VMotion IT Solutions (an Atlassian Gold Solution Partner) while studying MSc AI & Machine Learning at UL. Two years of hands-on software experience at AMCS Group before that — test automation with Cypress and Fiddler, CI/CD on Azure DevOps, and release management across a large enterprise platform. I build and ship full-stack web applications end to end, from a solo re-engineered coaching marketplace to this portfolio.",
     experienceCategories: ["software"],
-    experienceIncludeSlugs: ["ul-ict-tutor-2026", "ul-ict-tutor-2025-26", "ul-pslg-tutor"],
+    experienceIncludeSlugs: ["ul-ict-tutor-2026", "ul-ict-tutor-2025-26", "ul-ict-tutor-2025", "ul-pslg-tutor"],
     certCategories: ["tech", "language"],
     showProjects: true,
     showVolunteering: false,
@@ -103,7 +103,7 @@ export const cvVariants: CvVariant[] = [
     headline: "Junior Sommelier · Food & Beverage",
     blurb: "Sommelier and fine-dining service at Adare Manor, with WSET and Court of Master Sommeliers credentials.",
     profile:
-      "Junior Sommelier at Adare Manor (2024–2026) — Ireland's five-star Forbes-rated estate — holding WSET Level 2 (Merit) and the Court of Master Sommeliers Introductory certification. Deep knowledge of an extensive wine list, crafting food pairings and bespoke event selections, consistently lifting wine spend through attentive, knowledgeable service for an international clientele.",
+      "Former Junior Sommelier at Adare Manor (2024–2026) — Ireland's five-star Forbes-rated estate — holding WSET Level 2 (Merit) and the Court of Master Sommeliers Introductory certification. Deep knowledge of an extensive wine list, crafting food pairings and bespoke event selections, consistently lifting wine spend through attentive, knowledgeable service for an international clientele.",
     experienceCategories: ["hospitality"],
     certCategories: ["hospitality"],
     showProjects: false,
@@ -128,7 +128,13 @@ export const cvVariants: CvVariant[] = [
     profile:
       "People-first professional with experience across five-star hospitality, first-line IT support, library front-desk service, tutoring, and Bulgarian–English interpreting. I stay calm under pressure, communicate clearly with people from every background, and see issues through to resolution — whether that's a guest at Adare Manor, a staff member locked out of their account, or a patient who needs an interpreter.",
     experienceCategories: ["hospitality", "interpretation", "delivery", "education"],
-    experienceIncludeSlugs: ["ul-itd-computing-assistant"],
+    // Duty Manager roles are front-line, customer-facing management (their
+    // lifeguarding category would otherwise exclude them).
+    experienceIncludeSlugs: [
+      "ul-itd-computing-assistant",
+      "aura-grove-island-duty-manager",
+      "askeaton-duty-manager",
+    ],
     certCategories: ["language"],
     certIncludeSlugs: ["customer-service-payments", "cms-introductory-sommelier"],
     showProjects: false,
@@ -169,6 +175,24 @@ interface ExpEntry {
   data: ExpData;
 }
 
+/** One continuous stint within a (possibly merged) role. */
+export interface CvPeriod {
+  start: string;
+  end?: string;
+  current: boolean;
+}
+
+/** Like formatRange, but a range whose start equals its end renders once ("Mar 2023"). */
+export function formatCvRange(start: string, end?: string, current?: boolean): string {
+  if (!current && end === start) return formatRange(start);
+  return formatRange(start, end, current);
+}
+
+/** Renders periods as "May 2025 – Sep 2025 · Jun 2026 – Present". */
+export function formatPeriods(periods: CvPeriod[]): string {
+  return periods.map((p) => formatCvRange(p.start, p.end, p.current)).join(" · ");
+}
+
 export interface CvRole {
   title: string;
   employer: string;
@@ -177,13 +201,37 @@ export interface CvRole {
   start: string;
   end?: string;
   current: boolean;
+  /** Actual stints, joined only when contiguous (gap of one month or less). */
+  periods: CvPeriod[];
   summary: string;
+}
+
+/** Sort stints and join those that overlap or are at most one empty month apart. */
+function mergePeriods(input: CvPeriod[]): CvPeriod[] {
+  const sorted = [...input].sort((a, b) => a.start.localeCompare(b.start));
+  const out: CvPeriod[] = [];
+  for (const p of sorted) {
+    const last = out.at(-1);
+    // diffMonths is inclusive: Sep -> Oct = 2, Sep -> Nov = 3 (one empty month).
+    if (last && last.end && diffMonths(last.end, p.start) <= 3) {
+      if (p.current || !p.end) {
+        last.end = p.end;
+        last.current = p.current;
+      } else if (p.end > last.end) {
+        last.end = p.end;
+      }
+    } else {
+      out.push({ ...p });
+    }
+  }
+  return out;
 }
 
 /**
  * Filter experience by the variant, then merge repeated stints of the same
- * role (e.g. three Peer Advisor terms) into a single entry spanning the full
- * range — so each role appears once on the CV.
+ * role (e.g. three Peer Advisor terms) into a single entry — so each role
+ * appears once on the CV — while keeping the real periods (contiguous stints
+ * are joined, separate ones are listed individually).
  */
 export function selectExperience(entries: ExpEntry[], v: CvVariant): CvRole[] {
   const cats = new Set(v.experienceCategories);
@@ -208,6 +256,13 @@ export function selectExperience(entries: ExpEntry[], v: CvVariant): CvRole[] {
     const ends = group.map((g) => g.data.end).filter((x): x is string => Boolean(x)).sort();
     const current = group.some((g) => g.data.current);
     const latest = [...group].sort((a, b) => byMostRecent(a.data, b.data))[0];
+    const periods = mergePeriods(
+      group.map((g) => ({
+        start: g.data.start,
+        end: g.data.current ? undefined : (g.data.end ?? g.data.start),
+        current: Boolean(g.data.current),
+      })),
+    );
     roles.push({
       title: latest.data.title,
       employer: latest.data.employer,
@@ -216,6 +271,7 @@ export function selectExperience(entries: ExpEntry[], v: CvVariant): CvRole[] {
       start: starts[0],
       end: current ? undefined : ends.at(-1),
       current,
+      periods,
       summary: latest.data.summary,
     });
   }

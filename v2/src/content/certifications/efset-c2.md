@@ -3,6 +3,8 @@ title: EFSET English Certificate 76/100 (C2 Proficient)
 issuer: EF SET
 issuerUrl: https://www.efset.org/
 issued: "2023-02"
+credentialId: "fER3vG"
+credentialUrl: https://efset.org/cert/fER3vG
 category: language
 icon: ef set.jpg
 ---

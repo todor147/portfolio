@@ -8,7 +8,7 @@ stack: ["HTML5", "CSS3", "Vanilla JS", "Netlify"]
 githubUrl: https://github.com/todor147/monkey-rescue
 liveUrl: https://monkey-rescue.netlify.app/
 featured: true
-order: 3
+order: 4
 problem: "The first-year-of-college version had four duplicated stylesheets, deprecated markup, fixed pixel units, and zero accessibility consideration. Returning to it four years on, the question was: how do I rebuild it with what I know now — without abandoning the original design language?"
 approach: "Consolidated four duplicated stylesheets into one design system driven by CSS custom properties (color, spacing, shadow, type scale). Replaced deprecated markup with semantic HTML5 landmarks. Switched to mobile-first responsive layout with CSS Grid, Flexbox, and fluid clamp() typography. Added vanilla JavaScript as progressive enhancement — hamburger menu, animated impact counters, scroll-reveal sections, and an interactive donation widget with a live impact estimate."
 contribution: "Sole designer and developer for both versions — the 2022 original and the 2026 rebuild."

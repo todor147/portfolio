@@ -8,9 +8,6 @@ style: "red"
 note: "Almost two decades of age. Tertiary territory: leather, tobacco, dried herbs, mellow tannins. A Thracian Cabernet in full autumn — a time capsule."
 location: "bulgaria"
 order: 160
-heroImage: "/assets/cellar-bottles/vinex-slavyantsi-cabernet-sauvignon-special-reserva-2007.jpg"
-heroCredit: "Photo: Vivino (user-submitted) — TEMPORARY local reference, not licensed for publication"
-heroCreditUrl: "https://www.vivino.com/US/en/vinex-slavyantsi-slavia-cabernet-sauvignon-dry/w/2508695"
 ---
 
 Nearly two decades ago, this bottle would have been just another commercial Bulgarian Cabernet — solid, unremarkable, one of thousands. Time is the only thing that's made it interesting.

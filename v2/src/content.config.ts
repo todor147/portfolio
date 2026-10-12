@@ -1,5 +1,8 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
+import { z } from "astro/zod";
 import { glob } from "astro/loaders";
+
+const yearMonth = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/); // YYYY-MM
 
 const experience = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/experience" }),
@@ -17,8 +20,8 @@ const experience = defineCollection({
       "delivery",
       "other",
     ]),
-    start: z.string(), // YYYY-MM
-    end: z.string().optional(), // YYYY-MM, omit for current
+    start: yearMonth,
+    end: yearMonth.optional(), // omit for current
     current: z.boolean().default(false),
     summary: z.string(),
     icon: z.string().optional(),
@@ -32,9 +35,10 @@ const certifications = defineCollection({
     title: z.string(),
     issuer: z.string(),
     issuerUrl: z.string().url().optional(),
-    issued: z.string(), // YYYY-MM
-    expires: z.string().optional(),
+    issued: yearMonth,
+    expires: yearMonth.optional(),
     credentialId: z.string().optional(),
+    credentialUrl: z.string().url().optional(),
     category: z.enum(["tech", "hospitality", "safety", "language", "other"]),
     icon: z.string().optional(),
   }),
@@ -66,8 +70,8 @@ const volunteering = defineCollection({
     title: z.string(),
     organization: z.string(),
     organizationUrl: z.string().url().optional(),
-    start: z.string(),
-    end: z.string().optional(),
+    start: yearMonth,
+    end: yearMonth.optional(),
     summary: z.string(),
   }),
 });
@@ -78,7 +82,7 @@ const achievements = defineCollection({
     title: z.string(),
     issuer: z.string(),
     issuerUrl: z.string().url().optional(),
-    awarded: z.string(),
+    awarded: yearMonth,
     summary: z.string(),
   }),
 });
@@ -90,8 +94,8 @@ const education = defineCollection({
     institution: z.string(),
     institutionUrl: z.string().url().optional(),
     location: z.string().optional(),
-    start: z.string(),
-    end: z.string().optional(),
+    start: yearMonth,
+    end: yearMonth.optional(),
     grade: z.string().optional(),
     activities: z.string().optional(),
     note: z.string().optional(),

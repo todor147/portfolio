@@ -1,5 +1,5 @@
 ---
-title: Volunteer Marshall
+title: Volunteer Marshal
 organization: Milford Care Centre
 organizationUrl: https://milfordcarecentre.ie/
 start: "2023-02"

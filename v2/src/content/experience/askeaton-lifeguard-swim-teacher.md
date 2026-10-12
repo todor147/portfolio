@@ -2,7 +2,7 @@
 title: Lifeguard and Swim Teacher
 employer: Askeaton Pool & Leisure
 employerUrl: https://swimireland.ie/get-swimming/askeaton-pool-and-leisure/
-location: Askeaton, Ireland
+location: Askeaton, Co. Limerick, Ireland
 category: lifeguarding
 start: "2025-12"
 end: "2026-09"

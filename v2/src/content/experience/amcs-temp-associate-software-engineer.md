@@ -12,4 +12,4 @@ icon: amcs.jpg
 featured: true
 ---
 
-Assisted the release manager in merging branches across multiple feature teams, coordinating cut-overs and helping ensure the AMCS Platform shipped on cadence. Built on previous QA-automation work with Cypress and Fiddler from a prior internship cycle with the Central Automation Team.
+Assisted the release manager in merging branches across multiple feature teams, coordinating cut-overs and helping ensure the AMCS Platform shipped on cadence. Built on previous QA-automation work with Cypress and Fiddler from two prior internship cycles with AMCS, including the Central Automation Team.

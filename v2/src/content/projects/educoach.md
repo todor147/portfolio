@@ -8,7 +8,7 @@ stack: ["PHP 8.2", "MySQL / TiDB Cloud", "Bootstrap 5.3", "Docker", "Apache", "R
 githubUrl: https://github.com/todor147/CS4116_Group_1
 liveUrl: https://cs4116-group-1.onrender.com
 featured: true
-order: 1
+order: 2
 problem: "A two-sided educational marketplace that began as a CS4116 group build at UL. By the time I came back to it, the original InfinityFree host had been decommissioned, credentials were hardcoded across ~70 PHP pages, the admin login had a plaintext backdoor, and the UI hadn't aged well. The job: bring it back online — secure, modern, and fully free to run."
 approach: "Re-architected the ~20,000-line PHP codebase around a single environment-driven config + PDO layer. Hardened security top-to-bottom (bcrypt, prepared statements, CSRF, secure session cookies, response headers, backdoor removed). Refreshed the UI with a Bootstrap 5.3 design system. Containerised the app (PHP 8.2 + Apache) and stood up a one-command `docker compose` dev stack. Deployed continuously from GitHub to Render with a TiDB Cloud Serverless MySQL-compatible database over TLS — zero-dollar production stack."
 contribution: "Backend and system-architecture contributor on the original CS4116 team. Sole engineer for the modernisation and re-deployment — configuration, security, UI overhaul, Dockerisation, database migration, and production hosting."
