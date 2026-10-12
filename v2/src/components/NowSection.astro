@@ -9,7 +9,12 @@ import { byMostRecent, formatRange } from "../lib/dates";
 const experience = await getCollection("experience");
 const current = experience
   .filter((e) => e.data.current)
-  .sort((a, b) => byMostRecent(a.data, b.data));
+  .sort((a, b) => {
+    // Software roles first, then the rest by most recent start.
+    const aSw = a.data.category === "software" ? 0 : 1;
+    const bSw = b.data.category === "software" ? 0 : 1;
+    return aSw - bSw || byMostRecent(a.data, b.data);
+  });
 
 const categoryLabels: Record<string, string> = {
   software: "Software",
@@ -36,7 +41,7 @@ const categoryLabels: Record<string, string> = {
     <ol class="space-y-3">
       {current.map((role, i) => (
         <li
-          class="group grid grid-cols-[3rem_1fr_auto] sm:grid-cols-[3.5rem_minmax(0,1.5fr)_minmax(0,2fr)_auto] gap-4 sm:gap-6 items-baseline py-5 border-b transition-colors hover:border-burgundy-300"
+          class="group grid grid-cols-[3rem_1fr_auto] sm:grid-cols-[3.5rem_minmax(0,1.5fr)_minmax(0,2fr)_auto] gap-4 sm:gap-6 items-baseline py-5 border-b transition-colors hover:border-(--accent)"
           style="border-color: color-mix(in oklab, var(--text) 8%, transparent)"
         >
           <span
@@ -46,10 +51,10 @@ const categoryLabels: Record<string, string> = {
             {String(i + 1).padStart(2, "0")}
           </span>
           <div class="min-w-0">
-            <h3 class="font-display text-xl sm:text-2xl tracking-[-0.01em] truncate">
+            <h3 class="font-display text-xl sm:text-2xl tracking-[-0.01em] break-words">
               {role.data.title}
             </h3>
-            <p class="text-sm mt-0.5 truncate" style="color: var(--text-soft)">
+            <p class="text-sm mt-0.5 break-words" style="color: var(--text-soft)">
               {role.data.employer}
             </p>
           </div>

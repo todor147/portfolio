@@ -19,7 +19,7 @@ const frauncesItalic = readFileSync(
 type Page = { title: string; description: string; image?: string };
 
 const PAGES: Record<string, Page> = {
-  home:           { title: "Todor Aleksandrov",    description: "Computer Science · Sommelier · Lifeguard · Interpreter" },
+  home:           { title: "Todor Aleksandrov",    description: "Software Engineer · Sommelier · Lifeguard · Interpreter" },
   about:          { title: "About",                description: "The CS-meets-sommelier path" },
   experience:     { title: "Experience",           description: "Software, hospitality, aquatics, and more" },
   projects:       { title: "Projects",             description: "Full-stack web applications and side projects" },
@@ -33,6 +33,7 @@ const PAGES: Record<string, Page> = {
   now:            { title: "Now",                  description: "What I'm working on, learning, and drinking this month" },
   uses:           { title: "Uses",                 description: "Tools, hardware, wine kit, and what's in the cellar" },
   gallery:        { title: "Gallery",              description: "Photos from service, travel, and sport" },
+  cellar:         { title: "Cellar",               description: "A personal inventory of wine and spirits" },
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -72,10 +73,7 @@ export const GET: APIRoute = async ({ props }) => {
     .asPng();
 
   return new Response(png, {
-    headers: {
-      "Content-Type": "image/png",
-      "Cache-Control": "public, max-age=31536000, immutable",
-    },
+    headers: { "Content-Type": "image/png" },
   });
 };
 

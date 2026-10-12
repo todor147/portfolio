@@ -28,7 +28,7 @@ const headingSize = {
 }[level];
 ---
 
-<header data-reveal class:list={["max-w-3xl space-y-4", alignClass, className]}>
+<header data-reveal={level === 1 ? undefined : ""} class:list={["max-w-3xl space-y-4", alignClass, className]}>
   {eyebrow && <p class="eyebrow">{eyebrow}</p>}
   <Heading class:list={["font-display tracking-[-0.02em]", headingSize]}>
     {title}

@@ -30,15 +30,15 @@ const {
 } = Astro.props;
 
 const base =
-  "group inline-flex items-center gap-2 font-medium tracking-[0.01em] transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-burgundy-600 rounded-full whitespace-nowrap";
+  "group inline-flex items-center gap-2 font-medium tracking-[0.01em] transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-(--accent) focus-visible:ring-offset-(--bg) rounded-full whitespace-nowrap";
 
 const variants = {
   primary:
     "bg-burgundy-600 text-cream hover:bg-burgundy-700 active:bg-burgundy-800 shadow-sm hover:shadow-md",
   outline:
-    "border border-burgundy-600 text-burgundy-600 hover:bg-burgundy-600 hover:text-cream",
+    "border border-(--accent) text-(--accent) hover:bg-(--accent) hover:text-(--on-accent)",
   ghost:
-    "text-burgundy-600 hover:text-burgundy-700 underline decoration-burgundy-300 underline-offset-4 decoration-1 hover:decoration-burgundy-600 px-0",
+    "text-(--accent) underline decoration-[color-mix(in_oklab,var(--accent)_45%,transparent)] underline-offset-4 decoration-1 hover:decoration-(--accent) px-0",
 };
 
 const sizes = {

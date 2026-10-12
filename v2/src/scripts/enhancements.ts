@@ -166,13 +166,13 @@ function triggerKonami() {
   ];
   const pick = wines[Math.floor(Math.random() * wines.length)];
 
-  const overlay = document.createElement("div");
+  const previouslyFocused = document.activeElement as HTMLElement | null;
+  const overlay = document.createElement("dialog");
   overlay.id = "konami-overlay";
-  overlay.setAttribute("role", "dialog");
   overlay.setAttribute("aria-label", "Hidden wine recommendation");
   overlay.innerHTML = `
     <div class="konami-card">
-      <button class="konami-close" aria-label="Close">×</button>
+      <button type="button" class="konami-close" aria-label="Close">×</button>
       <p class="konami-eyebrow">A hidden pour</p>
       <p class="konami-headline">
         ↑↑↓↓←→←→<span style="color:var(--accent)">BA</span>
@@ -189,8 +189,13 @@ function triggerKonami() {
   styles.textContent = `
     #konami-overlay {
       position: fixed; inset: 0; z-index: 100000;
+      width: 100%; height: 100%; max-width: none; max-height: none;
+      margin: 0; border: 0; background: transparent; color: inherit;
+      overflow: auto; padding: 1rem;
+    }
+    #konami-overlay[open] { display: grid; place-items: center; }
+    #konami-overlay::backdrop {
       background: rgba(26,22,20,0.85); backdrop-filter: blur(6px);
-      display: grid; place-items: center; padding: 1rem;
       animation: konami-fade 200ms ease-out;
     }
     @keyframes konami-fade { from { opacity: 0; } to { opacity: 1; } }
@@ -242,34 +247,22 @@ function triggerKonami() {
   document.head.appendChild(styles);
 
   function close() {
+    if (overlay.open) overlay.close();
+  }
+  // Native <dialog> handles Escape; clean up whenever it closes.
+  overlay.addEventListener("close", () => {
     overlay.remove();
     styles.remove();
-    document.removeEventListener("keydown", escClose);
-  }
-  function escClose(e: KeyboardEvent) {
-    if (e.key === "Escape") close();
-  }
-  overlay.querySelector(".konami-close")?.addEventListener("click", close);
+    previouslyFocused?.focus?.();
+  });
+  const closeBtn = overlay.querySelector<HTMLButtonElement>(".konami-close");
+  closeBtn?.addEventListener("click", close);
   overlay.addEventListener("click", (e) => {
     if (e.target === overlay) close();
   });
-  document.addEventListener("keydown", escClose);
-}
 
-/* ───────────────── Reading time ───────────────── */
-
-function initReadingTime() {
-  const targets = document.querySelectorAll<HTMLElement>("[data-reading-time]");
-  targets.forEach((target) => {
-    const scope = target.dataset.readingTime
-      ? document.querySelector(target.dataset.readingTime)
-      : target.closest("main");
-    if (!scope) return;
-    const text = (scope as HTMLElement).innerText ?? "";
-    const words = text.trim().split(/\s+/).length;
-    const minutes = Math.max(1, Math.round(words / 220));
-    target.textContent = `${minutes} min read`;
-  });
+  overlay.showModal();
+  closeBtn?.focus();
 }
 
 /* ───────────────── Boot ───────────────── */
@@ -280,7 +273,6 @@ function boot() {
   initSmoothAnchors();
   initCountUp();
   initKonami();
-  initReadingTime();
 }
 
 if (document.readyState === "loading") {

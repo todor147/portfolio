@@ -47,8 +47,11 @@
     --surface: var(--color-parchment);
     --text: var(--color-ink);
     --text-soft: var(--color-ink-soft);
-    --accent: var(--color-burgundy-600);
+    --accent: var(--color-burgundy-600);       /* 9.44:1 on --bg, 8.43:1 on --surface */
+    --on-accent: var(--color-cream);           /* 9.44:1 on --accent */
     --accent-soft: var(--color-burgundy-300);
+    --field-border: #8A8178;                   /* 3.55:1 on --bg, 3.17:1 on --surface */
+    --placeholder: var(--text-soft);
     color-scheme: light;
   }
 
@@ -57,8 +60,11 @@
     --surface: var(--color-charcoal-soft);
     --text: var(--color-cream);
     --text-soft: #B8B0A5;
-    --accent: var(--color-burgundy-300);
+    --accent: #CF97A1;                         /* 6.21:1 on --bg, 5.09:1 on --surface */
+    --on-accent: var(--color-charcoal);        /* 6.21:1 on --accent */
     --accent-soft: var(--color-burgundy-500);
+    --field-border: #9A9086;                   /* 4.85:1 on --bg, 3.97:1 on --surface */
+    --placeholder: var(--text-soft);
     color-scheme: dark;
   }
 
@@ -70,6 +76,12 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem; /* sticky header (~72px) + breathing room */
+  }
+
+  ::placeholder {
+    color: var(--placeholder);
+    opacity: 1;
   }
 
   body {
@@ -132,7 +144,8 @@
 
 /* ───────────────── Scroll reveal ───────────────── */
 
-[data-reveal] {
+/* Gated on html.js (set by the inline head script) so no-JS visitors see everything. */
+html.js [data-reveal] {
   opacity: 0;
   transform: translateY(24px);
   transition:
@@ -141,13 +154,14 @@
   will-change: opacity, transform;
 }
 
-[data-reveal].in-view {
+html.js [data-reveal].in-view {
   opacity: 1;
   transform: translateY(0);
+  will-change: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-reveal] {
+  html.js [data-reveal] {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
@@ -173,6 +187,57 @@ button:focus-visible,
 a:focus-visible,
 [role="button"]:focus-visible {
   outline-offset: 4px;
+}
+
+/* Skip link — visually hidden until focused */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 0;
+  z-index: 100001;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0 0 0.75rem 0.75rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 500;
+  transform: translateY(-120%);
+  transition: transform 150ms ease-out;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+main:focus { outline: none; }
+
+/* ───────────────── Markdown tables in case studies ───────────────── */
+
+.prose-content table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  -webkit-overflow-scrolling: touch;
+}
+.prose-content th,
+.prose-content td {
+  padding: 0.6rem 0.85rem;
+  border: 1px solid color-mix(in oklab, var(--text) 18%, transparent);
+  text-align: left;
+  vertical-align: top;
+}
+.prose-content th {
+  font-weight: 600;
+  color: var(--text);
+  background: color-mix(in oklab, var(--surface) 80%, transparent);
+  white-space: nowrap;
+}
+.prose-content tbody tr:nth-child(even) td {
+  background: color-mix(in oklab, var(--surface) 40%, transparent);
 }
 
 /* ───────────────── Native cross-document view transitions ───────────────── */

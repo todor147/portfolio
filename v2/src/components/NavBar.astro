@@ -3,52 +3,57 @@ import Container from "./Container.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 
 const primaryLinks = [
-  { href: "/about",          label: "About"          },
-  { href: "/experience",     label: "Experience"     },
-  { href: "/projects",       label: "Projects"       },
-  { href: "/sommelier",      label: "Wine"           },
-  { href: "/water",          label: "Water"          },
-  { href: "/language",       label: "Language"       },
-  { href: "/cv",             label: "CV"             },
-  { href: "/certifications", label: "Certifications" },
+  { href: "/about",      label: "About"      },
+  { href: "/experience", label: "Experience" },
+  { href: "/projects",   label: "Projects"   },
+  { href: "/cv",         label: "CV"         },
+  { href: "/sommelier",  label: "Wine"       },
+  { href: "/water",      label: "Water"      },
+  { href: "/language",   label: "Language"   },
 ];
 
 const moreLinks = [
-  { href: "/gallery",    label: "Gallery",    note: "Photos from service, travel & sport" },
-  { href: "/cellar",     label: "Cellar",     note: "Personal wine and spirit inventory"  },
-  { href: "/now",        label: "Now",         note: "What I'm currently working on"       },
-  { href: "/uses",       label: "Uses",        note: "Tools, hardware, and daily carry"    },
-  { href: "/transcript", label: "Transcript",  note: "Full BSc academic record"            },
+  { href: "/certifications", label: "Certifications", note: "Qualifications across five areas"    },
+  { href: "/gallery",        label: "Gallery",        note: "Photos from service, travel & sport" },
+  { href: "/cellar",         label: "Cellar",         note: "Personal wine and spirit inventory"  },
+  { href: "/transcript",     label: "Transcript",     note: "Full BSc academic record"            },
+  { href: "/now",            label: "Now",            note: "What I'm currently working on"       },
+  { href: "/uses",           label: "Uses",           note: "Tools, hardware, and daily carry"    },
 ];
+
+// Mobile: CV + Contact pinned as buttons, then everything else.
+const mobileRest = primaryLinks.filter((l) => l.href !== "/cv");
 
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 const moreActive = moreLinks.some((l) => path === l.href);
+const activeCue = "underline decoration-2 underline-offset-[6px]";
 ---
 
 <header
   id="site-nav"
   class="sticky top-0 z-40 backdrop-blur-md bg-[color-mix(in_oklab,var(--bg)_82%,transparent)] border-b border-[color-mix(in_oklab,var(--text)_8%,transparent)]"
 >
-  <Container size="wide" class="flex items-center justify-between py-4">
+  <Container size="wide" class="flex items-center justify-between gap-3 py-4">
     <a
       href="/"
-      class="font-display text-xl tracking-[-0.01em] hover:text-burgundy-600 transition-colors"
+      class="font-display text-xl tracking-[-0.01em] hover:text-(--accent) transition-colors"
       style="color: var(--text)"
     >
       Todor Aleksandrov
     </a>
 
-    <nav aria-label="Primary" class="hidden md:flex items-center gap-1">
+    <nav aria-label="Primary" class="hidden lg:flex items-center gap-0.5">
       {primaryLinks.map((link) => {
         const active = path === link.href;
         return (
           <a
             href={link.href}
+            aria-current={active ? "page" : undefined}
             class:list={[
-              "px-3 py-2 text-sm tracking-wide rounded-full transition-colors",
-              active ? "text-burgundy-600" : "hover:text-burgundy-600",
+              "px-2.5 py-2 text-sm tracking-wide rounded-full transition-colors hover:text-(--accent)",
+              active && activeCue,
             ]}
-            style={active ? undefined : "color: var(--text-soft)"}
+            style={active ? "color: var(--accent)" : "color: var(--text-soft)"}
           >
             {link.label}
           </a>
@@ -60,13 +65,13 @@ const moreActive = moreLinks.some((l) => path === l.href);
         <button
           id="more-btn"
           type="button"
-          aria-haspopup="true"
           aria-expanded="false"
+          aria-controls="more-panel"
           class:list={[
-            "inline-flex items-center gap-1 px-3 py-2 text-sm tracking-wide rounded-full transition-colors select-none",
-            moreActive ? "text-burgundy-600" : "hover:text-burgundy-600",
+            "inline-flex items-center gap-1 px-2.5 py-2 text-sm tracking-wide rounded-full transition-colors select-none hover:text-(--accent)",
+            moreActive && activeCue,
           ]}
-          style={moreActive ? undefined : "color: var(--text-soft)"}
+          style={moreActive ? "color: var(--accent)" : "color: var(--text-soft)"}
         >
           More
           <svg
@@ -99,6 +104,7 @@ const moreActive = moreLinks.some((l) => path === l.href);
             return (
               <a
                 href={link.href}
+                aria-current={active ? "page" : undefined}
                 class:list={[
                   "flex items-center justify-between gap-3 px-4 py-3.5 border-b last:border-0 transition-colors group",
                   active
@@ -109,8 +115,8 @@ const moreActive = moreLinks.some((l) => path === l.href);
               >
                 <div>
                   <p
-                    class:list={["text-sm font-medium leading-snug", active ? "text-burgundy-600" : ""]}
-                    style={active ? undefined : "color: var(--text)"}
+                    class:list={["text-sm font-medium leading-snug", active && activeCue]}
+                    style={active ? "color: var(--accent)" : "color: var(--text)"}
                   >
                     {link.label}
                   </p>
@@ -121,27 +127,47 @@ const moreActive = moreLinks.some((l) => path === l.href);
                 <span
                   class="text-sm flex-shrink-0 transition-transform duration-200 group-hover:translate-x-0.5"
                   style="color: var(--text-soft)"
+                  aria-hidden="true"
                 >→</span>
               </a>
             );
           })}
         </div>
       </div>
-
-      <!-- Contact — kept last as CTA -->
-      <a
-        href="/contact"
-        class:list={[
-          "px-3 py-2 text-sm tracking-wide rounded-full transition-colors",
-          path === "/contact" ? "text-burgundy-600" : "hover:text-burgundy-600",
-        ]}
-        style={path === "/contact" ? undefined : "color: var(--text-soft)"}
-      >
-        Contact
-      </a>
     </nav>
 
     <div class="flex items-center gap-2">
+      <!-- Search (opens the command palette) -->
+      <button
+        type="button"
+        data-palette-open
+        aria-label="Search the site"
+        class="inline-flex items-center justify-center gap-2 h-10 min-w-10 px-0 lg:px-3 rounded-full border border-[color-mix(in_oklab,var(--text)_15%,transparent)] hover:border-(--accent) hover:text-(--accent) transition-colors"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <kbd
+          data-palette-hint
+          aria-hidden="true"
+          class="hidden xl:inline text-[0.7rem] font-sans tracking-wide"
+          style="color: var(--text-soft)">Ctrl K</kbd
+        >
+      </button>
+
+      <a
+        href="/contact"
+        aria-current={path === "/contact" ? "page" : undefined}
+        class:list={[
+          "hidden lg:inline-flex items-center px-5 py-2 text-sm font-medium tracking-wide rounded-full transition-opacity hover:opacity-90",
+          path === "/contact" && "underline decoration-2 underline-offset-4",
+        ]}
+        style="background: var(--accent); color: var(--on-accent)"
+      >
+        Contact
+      </a>
+
       <ThemeToggle />
       <button
         id="mobile-menu-toggle"
@@ -149,7 +175,7 @@ const moreActive = moreLinks.some((l) => path === l.href);
         aria-label="Open menu"
         aria-expanded="false"
         aria-controls="mobile-menu"
-        class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-full border border-[color-mix(in_oklab,var(--text)_15%,transparent)] hover:border-burgundy-600 hover:text-burgundy-600 transition-colors"
+        class="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-full border border-[color-mix(in_oklab,var(--text)_15%,transparent)] hover:border-(--accent) hover:text-(--accent) transition-colors"
       >
         <span aria-hidden="true" data-menu-icon>☰</span>
       </button>
@@ -160,34 +186,66 @@ const moreActive = moreLinks.some((l) => path === l.href);
   <div
     id="mobile-menu"
     hidden
-    class="md:hidden border-t border-[color-mix(in_oklab,var(--text)_8%,transparent)]"
+    class="lg:hidden border-t border-[color-mix(in_oklab,var(--text)_8%,transparent)] max-h-[calc(100dvh-4.5rem)] overflow-y-auto"
   >
     <Container size="wide" class="py-3">
       <nav aria-label="Mobile" class="flex flex-col">
-        {[...primaryLinks, { href: "/contact", label: "Contact" }].map((link) => (
+        <div class="grid grid-cols-2 gap-3 pb-3">
           <a
-            href={link.href}
-            class="py-3 text-base border-b border-[color-mix(in_oklab,var(--text)_6%,transparent)] hover:text-burgundy-600 transition-colors"
-            style="color: var(--text)"
+            href="/cv"
+            aria-current={path === "/cv" ? "page" : undefined}
+            class="inline-flex items-center justify-center rounded-full border border-(--accent) px-4 py-3 text-base font-medium"
+            style="color: var(--accent)"
           >
-            {link.label}
+            CV
           </a>
-        ))}
+          <a
+            href="/contact"
+            aria-current={path === "/contact" ? "page" : undefined}
+            class="inline-flex items-center justify-center rounded-full px-4 py-3 text-base font-medium"
+            style="background: var(--accent); color: var(--on-accent)"
+          >
+            Contact
+          </a>
+        </div>
+        {mobileRest.map((link) => {
+          const active = path === link.href;
+          return (
+            <a
+              href={link.href}
+              aria-current={active ? "page" : undefined}
+              class:list={[
+                "py-3 text-base border-b border-[color-mix(in_oklab,var(--text)_6%,transparent)] hover:text-(--accent) transition-colors",
+                active && activeCue,
+              ]}
+              style={active ? "color: var(--accent)" : "color: var(--text)"}
+            >
+              {link.label}
+            </a>
+          );
+        })}
         <p
           class="pt-5 pb-2 text-[0.65rem] font-semibold tracking-widest uppercase"
           style="color: var(--text-soft)"
         >
           More
         </p>
-        {moreLinks.map((link) => (
-          <a
-            href={link.href}
-            class="py-3 text-base border-b border-[color-mix(in_oklab,var(--text)_6%,transparent)] last:border-0 hover:text-burgundy-600 transition-colors"
-            style="color: var(--text)"
-          >
-            {link.label}
-          </a>
-        ))}
+        {moreLinks.map((link) => {
+          const active = path === link.href;
+          return (
+            <a
+              href={link.href}
+              aria-current={active ? "page" : undefined}
+              class:list={[
+                "py-3 text-base border-b border-[color-mix(in_oklab,var(--text)_6%,transparent)] last:border-0 hover:text-(--accent) transition-colors",
+                active && activeCue,
+              ]}
+              style={active ? "color: var(--accent)" : "color: var(--text)"}
+            >
+              {link.label}
+            </a>
+          );
+        })}
       </nav>
     </Container>
   </div>
@@ -195,59 +253,66 @@ const moreActive = moreLinks.some((l) => path === l.href);
 
 <script is:inline>
   (function () {
+    // Platform-appropriate shortcut hint
+    if (/Mac|iPhone|iPad/.test(navigator.platform || "")) {
+      document.querySelectorAll("[data-palette-hint]").forEach((k) => (k.textContent = "⌘K"));
+    }
+
     // Mobile menu
     const btn = document.getElementById("mobile-menu-toggle");
     const menu = document.getElementById("mobile-menu");
     if (btn && menu) {
       const icon = btn.querySelector("[data-menu-icon]");
-      btn.addEventListener("click", () => {
-        const open = !menu.hidden;
-        menu.hidden = open;
-        btn.setAttribute("aria-expanded", String(!open));
-        btn.setAttribute("aria-label", open ? "Open menu" : "Close menu");
-        if (icon) icon.textContent = open ? "☰" : "×";
-      });
+      const setOpen = (open) => {
+        menu.hidden = !open;
+        btn.setAttribute("aria-expanded", String(open));
+        btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+        if (icon) icon.textContent = open ? "×" : "☰";
+      };
+      btn.addEventListener("click", () => setOpen(menu.hidden));
       menu.querySelectorAll("a").forEach((a) =>
-        a.addEventListener("click", () => {
-          menu.hidden = true;
-          btn.setAttribute("aria-expanded", "false");
-          if (icon) icon.textContent = "☰";
-        }),
+        a.addEventListener("click", () => setOpen(false)),
       );
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !menu.hidden) {
+          setOpen(false);
+          btn.focus();
+        }
+      });
     }
 
     // More dropdown
+    const wrap = document.getElementById("more-wrap");
     const moreBtn = document.getElementById("more-btn");
     const morePanel = document.getElementById("more-panel");
     const moreChevron = document.getElementById("more-chevron");
 
-    if (moreBtn && morePanel) {
-      const openMore = () => {
-        morePanel.hidden = false;
-        moreBtn.setAttribute("aria-expanded", "true");
-        if (moreChevron) moreChevron.style.transform = "rotate(180deg)";
-      };
-      const closeMore = () => {
-        morePanel.hidden = true;
-        moreBtn.setAttribute("aria-expanded", "false");
-        if (moreChevron) moreChevron.style.transform = "";
+    if (wrap && moreBtn && morePanel) {
+      const setMore = (open) => {
+        morePanel.hidden = !open;
+        moreBtn.setAttribute("aria-expanded", String(open));
+        if (moreChevron) moreChevron.style.transform = open ? "rotate(180deg)" : "";
       };
 
-      moreBtn.addEventListener("click", () =>
-        morePanel.hidden ? openMore() : closeMore()
-      );
+      moreBtn.addEventListener("click", () => setMore(morePanel.hidden));
 
       document.addEventListener("click", (e) => {
-        const wrap = document.getElementById("more-wrap");
-        if (wrap && !wrap.contains(e.target)) closeMore();
+        if (!wrap.contains(e.target)) setMore(false);
       });
 
       document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeMore();
+        if (e.key === "Escape" && !morePanel.hidden) {
+          setMore(false);
+          moreBtn.focus();
+        }
+      });
+
+      wrap.addEventListener("focusout", (e) => {
+        if (!morePanel.hidden && e.relatedTarget && !wrap.contains(e.relatedTarget)) setMore(false);
       });
 
       morePanel.querySelectorAll("a").forEach((a) =>
-        a.addEventListener("click", closeMore)
+        a.addEventListener("click", () => setMore(false)),
       );
     }
   })();

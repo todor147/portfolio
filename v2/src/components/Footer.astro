@@ -24,46 +24,46 @@ const socials = [
 
     <nav aria-label="Footer">
       <p class="eyebrow mb-3">Pages</p>
-      <ul class="space-y-2 text-sm">
-        <li><a href="/about" class="hover:text-burgundy-600 transition-colors">About</a></li>
-        <li><a href="/experience" class="hover:text-burgundy-600 transition-colors">Experience</a></li>
-        <li><a href="/projects" class="hover:text-burgundy-600 transition-colors">Projects</a></li>
-        <li><a href="/cv" class="hover:text-burgundy-600 transition-colors">CV</a></li>
-        <li><a href="/certifications" class="hover:text-burgundy-600 transition-colors">Certifications</a></li>
-        <li><a href="/transcript" class="hover:text-burgundy-600 transition-colors">Transcript</a></li>
-        <li><a href="/contact" class="hover:text-burgundy-600 transition-colors">Contact</a></li>
+      <ul class="space-y-0.5 text-sm">
+        <li><a href="/about" class="hover:text-(--accent) transition-colors inline-block py-1">About</a></li>
+        <li><a href="/experience" class="hover:text-(--accent) transition-colors inline-block py-1">Experience</a></li>
+        <li><a href="/projects" class="hover:text-(--accent) transition-colors inline-block py-1">Projects</a></li>
+        <li><a href="/cv" class="hover:text-(--accent) transition-colors inline-block py-1">CV</a></li>
+        <li><a href="/certifications" class="hover:text-(--accent) transition-colors inline-block py-1">Certifications</a></li>
+        <li><a href="/transcript" class="hover:text-(--accent) transition-colors inline-block py-1">Transcript</a></li>
+        <li><a href="/contact" class="hover:text-(--accent) transition-colors inline-block py-1">Contact</a></li>
       </ul>
     </nav>
 
     <nav aria-label="Trades">
       <p class="eyebrow mb-3">Three trades</p>
-      <ul class="space-y-2 text-sm">
-        <li><a href="/sommelier" class="hover:text-burgundy-600 transition-colors">Wine — Sommelier</a></li>
-        <li><a href="/water" class="hover:text-burgundy-600 transition-colors">Water — Lifeguard</a></li>
-        <li><a href="/language" class="hover:text-burgundy-600 transition-colors">Language — Interpreter</a></li>
+      <ul class="space-y-0.5 text-sm">
+        <li><a href="/sommelier" class="hover:text-(--accent) transition-colors inline-block py-1">Wine — Sommelier</a></li>
+        <li><a href="/water" class="hover:text-(--accent) transition-colors inline-block py-1">Water — Lifeguard</a></li>
+        <li><a href="/language" class="hover:text-(--accent) transition-colors inline-block py-1">Language — Interpreter</a></li>
       </ul>
     </nav>
 
     <nav aria-label="Explore">
       <p class="eyebrow mb-3">Explore</p>
-      <ul class="space-y-2 text-sm">
-        <li><a href="/gallery" class="hover:text-burgundy-600 transition-colors">Gallery</a></li>
-        <li><a href="/cellar" class="hover:text-burgundy-600 transition-colors">Cellar</a></li>
-        <li><a href="/now" class="hover:text-burgundy-600 transition-colors">Now</a></li>
-        <li><a href="/uses" class="hover:text-burgundy-600 transition-colors">Uses</a></li>
+      <ul class="space-y-0.5 text-sm">
+        <li><a href="/gallery" class="hover:text-(--accent) transition-colors inline-block py-1">Gallery</a></li>
+        <li><a href="/cellar" class="hover:text-(--accent) transition-colors inline-block py-1">Cellar</a></li>
+        <li><a href="/now" class="hover:text-(--accent) transition-colors inline-block py-1">Now</a></li>
+        <li><a href="/uses" class="hover:text-(--accent) transition-colors inline-block py-1">Uses</a></li>
       </ul>
     </nav>
 
     <div>
       <p class="eyebrow mb-3">Find me</p>
-      <ul class="space-y-2 text-sm">
+      <ul class="space-y-0.5 text-sm">
         {socials.map((s) => (
           <li>
             <a
               href={s.href}
               target={s.href.startsWith("http") ? "_blank" : undefined}
               rel={s.href.startsWith("http") ? "noopener noreferrer" : undefined}
-              class="hover:text-burgundy-600 transition-colors"
+              class="hover:text-(--accent) transition-colors inline-block py-1"
             >
               {s.label} →
             </a>
@@ -72,7 +72,7 @@ const socials = [
         <li>
           <a
             href="/cv"
-            class="hover:text-burgundy-600 transition-colors"
+            class="hover:text-(--accent) transition-colors inline-block py-1"
           >
             Curriculum Vitae →
           </a>
@@ -92,13 +92,13 @@ const socials = [
           href="https://astro.build"
           target="_blank"
           rel="noopener noreferrer"
-          class="hover:text-burgundy-600 transition-colors">Astro</a
+          class="hover:text-(--accent) transition-colors inline-block py-1">Astro</a
         >
         & <a
           href="https://tailwindcss.com"
           target="_blank"
           rel="noopener noreferrer"
-          class="hover:text-burgundy-600 transition-colors">Tailwind</a
+          class="hover:text-(--accent) transition-colors inline-block py-1">Tailwind</a
         >.
       </p>
     </div>

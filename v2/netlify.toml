@@ -1,16 +1,7 @@
 # Netlify configuration for Portfolio v2.0
 #
-# CUTOVER INSTRUCTIONS — when you're ready to switch from the v1 site to v2:
-#
-#   1. Copy this file to the REPO ROOT:
-#        cp v2/netlify.toml netlify.toml
-#
-#   2. Commit and push. Netlify will read the root netlify.toml, run
-#      `npm install && npm run build` inside the v2/ folder, and publish
-#      v2/dist/ — replacing the current live site.
-#
-#   3. The v1 files (root index.html, style.css, etc.) are kept in place
-#      but no longer served. Roll back by deleting the root netlify.toml.
+# The repo-root netlify.toml is the authoritative Netlify config (base = "v2").
+# This copy under v2/ is kept byte-identical for safety; edit both together.
 
 [build]
   base    = "v2"
@@ -31,6 +22,12 @@
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=86400"
+
+# Generated Open Graph images: cache for a week (they change when content does).
+[[headers]]
+  for = "/og/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
 
 # Security headers for every response.
 [[headers]]

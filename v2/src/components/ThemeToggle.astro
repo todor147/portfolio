@@ -7,9 +7,9 @@
 <button
   id="theme-toggle"
   type="button"
-  aria-label="Toggle color theme"
-  title="Toggle theme (Auto · Light · Dark)"
-  class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[color-mix(in_oklab,var(--text)_15%,transparent)] hover:border-burgundy-600 hover:text-burgundy-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-burgundy-600 focus-visible:ring-offset-2"
+  aria-label="Theme: Auto (switch to Light)"
+  title="Theme: Auto (switch to Light)"
+  class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[color-mix(in_oklab,var(--text)_15%,transparent)] hover:border-(--accent) hover:text-(--accent) transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-(--accent) focus-visible:ring-offset-2 focus-visible:ring-offset-(--bg)"
 >
   <span aria-hidden="true" data-theme-icon class="text-base leading-none"></span>
 </button>
@@ -30,20 +30,24 @@
         icon.textContent =
           theme === "auto" ? "◐" : theme === "dark" ? "●" : "○";
       }
-      btn.setAttribute(
-        "aria-label",
-        `Theme: ${theme} (click to switch)`
-      );
+      const names = { auto: "Auto", light: "Light", dark: "Dark" };
+      const nextName = names[theme === "auto" ? "light" : theme === "light" ? "dark" : "auto"];
+      const label = `Theme: ${names[theme]} (switch to ${nextName})`;
+      btn.setAttribute("aria-label", label);
+      btn.setAttribute("title", label);
     };
 
-    const stored = localStorage.getItem("theme") || "auto";
-    apply(stored);
+    const read = () => {
+      try { return localStorage.getItem("theme") || "auto"; } catch (e) { return document.documentElement.dataset.themePref || "auto"; }
+    };
+
+    apply(read());
 
     btn.addEventListener("click", () => {
-      const current = localStorage.getItem("theme") || "auto";
+      const current = read();
       const next =
         current === "auto" ? "light" : current === "light" ? "dark" : "auto";
-      localStorage.setItem("theme", next);
+      try { localStorage.setItem("theme", next); } catch (e) {}
       apply(next);
     });
 
@@ -51,7 +55,7 @@
     window
       .matchMedia("(prefers-color-scheme: dark)")
       .addEventListener("change", () => {
-        if ((localStorage.getItem("theme") || "auto") === "auto") apply("auto");
+        if (read() === "auto") apply("auto");
       });
   })();
 </script>

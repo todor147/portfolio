@@ -3,24 +3,32 @@ import "../styles/global.css";
 import NavBar from "../components/NavBar.astro";
 import Footer from "../components/Footer.astro";
 import CommandPalette from "../components/CommandPalette.astro";
+import interLatinUrl from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
+import frauncesLatinUrl from "@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url";
 
 interface Props {
   title?: string;
   description?: string;
   showChrome?: boolean;
   ogImage?: string;
+  /** Emit <meta name="robots" content="noindex"> */
+  noindex?: boolean;
+  /** Omit canonical + og:url (e.g. the 404 page) */
+  noCanonical?: boolean;
 }
 
 const {
-  title = "Todor Aleksandrov — Computer Science · Sommelier",
-  description = "BSc Computer Science, University of Limerick (2026) · now studying MSc AI & ML. Junior Software Engineer at VMotion IT Solutions. Software, hospitality, language, and lifeguarding.",
+  title = "Todor Aleksandrov — Software Engineer · Sommelier",
+  description = "Junior Software Engineer at VMotion IT Solutions. BSc Computer Science (UL, 2026), studying MSc AI & ML. Also a sommelier, lifeguard and interpreter.",
   showChrome = true,
   ogImage: ogImageProp,
+  noindex = false,
+  noCanonical = false,
 } = Astro.props;
 
 const KNOWN_OG_SLUGS = new Set([
   "home","about","experience","projects","cv","contact",
-  "sommelier","water","language","certifications","transcript","now","uses","gallery",
+  "sommelier","water","language","certifications","transcript","now","uses","gallery","cellar",
 ]);
 const _pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
 const _autoSlug = _pathname === "/" ? "home" : _pathname.slice(1).split("/")[0];
@@ -29,6 +37,63 @@ const ogImage = ogImageProp ?? `/og/${KNOWN_OG_SLUGS.has(_autoSlug) ? _autoSlug 
 const siteUrl = Astro.site ?? new URL("https://todors-portfolio.netlify.app");
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
 const ogImageUrl = new URL(ogImage, siteUrl).href;
+const ogImageAlt = `${title} — Todor Aleksandrov`;
+const isHome = _pathname === "/";
+const personId = new URL("/#person", siteUrl).href;
+
+const personLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": personId,
+  name: "Todor Aleksandrov",
+  url: siteUrl.href,
+  image: new URL("/assets/about.jpg", siteUrl).href,
+  description:
+    "Junior Software Engineer at VMotion IT Solutions. BSc Computer Science (University of Limerick, 2026), studying MSc AI & Machine Learning. Also a sommelier, lifeguard and Bulgarian–English interpreter.",
+  address: { "@type": "PostalAddress", addressLocality: "Limerick", addressCountry: "IE" },
+  jobTitle: ["Junior Software Engineer", "Duty Manager", "ICT Tutor", "Student Professional"],
+  worksFor: [
+    { "@type": "Organization", name: "VMotion IT Solutions", url: "https://vmotionitsolutions.com" },
+    { "@type": "Organization", name: "Aura Holohan Group", url: "https://www.auraleisure.ie/" },
+    { "@type": "Organization", name: "University of Limerick", url: "https://www.ul.ie" },
+    {
+      "@type": "Organization",
+      name: "National Building Control Office & National Market Surveillance Office",
+      url: "https://www.nbco.localgov.ie/",
+    },
+    { "@type": "Organization", name: "TRANSLIT", url: "https://translit.com/" },
+    { "@type": "Organization", name: "translation.ie", url: "https://translation.ie/" },
+    { "@type": "Organization", name: "UL Student Life", url: "https://www.ulstudentlife.ie" },
+  ],
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "University of Limerick",
+    url: "https://www.ul.ie",
+  },
+  knowsAbout: [
+    "Software engineering",
+    "Web development",
+    "Artificial intelligence and machine learning",
+    "Wine service and sommelier practice",
+    "Lifeguarding and aquatics management",
+    "Bulgarian–English interpretation",
+  ],
+  sameAs: [
+    "https://www.linkedin.com/in/todoraleksandrov/",
+    "https://github.com/todor147",
+  ],
+  knowsLanguage: ["en", "bg"],
+};
+
+const websiteLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": new URL("/#website", siteUrl).href,
+  name: "Todor Aleksandrov",
+  url: siteUrl.href,
+  inLanguage: "en-IE",
+  publisher: { "@id": personId },
+};
 ---
 
 <!doctype html>
@@ -39,23 +104,30 @@ const ogImageUrl = new URL(ogImage, siteUrl).href;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    {!noCanonical && <link rel="canonical" href={canonical} />}
 
     <!-- Open Graph / social -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonical} />
+    {!noCanonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:site_name" content="Todor Aleksandrov" />
     <meta property="og:locale" content="en_IE" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+
+    <!-- Preload the two above-the-fold variable fonts -->
+    <link rel="preload" as="font" type="font/woff2" href={interLatinUrl} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={frauncesLatinUrl} crossorigin />
 
     <!-- Identity -->
     <link rel="me" href="https://www.linkedin.com/in/todoraleksandrov/" />
@@ -73,37 +145,16 @@ const ogImageUrl = new URL(ogImage, siteUrl).href;
     <link rel="alternate icon" href="/favicon.ico" />
 <link rel="mask-icon" href="/favicon.svg" color="#7B1E2D" />
 
-    <!-- JSON-LD person schema -->
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Person",
-        name: "Todor Aleksandrov",
-        url: siteUrl.href,
-        jobTitle: "Junior Software Engineer · Duty Manager",
-        worksFor: [
-          { "@type": "Organization", name: "VMotion IT Solutions", url: "https://vmotionitsolutions.com" },
-          { "@type": "Organization", name: "Aura Holohan Group", url: "https://www.auraleisure.ie/" },
-          { "@type": "Organization", name: "UL Student Life", url: "https://www.ulstudentlife.ie" },
-        ],
-        alumniOf: {
-          "@type": "CollegeOrUniversity",
-          name: "University of Limerick",
-          url: "https://www.ul.ie",
-        },
-        sameAs: [
-          "https://www.linkedin.com/in/todoraleksandrov/",
-          "https://github.com/todor147",
-        ],
-        knowsLanguage: ["en", "bg"],
-      })}
-    />
+    <!-- JSON-LD -->
+    <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+    {isHome && <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />}
 
     <script is:inline>
       // Apply theme before paint to avoid flash
       (function () {
-        const stored = localStorage.getItem("theme");
+        document.documentElement.classList.add("js");
+        let stored = null;
+        try { stored = localStorage.getItem("theme"); } catch (e) {}
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         const theme = stored ?? "auto";
         const resolved = theme === "auto" ? (prefersDark ? "dark" : "light") : theme;
@@ -115,8 +166,9 @@ const ogImageUrl = new URL(ogImage, siteUrl).href;
     <script src="../scripts/enhancements.ts"></script>
   </head>
   <body class="min-h-dvh flex flex-col">
+    <a href="#main" class="skip-link">Skip to content</a>
     {showChrome && <NavBar />}
-    <main class="flex-1">
+    <main id="main" tabindex="-1" class="flex-1">
       <slot />
     </main>
     {showChrome && <Footer />}

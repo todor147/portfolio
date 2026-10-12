@@ -10,7 +10,7 @@ const { variant = "default", size = "sm", class: className = "" } = Astro.props;
 const variants = {
   default:
     "border border-[color-mix(in_oklab,var(--text)_18%,transparent)] text-(--text-soft) bg-transparent",
-  accent: "border border-burgundy-600 text-burgundy-600 bg-transparent",
+  accent: "border border-(--accent) text-(--accent) bg-transparent",
   soft: "bg-[color-mix(in_oklab,var(--accent)_12%,transparent)] text-(--accent) border border-transparent",
 };
 

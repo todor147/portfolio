@@ -18,7 +18,7 @@ import Picture from "./Picture.astro";
   <Container size="wide">
     <div class="grid lg:grid-cols-[1.4fr_1fr] gap-10 md:gap-16 items-center">
       <!-- TEXT COLUMN -->
-      <div class="space-y-8 md:space-y-10" data-reveal>
+      <div class="space-y-6 md:space-y-10">
         <p class="eyebrow">Portfolio · 2026</p>
 
         <h1
@@ -35,7 +35,7 @@ import Picture from "./Picture.astro";
             class="font-display italic text-xl md:text-2xl"
             style="color:var(--text-soft)"
           >
-            Computer Science <span style="color:var(--accent)">·</span> Sommelier
+            Software Engineer <span style="color:var(--accent)">·</span> Sommelier
           </p>
         </div>
 
@@ -45,14 +45,14 @@ import Picture from "./Picture.astro";
         >
           Currently a Junior Software Engineer at <a
             href="/experience#vmotion-junior-software-engineer"
-            class="underline decoration-burgundy-300 underline-offset-4 hover:decoration-burgundy-600 transition-colors">VMotion IT Solutions</a
+            class="underline decoration-[color-mix(in_oklab,var(--accent)_45%,transparent)] underline-offset-4 hover:decoration-(--accent) transition-colors">VMotion IT Solutions</a
           > and part-time Duty Manager at
           <a
             href="/water"
-            class="underline decoration-burgundy-300 underline-offset-4 hover:decoration-burgundy-600 transition-colors">Aura — Grove Island</a
+            class="underline decoration-[color-mix(in_oklab,var(--accent)_45%,transparent)] underline-offset-4 hover:decoration-(--accent) transition-colors">Aura — Grove Island</a
           >. Former <a
             href="/sommelier"
-            class="underline decoration-burgundy-300 underline-offset-4 hover:decoration-burgundy-600 transition-colors">Junior Sommelier at Adare Manor</a
+            class="underline decoration-[color-mix(in_oklab,var(--accent)_45%,transparent)] underline-offset-4 hover:decoration-(--accent) transition-colors">Junior Sommelier at Adare Manor</a
           >. BSc Computer Science graduate (UL, 2026), now studying MSc AI &amp; Machine Learning at UL.
         </p>
 
@@ -96,7 +96,7 @@ import Picture from "./Picture.astro";
       </div>
 
       <!-- PORTRAIT COLUMN -->
-      <div class="relative order-first lg:order-last" data-reveal data-reveal-delay="120">
+      <div class="relative lg:order-last" data-reveal data-reveal-delay="120">
         <!-- Decorative frame -->
         <div
           aria-hidden="true"
@@ -106,7 +106,7 @@ import Picture from "./Picture.astro";
         </div>
 
         <div
-          class="relative aspect-[4/5] max-w-[28rem] mx-auto rounded-[2rem] overflow-hidden border"
+          class="relative aspect-[4/5] max-w-[18rem] md:max-w-[28rem] mx-auto rounded-[2rem] overflow-hidden border"
           style="border-color:color-mix(in oklab, var(--text) 12%, transparent)"
         >
           <Picture
@@ -124,8 +124,8 @@ import Picture from "./Picture.astro";
           style="background:color-mix(in oklab, var(--bg) 70%, transparent); border:1px solid color-mix(in oklab, var(--text) 15%, transparent); box-shadow: 0 12px 32px color-mix(in oklab, var(--text) 12%, transparent);"
         >
           <p class="eyebrow mb-1">Currently</p>
-          <p class="font-display text-lg leading-tight">Duty Manager</p>
-          <p class="text-xs mt-0.5" style="color:var(--text-soft)">Aura — Grove Island · 2026</p>
+          <p class="font-display text-lg leading-tight">Junior Software Engineer</p>
+          <p class="text-xs mt-0.5" style="color:var(--text-soft)">VMotion IT Solutions · 2026</p>
         </div>
       </div>
     </div>
