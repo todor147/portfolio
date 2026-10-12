@@ -4,7 +4,7 @@
  * instead of being inlined into every page.
  */
 import { getCollection } from "astro:content";
-import { cvVariants, GENERAL_PDF } from "./cv";
+import { cvVariants, CV_PDFS } from "./cv";
 
 export interface SearchItem {
   /** Group heading, e.g. "Page", "Role". */
@@ -68,7 +68,9 @@ export async function buildSearchIndex(): Promise<SearchItem[]> {
 
   // Downloads and external links
   items.push(
-    item("Link", "Download CV (PDF)", "General CV, designed PDF", GENERAL_PDF, "cv resume résumé pdf download"),
+    ...cvVariants.map((v) =>
+      item("Link", `Download CV (PDF): ${v.label}`, `${v.headline}, PDF`, CV_PDFS[v.id], `cv resume résumé pdf download ${v.id.replace("-", " ")} ${v.label.toLowerCase()}`),
+    ),
     item("Link", "LinkedIn", "todoraleksandrov", "https://www.linkedin.com/in/todoraleksandrov/"),
     item("Link", "GitHub", "todor147", "https://github.com/todor147"),
     item("Link", "Email", "todor_147@abv.bg", "mailto:todor_147@abv.bg", "contact message"),

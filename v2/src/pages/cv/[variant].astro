@@ -2,7 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Container from "../../components/Container.astro";
 import CvDocument from "../../components/CvDocument.astro";
-import { cvVariants, getVariant, GENERAL_PDF, type CvVariant } from "../../lib/cv";
+import { cvVariants, getVariant, CV_PDFS, type CvVariant } from "../../lib/cv";
 
 export function getStaticPaths() {
   return cvVariants.map((v) => ({ params: { variant: v.id }, props: { variant: v } }));
@@ -17,15 +17,15 @@ const { variant } = Astro.props as { variant: CvVariant };
 >
   <Container size="wide" class="py-12 md:py-16">
     <!-- Toolbar (hidden when printing) -->
-    <div class="print:hidden flex flex-wrap items-center justify-between gap-4 mb-10">
-      <a href="/cv" class="inline-flex items-center gap-1 text-sm min-h-10 hover:text-(--accent) transition-colors" style="color: var(--text-soft)">
+    <div class="print:hidden no-print flex flex-wrap items-center justify-between gap-4 mb-10">
+      <a href="/cv/" class="inline-flex items-center gap-1 text-sm min-h-10 hover:text-(--accent) transition-colors" style="color: var(--text-soft)">
         <span aria-hidden="true">←</span> All CVs
       </a>
 
       <nav aria-label="CV versions" class="flex flex-wrap items-center gap-2">
         {cvVariants.map((v) => (
           <a
-            href={`/cv/${v.id}`}
+            href={`/cv/${v.id}/`}
             aria-current={v.id === variant.id ? "page" : undefined}
             class:list={[
               "inline-flex items-center min-h-10 px-4 rounded-full text-xs font-medium tracking-wide border transition-colors",
@@ -39,14 +39,13 @@ const { variant } = Astro.props as { variant: CvVariant };
       </nav>
 
       <div class="flex items-center gap-3">
-        {variant.id === "general" && (
-          <a
-            href={GENERAL_PDF}
-            download
-            class="text-sm font-medium inline-flex items-center min-h-10 hover:underline transition-colors"
-            style="color: var(--accent)"
-          >Download PDF ↓</a>
-        )}
+        <a
+          href={CV_PDFS[variant.id]}
+          download
+          aria-label={`Download ${variant.label} CV (PDF)`}
+          class="text-sm font-medium inline-flex items-center min-h-10 hover:underline transition-colors"
+          style="color: var(--accent)"
+        >Download PDF ↓</a>
         <button
           id="cv-print"
           type="button"

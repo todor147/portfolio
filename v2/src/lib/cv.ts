@@ -6,8 +6,20 @@
  */
 import { byMostRecent, diffMonths, formatRange } from "./dates";
 
-/** The designed, downloadable general CV (served from /public). */
-export const GENERAL_PDF = "/assets/Todor_Aleksandrov_CV_General.pdf";
+/**
+ * Downloadable PDF per variant id (served from /public/assets). Generated from
+ * the /cv/<id>/ pages by `npm run cv:pdf` (scripts/generate-cv-pdfs.mjs) —
+ * keep ids and filenames in sync with that script.
+ */
+export const CV_PDFS: Record<string, string> = {
+  general: "/assets/Todor_Aleksandrov_CV_General.pdf",
+  software: "/assets/Todor_Aleksandrov_CV_Software.pdf",
+  wine: "/assets/Todor_Aleksandrov_CV_Wine.pdf",
+  "customer-service": "/assets/Todor_Aleksandrov_CV_Customer_Service.pdf",
+};
+
+/** The general CV PDF (kept for compatibility). */
+export const GENERAL_PDF = CV_PDFS.general;
 
 export const CONTACT = {
   name: "Todor Aleksandrov",
@@ -204,6 +216,7 @@ export interface CvRole {
   /** Actual stints, joined only when contiguous (gap of one month or less). */
   periods: CvPeriod[];
   summary: string;
+  category: string;
 }
 
 /** Sort stints and join those that overlap or are at most one empty month apart. */
@@ -273,10 +286,17 @@ export function selectExperience(entries: ExpEntry[], v: CvVariant): CvRole[] {
       current,
       periods,
       summary: latest.data.summary,
+      category: latest.data.category,
     });
   }
 
-  return roles.sort((a, b) => byMostRecent(a, b));
+  // Current roles first; among those, software leads (it's the CV headline).
+  return roles.sort((a, b) => {
+    if (a.current && b.current && (a.category === "software") !== (b.category === "software")) {
+      return a.category === "software" ? -1 : 1;
+    }
+    return byMostRecent(a, b);
+  });
 }
 
 // ───────────────── Certification selection ─────────────────

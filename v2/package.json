@@ -10,7 +10,8 @@
     "build": "npm run optimize:images && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "optimize:images": "node scripts/optimize-images.mjs"
+    "optimize:images": "node scripts/optimize-images.mjs",
+    "cv:pdf": "node scripts/generate-cv-pdfs.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

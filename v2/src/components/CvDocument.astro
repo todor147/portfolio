@@ -64,7 +64,7 @@ const contactLinks = [
               href={c.href}
               target={c.href.startsWith("http") ? "_blank" : undefined}
               rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
-              class="hover:text-burgundy-600 transition-colors"
+              class="hover:text-(--accent) transition-colors"
             >{c.label}</a>
           ) : (
             <span>{c.label}</span>

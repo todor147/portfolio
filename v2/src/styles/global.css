@@ -263,6 +263,8 @@ main:focus { outline: none; }
 /* ───────────────── Print stylesheet ───────────────── */
 /* When printed, the site reflows into a clean CV-style document. */
 @media print {
+  @page { size: A4; margin: 12mm 14mm; }
+
   html, body {
     background: #ffffff !important;
     color: #111111 !important;
@@ -271,7 +273,12 @@ main:focus { outline: none; }
 
   /* Hide all the chrome */
   #site-nav,
+  header[role="banner"],
   footer,
+  .skip-link,
+  #theme-toggle,
+  .no-print,
+  [data-print-hide],
   #cmdk-trigger,
   #cmdk-dialog,
   .floating-arrow,
@@ -314,7 +321,10 @@ main:focus { outline: none; }
   }
 
   /* Make links readable on paper */
-  a { color: #4a1218 !important; text-decoration: underline !important; }
+  a { color: #111111 !important; text-decoration: none !important; }
+  .cv-document a[href]::after { content: "" !important; }
+  .cv-entry, li { break-inside: avoid; }
+  * { background-image: none !important; }
   a[href^="http"]::after {
     content: " (" attr(href) ")";
     font-size: 8pt;
