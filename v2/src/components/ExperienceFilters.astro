@@ -26,8 +26,8 @@ const total = categories.reduce((sum, c) => sum + c.count, 0);
         id="exp-search"
         placeholder="Search roles, employers, keywords..."
         autocomplete="off"
-        class="w-full pl-10 pr-3 py-2.5 text-sm rounded-full border bg-transparent focus:outline-none focus:border-burgundy-600 transition-colors"
-        style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text);"
+        class="w-full pl-10 pr-3 py-2.5 text-sm rounded-full border bg-transparent transition-colors"
+        style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text);"
       />
     </div>
 
@@ -35,20 +35,22 @@ const total = categories.reduce((sum, c) => sum + c.count, 0);
     <div class="flex flex-wrap items-center gap-2 lg:flex-1 lg:justify-end" role="group" aria-label="Filter by category">
       <button
         type="button"
+        aria-pressed="true"
         class="exp-cat-btn active px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
         data-category="all"
-        style="border-color: var(--accent); background: var(--accent); color: var(--color-cream);"
+        style="border-color: var(--accent); background: var(--accent); color: var(--on-accent, #FAF6F0);"
       >
-        All <span class="opacity-75 font-mono ml-1">{total}</span>
+        All <span class="font-mono ml-1">{total}</span>
       </button>
       {categories.map((cat) => (
         <button
           type="button"
-          class="exp-cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all hover:border-burgundy-600 hover:text-burgundy-600"
+          class="exp-cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
           data-category={cat.id}
-          style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text-soft);"
+          aria-pressed="false"
+          style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text-soft);"
         >
-          {cat.label} <span class="opacity-60 font-mono ml-1">{cat.count}</span>
+          {cat.label} <span class="font-mono ml-1" style="color: var(--text-soft);">{cat.count}</span>
         </button>
       ))}
     </div>
@@ -57,12 +59,17 @@ const total = categories.reduce((sum, c) => sum + c.count, 0);
   <p
     id="exp-empty-state"
     hidden
+    role="status"
     class="text-sm mt-3 text-center"
     style="color:var(--text-soft)"
   >
     No roles match — try a different keyword or category.
   </p>
 </div>
+
+<style>
+  .exp-cat-btn:not(.active):hover { border-color: var(--accent) !important; color: var(--accent) !important; }
+</style>
 
 <script>
   const filtersRoot = document.getElementById("exp-filters");
@@ -79,12 +86,13 @@ const total = categories.reduce((sum, c) => sum + c.count, 0);
     buttons.forEach((btn) => {
       const active = btn.dataset.category === cat;
       btn.classList.toggle("active", active);
+      btn.setAttribute("aria-pressed", String(active));
       if (active) {
         btn.style.borderColor = "var(--accent)";
         btn.style.background = "var(--accent)";
-        btn.style.color = "var(--color-cream)";
+        btn.style.color = "var(--on-accent, #FAF6F0)";
       } else {
-        btn.style.borderColor = "color-mix(in oklab, var(--text) 15%, transparent)";
+        btn.style.borderColor = "var(--field-border, color-mix(in oklab, var(--text) 45%, transparent))";
         btn.style.background = "transparent";
         btn.style.color = "var(--text-soft)";
       }

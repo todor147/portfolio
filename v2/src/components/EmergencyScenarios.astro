@@ -14,8 +14,8 @@ const initial = sorted[0];
 
 const severityColors: Record<string, string> = {
   critical: "#DC2626",
-  urgent: "#EA580C",
-  serious: "#CA8A04",
+  urgent: "#C2410C",
+  serious: "#854D0E",
 };
 
 const severityLabels: Record<string, string> = {
@@ -90,7 +90,7 @@ const severityLabels: Record<string, string> = {
     </div>
 
     <!-- RESULT CARDS -->
-    <div id="scenario-results" class="mt-8">
+    <div id="scenario-results" class="mt-8" role="status" aria-live="polite">
       {sorted.map((s) => (
         <article
           data-scenario-id={s.id}
@@ -166,7 +166,7 @@ const severityLabels: Record<string, string> = {
             <div>
               <p
                 class="text-[0.7rem] font-semibold tracking-[0.18em] uppercase mb-2"
-                style="color: rgba(232, 240, 245, 0.55);"
+                style="color: rgba(232, 240, 245, 0.72);"
               >
                 Skills required
               </p>
@@ -185,7 +185,7 @@ const severityLabels: Record<string, string> = {
               <div>
                 <p
                   class="text-[0.7rem] font-semibold tracking-[0.18em] uppercase mb-2"
-                  style="color: rgba(232, 240, 245, 0.55);"
+                  style="color: rgba(232, 240, 245, 0.72);"
                 >
                   Worth remembering
                 </p>
@@ -202,7 +202,7 @@ const severityLabels: Record<string, string> = {
     <!-- DISCLAIMER -->
     <p
       class="mt-6 text-xs leading-relaxed max-w-3xl"
-      style="color: rgba(232, 240, 245, 0.55);"
+      style="color: rgba(232, 240, 245, 0.72);"
     >
       <strong style="color: rgba(232, 240, 245, 0.75)">Educational summary only.</strong>
       These are condensed versions of PHECC-aligned protocols from FAR and CFR-A training current as of 2026. They are not a substitute for accredited first-aid training. In a real emergency, call 112 (Ireland) or 999 (UK / Ireland) and follow the dispatcher's instructions.

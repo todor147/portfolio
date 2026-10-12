@@ -58,7 +58,7 @@ const sorted = phrases.sort((a, b) => {
       class="text-[0.8125rem] font-medium tracking-[0.18em] uppercase"
       style="color: #C4A6D4;"
     >
-      Thirty phrases
+      Thirty-three phrases
     </p>
     <h2
       class="font-display tracking-[-0.02em] mt-3"
@@ -78,20 +78,22 @@ const sorted = phrases.sort((a, b) => {
     >
       <button
         type="button"
+        aria-pressed="true"
         class="phrase-cat-btn active px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
         data-category="all"
         style="border-color: #C4A6D4; background: #C4A6D4; color: #1F1A2E;"
       >
-        All <span class="font-mono ml-1 opacity-80">{phrases.length}</span>
+        All <span class="font-mono ml-1">{phrases.length}</span>
       </button>
       {counts.map((cat) => (
         <button
           type="button"
           class="phrase-cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
           data-category={cat.id}
+          aria-pressed="false"
           style="border-color: rgba(196, 166, 212, 0.35); color: rgba(245, 240, 232, 0.75);"
         >
-          {cat.label} <span class="font-mono ml-1 opacity-60">{cat.count}</span>
+          {cat.label} <span class="font-mono ml-1">{cat.count}</span>
         </button>
       ))}
     </div>
@@ -145,8 +147,9 @@ const sorted = phrases.sort((a, b) => {
     <p
       id="phrase-empty"
       hidden
+      role="status"
       class="mt-6 text-center text-sm"
-      style="color: rgba(245, 240, 232, 0.55);"
+      style="color: rgba(245, 240, 232, 0.78);"
     >
       No phrases in this category.
     </p>
@@ -162,6 +165,7 @@ const sorted = phrases.sort((a, b) => {
     buttons.forEach((btn) => {
       const isActive = btn === active;
       btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-pressed", String(isActive));
       if (isActive) {
         btn.style.borderColor = "#C4A6D4";
         btn.style.background = "#C4A6D4";

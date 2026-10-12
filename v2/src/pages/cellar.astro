@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Container from "../components/Container.astro";
 import Card from "../components/Card.astro";
-import { styleConfig, locationConfig } from "../lib/cellar";
+import { styleConfig, locationConfig, styleColorVar, styleColorCss } from "../lib/cellar";
 
 const bottlesRaw = (await getCollection("cellar")).sort((a, b) => a.data.order - b.data.order);
 
@@ -19,7 +19,7 @@ const bottlesWithMeta = bottlesRaw.map((b, i) => ({
   ...b.data,
   slug:          b.id,
   styleLabel:    styleConfig[b.data.style].label,
-  styleColor:    styleConfig[b.data.style].color,
+  styleColor:    styleColorVar(b.data.style),
   locationLabel: locationConfig[b.data.location],
   vintageSort:   b.data.vintage && /^\d{4}$/.test(b.data.vintage) ? b.data.vintage : "0",
   idx:           i,
@@ -30,12 +30,16 @@ const bottles = bottlesWithMeta;
 // Flat arrays for filter buttons — Object.entries preserves insertion order
 const styleEntries    = Object.entries(styleConfig);
 const locationEntries = Object.entries(locationConfig);
+const styleColors     = Object.fromEntries(
+  (Object.keys(styleConfig) as (keyof typeof styleConfig)[]).map((k) => [k, styleColorVar(k)])
+);
 ---
 
 <BaseLayout
   title="The Cellar — Todor Aleksandrov"
   description={`A personal cellar inventory — ${bottles.length} bottles across ${uniqueProducers} producers. Champagne, Port, Bulgarian indigenous varieties, and a few Irish whiskies that had no business being bought on a student budget.`}
 >
+  <Fragment set:html={`<style>${styleColorCss}</style>`} />
   <!-- HERO -->
   <section class="relative overflow-hidden">
     <div
@@ -96,8 +100,9 @@ const locationEntries = Object.entries(locationConfig);
 
   <!-- CONTROLS -->
   <div
+    id="cellar-controls"
     class="sticky z-30 border-b py-4 backdrop-blur-md"
-    style="top: 65px; background: color-mix(in oklab, var(--bg) 85%, transparent); border-color: color-mix(in oklab, var(--text) 8%, transparent);"
+    style="top: var(--header-h, 65px); background: color-mix(in oklab, var(--bg) 85%, transparent); border-color: color-mix(in oklab, var(--text) 8%, transparent);"
   >
     <Container size="wide">
       <!-- Search + sort row -->
@@ -111,18 +116,19 @@ const locationEntries = Object.entries(locationConfig);
           >
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
+          <label for="cellar-search" class="sr-only">Search bottles</label>
           <input
             id="cellar-search"
             type="search"
             placeholder="Search name, producer, grape, region…"
             class="w-full pl-9 pr-4 py-2 rounded-xl text-sm border outline-none transition-colors"
-            style="background: color-mix(in oklab, var(--surface) 80%, transparent); border-color: color-mix(in oklab, var(--text) 12%, transparent); color: var(--text);"
+            style="background: color-mix(in oklab, var(--surface) 80%, transparent); border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text);"
           />
         </div>
         <select
           id="cellar-sort"
           class="text-sm rounded-xl px-3 py-2 border outline-none cursor-pointer"
-          style="background: color-mix(in oklab, var(--surface) 80%, transparent); border-color: color-mix(in oklab, var(--text) 12%, transparent); color: var(--text);"
+          style="background: color-mix(in oklab, var(--surface) 80%, transparent); border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text);"
           aria-label="Sort bottles"
         >
           <option value="default">Default order</option>
@@ -138,21 +144,23 @@ const locationEntries = Object.entries(locationConfig);
         <!-- Style filters -->
         <div class="flex flex-wrap gap-1.5" role="group" aria-label="Filter by style">
           <button
+            type="button"
             class="cellar-style-btn px-3 py-1 rounded-full text-xs font-medium border transition-colors"
             data-style=""
             aria-pressed="true"
-            style="border-color: color-mix(in oklab, var(--text) 18%, transparent); color: var(--text);"
+            style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text);"
           >
             All styles
           </button>
           {styleEntries.map(([key, cfg]) => (
             <button
+              type="button"
               class="cellar-style-btn inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border transition-colors"
               data-style={key}
               aria-pressed="false"
-              style={`border-color: ${cfg.color}22; color: ${cfg.color};`}
+              style={`border-color: color-mix(in oklab, ${styleColors[key]} 45%, transparent); color: ${styleColors[key]};`}
             >
-              <span class="inline-block w-1.5 h-1.5 rounded-full" style={`background:${cfg.color};`}></span>
+              <span class="inline-block w-1.5 h-1.5 rounded-full" style={`background:${styleColors[key]};`}></span>
               {cfg.label}
             </button>
           ))}
@@ -163,19 +171,21 @@ const locationEntries = Object.entries(locationConfig);
         <!-- Location filters -->
         <div class="flex flex-wrap gap-1.5" role="group" aria-label="Filter by location">
           <button
+            type="button"
             class="cellar-loc-btn px-3 py-1 rounded-full text-xs font-medium border transition-colors"
             data-location=""
             aria-pressed="true"
-            style="border-color: color-mix(in oklab, var(--text) 18%, transparent); color: var(--text);"
+            style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text);"
           >
             All locations
           </button>
           {locationEntries.map(([key, label]) => (
             <button
+              type="button"
               class="cellar-loc-btn px-3 py-1 rounded-full text-xs font-medium border transition-colors"
               data-location={key}
               aria-pressed="false"
-              style="border-color: color-mix(in oklab, var(--text) 12%, transparent); color: var(--text-soft);"
+              style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text-soft);"
             >
               {label}
             </button>
@@ -186,6 +196,7 @@ const locationEntries = Object.entries(locationConfig);
       <!-- Result count -->
       <p
         id="cellar-count"
+        role="status"
         class="mt-2.5 text-xs font-mono"
         style="color: var(--text-soft)"
       >
@@ -196,6 +207,7 @@ const locationEntries = Object.entries(locationConfig);
 
   <!-- GRID -->
   <Container size="wide" class="py-(--spacing-section)">
+    <h2 class="sr-only">Bottles</h2>
     <div id="cellar-grid" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {bottlesWithMeta.map((bottle) => (
         <article
@@ -291,13 +303,14 @@ const locationEntries = Object.entries(locationConfig);
     </div>
 
     <!-- Empty state -->
-    <div id="cellar-empty" hidden class="py-24 text-center">
+    <div id="cellar-empty" hidden role="status" class="py-24 text-center">
       <p class="font-display text-2xl tracking-[-0.01em]" style="color: var(--text-soft)">No bottles match.</p>
       <p class="mt-2 text-sm" style="color: var(--text-soft)">Try a different search or clear the filters.</p>
       <button
         id="cellar-reset"
-        class="mt-6 px-4 py-2 text-sm rounded-full border transition-colors hover:border-burgundy-600 hover:text-burgundy-600"
-        style="border-color: color-mix(in oklab, var(--text) 18%, transparent); color: var(--text-soft);"
+        type="button"
+        class="mt-6 px-4 py-2 text-sm rounded-full border transition-colors"
+        style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text-soft);"
       >
         Clear all filters
       </button>
@@ -337,6 +350,15 @@ const locationEntries = Object.entries(locationConfig);
   const locBtns    = document.querySelectorAll(".cellar-loc-btn");
 
   if (!grid || !searchEl || !sortEl) return;
+
+  // Keep the sticky controls directly below the (possibly wrapped) site header.
+  const controls = document.getElementById("cellar-controls");
+  const hdr = document.getElementById("site-nav");
+  function syncHeader() {
+    if (controls && hdr) controls.style.setProperty("--header-h", hdr.getBoundingClientRect().height + "px");
+  }
+  syncHeader();
+  window.addEventListener("resize", syncHeader);
 
   // Cache original DOM order
   const allCards = Array.from(grid.querySelectorAll("article"));

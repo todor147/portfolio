@@ -109,22 +109,25 @@ function gradeClass(g: string) {
 
     <!-- Controls -->
     <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between mb-5">
+      <label for="ts-search" class="sr-only">Search modules by code or title</label>
       <input
         id="ts-search"
         type="search"
         placeholder="Search code or module title…"
         autocomplete="off"
         class="w-full sm:w-72 rounded-xl border px-4 py-2.5 text-sm outline-none transition-shadow"
-        style="background: var(--bg-soft); border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text);"
+        style="background: var(--bg-soft); border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text);"
       />
       <div class="flex flex-wrap gap-2" id="year-filters">
         {(["all", "1", "2", "3", "4"] as const).map(y => (
           <button
+            type="button"
             data-year={y}
+            aria-pressed={y === "all" ? "true" : "false"}
             class="year-btn text-xs font-medium px-3 py-1.5 rounded-full border transition-colors"
             style={y === "all"
-              ? "background: var(--accent); color: var(--color-cream); border-color: var(--accent);"
-              : "background: transparent; color: var(--text-soft); border-color: color-mix(in oklab, var(--text) 15%, transparent);"}
+              ? "background: var(--accent); color: var(--on-accent, #FAF6F0); border-color: var(--accent);"
+              : "background: transparent; color: var(--text-soft); border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent));"}
           >
             {y === "all" ? "All years" : `Year ${y}`}
           </button>
@@ -148,10 +151,12 @@ function gradeClass(g: string) {
             ].map(col => (
               <th
                 data-col={col.key}
-                class="sort-th px-4 py-3 text-left text-[0.65rem] font-semibold tracking-widest uppercase cursor-pointer select-none whitespace-nowrap border-b transition-colors"
+                scope="col"
+                aria-sort={col.key === "year" ? "ascending" : undefined}
+                class="sort-th px-4 py-3 text-left text-[0.65rem] font-semibold tracking-widest uppercase select-none whitespace-nowrap border-b transition-colors"
                 style="color: var(--text-soft); border-color: color-mix(in oklab, var(--text) 12%, transparent);"
               >
-                {col.label}
+                <button type="button" class="sort-btn">{col.label}</button>
               </th>
             ))}
           </tr>
@@ -187,7 +192,7 @@ function gradeClass(g: string) {
           ))}
         </tbody>
       </table>
-      <p id="ts-empty" class="hidden px-6 py-12 text-center text-sm" style="color: var(--text-soft);">
+      <p id="ts-empty" role="status" class="hidden px-6 py-12 text-center text-sm" style="color: var(--text-soft);">
         No modules match your search.
       </p>
     </div>
@@ -197,7 +202,7 @@ function gradeClass(g: string) {
       PV1000 (President's Volunteer Award — Gold) carries 0 credits and is non-qualifying.
       Final-year project (CS4617 / CS4618) spans two semesters worth 18 credits total.
       Final-year modules (Years 3–4) are weighted ×2 in the QCA calculation.
-      Click any column header to sort. Use the search box to filter by code or module name.
+      Use the column header buttons to sort. Use the search box to filter by code or module name.
     </p>
 
   </Container>
@@ -234,17 +239,22 @@ function gradeClass(g: string) {
   :global(.dark) .grade-c { background: #78350f; color: #fde68a; }
   :global(.dark) .grade-g { background: #713f12; color: #fde68a; }
 
-  .coop-row td { opacity: 0.55; }
+  .coop-row td, .coop-row td * { color: var(--text-soft) !important; }
   .ts-row:last-child { border-bottom: none !important; }
 
-  .sort-th:hover { color: var(--text) !important; }
-  .sort-th.sort-asc::after  { content: " ↑"; color: var(--accent); }
-  .sort-th.sort-desc::after { content: " ↓"; color: var(--accent); }
-
-  #ts-search:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 35%, transparent);
+  .sort-btn {
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0.25rem 0;
+    cursor: pointer;
   }
+  .sort-th:hover { color: var(--text) !important; }
+  .sort-th.sort-asc .sort-btn::after  { content: " ↑"; color: var(--accent); }
+  .sort-th.sort-desc .sort-btn::after { content: " ↓"; color: var(--accent); }
 </style>
 
 <script>
@@ -292,8 +302,10 @@ function gradeClass(g: string) {
     sorted.forEach(r => tbody.appendChild(r));
     sortThs.forEach(th => {
       th.classList.remove("sort-asc", "sort-desc");
+      th.removeAttribute("aria-sort");
       if (th.dataset.col === sortCol) {
         th.classList.add(sortDir === "asc" ? "sort-asc" : "sort-desc");
+        th.setAttribute("aria-sort", sortDir === "asc" ? "ascending" : "descending");
       }
     });
   }
@@ -307,14 +319,15 @@ function gradeClass(g: string) {
       activeYear = btn.dataset.year ?? "all";
       yearBtns.forEach(b => {
         const active = b.dataset.year === activeYear;
+        b.setAttribute("aria-pressed", String(active));
         if (active) {
           b.style.background = "var(--accent)";
-          b.style.color      = "var(--color-cream)";
+          b.style.color      = "var(--on-accent, #FAF6F0)";
           b.style.borderColor= "var(--accent)";
         } else {
           b.style.background = "transparent";
           b.style.color      = "var(--text-soft)";
-          b.style.borderColor= "color-mix(in oklab, var(--text) 15%, transparent)";
+          b.style.borderColor= "var(--field-border, color-mix(in oklab, var(--text) 45%, transparent))";
         }
       });
       applyFilters();
@@ -322,7 +335,7 @@ function gradeClass(g: string) {
   });
 
   sortThs.forEach(th => {
-    th.addEventListener("click", () => {
+    th.querySelector("button")?.addEventListener("click", () => {
       const col = th.dataset.col ?? "";
       if (sortCol === col) {
         sortDir = sortDir === "asc" ? "desc" : "asc";

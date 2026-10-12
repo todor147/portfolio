@@ -8,16 +8,8 @@ import Button from "../components/Button.astro";
 const siteUrl = Astro.site ?? new URL("https://todors-portfolio.netlify.app");
 const successUrl = new URL("/contact/success", siteUrl).href;
 
-// Web3Forms — free unlimited form-to-email forwarding.
-//
-// Setup (one-time, ~60 sec):
-//   1. Go to https://web3forms.com/
-//   2. Enter your email (todor_147@abv.bg)
-//   3. They email you an "access key" (looks like a UUID)
-//   4. Paste it as the value of ACCESS_KEY below
-//
-// Until ACCESS_KEY is filled in, submissions will fail gracefully and the
-// page also shows a direct mailto: link as a fallback.
+// Web3Forms — free unlimited form-to-email forwarding. The page also shows
+// a direct mailto: link as a fallback.
 const ACCESS_KEY = "df998354-20cb-4e32-a6fa-22af30c21f3e";
 
 const formAction = "https://api.web3forms.com/submit";
@@ -26,13 +18,13 @@ const directEmail = "todor_147@abv.bg";
 
 <BaseLayout
   title="Contact — Todor Aleksandrov"
-  description="Get in touch — for graduate roles, freelance work, interpretation, or just to talk wine."
+  description="Get in touch — for engineering work, collaborations, interpretation, or just to talk wine."
 >
   <Container size="wide" class="py-(--spacing-section)">
     <SectionHeader
       eyebrow="Get in touch"
       title="Send a message"
-      subtitle="Whether it's a graduate role, an interpretation gig, a project collaboration, or a wine recommendation — I read every message and reply within a day or two."
+      subtitle="Always happy to hear about interesting engineering work, collaborations, interpretation gigs, or wine events — I read every message and reply within a day or two."
       level={1}
       rule
     />
@@ -59,15 +51,16 @@ const directEmail = "todor_147@abv.bg";
           method="POST"
           action={formAction}
           class="space-y-5"
+          aria-describedby="contact-form-hint"
         >
+          <p id="contact-form-hint" class="text-xs" style="color: var(--text-soft)">All fields are required.</p>
           <!-- Web3Forms configuration -->
           <input type="hidden" name="access_key" value={ACCESS_KEY} />
-          <input type="hidden" name="subject" value="New message from portfolio" />
           <input type="hidden" name="from_name" value="Portfolio contact form" />
           <input type="hidden" name="redirect" value={successUrl} />
 
           <!-- Honeypot — invisible to humans, bots fill it in -->
-          <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
+          <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
           <div class="grid sm:grid-cols-2 gap-5">
             <label class="block">
@@ -77,8 +70,8 @@ const directEmail = "todor_147@abv.bg";
                 name="name"
                 required
                 autocomplete="name"
-                class="w-full px-4 py-3 rounded-xl border bg-transparent focus:outline-none focus:border-burgundy-600 transition-colors"
-                style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text);"
+                class="w-full px-4 py-3 rounded-xl border bg-transparent transition-colors"
+                style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text);"
               />
             </label>
             <label class="block">
@@ -88,8 +81,8 @@ const directEmail = "todor_147@abv.bg";
                 name="email"
                 required
                 autocomplete="email"
-                class="w-full px-4 py-3 rounded-xl border bg-transparent focus:outline-none focus:border-burgundy-600 transition-colors"
-                style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text);"
+                class="w-full px-4 py-3 rounded-xl border bg-transparent transition-colors"
+                style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text);"
               />
             </label>
           </div>
@@ -100,9 +93,9 @@ const directEmail = "todor_147@abv.bg";
               type="text"
               name="subject"
               required
-              placeholder="e.g. Graduate role, Interpretation enquiry, Wine question..."
-              class="w-full px-4 py-3 rounded-xl border bg-transparent focus:outline-none focus:border-burgundy-600 transition-colors"
-              style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text);"
+              placeholder="e.g. Engineering role, Interpretation enquiry, Wine question..."
+              class="w-full px-4 py-3 rounded-xl border bg-transparent transition-colors"
+              style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text);"
             />
           </label>
 
@@ -113,8 +106,8 @@ const directEmail = "todor_147@abv.bg";
               required
               rows="6"
               placeholder="Tell me what you're working on, or what you'd like to talk about."
-              class="w-full px-4 py-3 rounded-xl border bg-transparent focus:outline-none focus:border-burgundy-600 transition-colors resize-y"
-              style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text);"
+              class="w-full px-4 py-3 rounded-xl border bg-transparent transition-colors resize-y"
+              style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text);"
             ></textarea>
           </label>
 
@@ -136,7 +129,7 @@ const directEmail = "todor_147@abv.bg";
               <span class="text-sm" style="color:var(--text-soft)">Email</span>
               <a
                 href="mailto:todor_147@abv.bg"
-                class="text-sm font-medium hover:text-burgundy-600 transition-colors"
+                class="text-sm font-medium hover:text-(--accent) transition-colors"
               >todor_147@abv.bg</a>
             </li>
 
@@ -144,7 +137,7 @@ const directEmail = "todor_147@abv.bg";
               <span class="text-sm" style="color:var(--text-soft)">Mobile</span>
               <a
                 href="tel:+353894694333"
-                class="text-sm font-medium hover:text-burgundy-600 transition-colors"
+                class="text-sm font-medium hover:text-(--accent) transition-colors"
               >+353 89 469 4333</a>
             </li>
           </ul>
@@ -160,7 +153,7 @@ const directEmail = "todor_147@abv.bg";
                 rel="noopener noreferrer"
                 class="flex items-baseline justify-between gap-3 group/link"
               >
-                <span class="text-sm font-medium group-hover/link:text-burgundy-600 transition-colors">LinkedIn</span>
+                <span class="text-sm font-medium group-hover/link:text-(--accent) transition-colors">LinkedIn</span>
                 <span aria-hidden="true" style="color:var(--text-soft)" class="text-xs">↗</span>
               </a>
             </li>
@@ -171,7 +164,7 @@ const directEmail = "todor_147@abv.bg";
                 rel="noopener noreferrer"
                 class="flex items-baseline justify-between gap-3 group/link"
               >
-                <span class="text-sm font-medium group-hover/link:text-burgundy-600 transition-colors">GitHub</span>
+                <span class="text-sm font-medium group-hover/link:text-(--accent) transition-colors">GitHub</span>
                 <span aria-hidden="true" style="color:var(--text-soft)" class="text-xs">↗</span>
               </a>
             </li>
@@ -180,7 +173,7 @@ const directEmail = "todor_147@abv.bg";
                 href="/cv"
                 class="flex items-baseline justify-between gap-3 group/link"
               >
-                <span class="text-sm font-medium group-hover/link:text-burgundy-600 transition-colors">CV — view or download</span>
+                <span class="text-sm font-medium group-hover/link:text-(--accent) transition-colors">CV — view or download</span>
                 <span aria-hidden="true" style="color:var(--text-soft)" class="text-xs">→</span>
               </a>
             </li>

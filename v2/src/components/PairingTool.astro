@@ -81,7 +81,7 @@ const initial = sorted[0];
     </div>
 
     <!-- RESULT CARDS (only one visible at a time) -->
-    <div id="pairing-results" class="mt-8">
+    <div id="pairing-results" class="mt-8" role="status" aria-live="polite">
       {sorted.map((p) => (
         <article
           data-pairing-id={p.id}
@@ -106,7 +106,7 @@ const initial = sorted[0];
             <div>
               <dt
                 class="text-[0.7rem] uppercase tracking-[0.16em]"
-                style="color: color-mix(in oklab, var(--color-cream) 55%, transparent)"
+                style="color: color-mix(in oklab, var(--color-cream) 72%, transparent)"
               >Grape</dt>
               <dd class="font-medium mt-0.5">{p.data.grape}</dd>
             </div>
@@ -114,7 +114,7 @@ const initial = sorted[0];
               <div>
                 <dt
                   class="text-[0.7rem] uppercase tracking-[0.16em]"
-                  style="color: color-mix(in oklab, var(--color-cream) 55%, transparent)"
+                  style="color: color-mix(in oklab, var(--color-cream) 72%, transparent)"
                 >Region</dt>
                 <dd class="font-medium mt-0.5">{p.data.region}</dd>
               </div>
@@ -123,7 +123,7 @@ const initial = sorted[0];
               <div>
                 <dt
                   class="text-[0.7rem] uppercase tracking-[0.16em]"
-                  style="color: color-mix(in oklab, var(--color-cream) 55%, transparent)"
+                  style="color: color-mix(in oklab, var(--color-cream) 72%, transparent)"
                 >Try a bottle</dt>
                 <dd class="italic mt-0.5">{p.data.example}</dd>
               </div>
@@ -147,7 +147,7 @@ const initial = sorted[0];
 
     <p
       class="mt-6 text-xs"
-      style="color: color-mix(in oklab, var(--color-cream) 55%, transparent)"
+      style="color: color-mix(in oklab, var(--color-cream) 72%, transparent)"
     >
       Pairings are suggestions, not laws. The best wine is usually the one you both have.
     </p>

@@ -73,10 +73,10 @@ const counts = groupOrder.map((key) => ({
       {counts.map((c) => c.count > 0 && (
         <a
           href={`#cat-${c.key}`}
-          class="px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-colors hover:border-burgundy-600 hover:text-burgundy-600"
-          style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text-soft);"
+          class="px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-colors cert-anchor"
+          style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text-soft);"
         >
-          {c.label} <span class="opacity-60 font-mono ml-1">{c.count}</span>
+          {c.label} <span class="font-mono ml-1">{c.count}</span>
         </a>
       ))}
     </nav>
@@ -104,7 +104,7 @@ const counts = groupOrder.map((key) => ({
                 {cert.data.icon && (
                   <img
                     src={`/assets/${cert.data.icon}`}
-                    alt={cert.data.issuer}
+                    alt=""
                     class="w-14 h-14 rounded-xl object-contain bg-cream p-1.5 shrink-0"
                     loading="lazy"
                   />
@@ -135,16 +135,33 @@ const counts = groupOrder.map((key) => ({
                       ID: {cert.data.credentialId}
                     </p>
                   )}
-                  {cert.data.issuerUrl && (
-                    <a
-                      href={cert.data.issuerUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="inline-flex items-center gap-1 mt-3 text-xs font-medium"
-                      style="color:var(--accent)"
-                    >
-                      Issuer site <span aria-hidden="true">↗</span>
-                    </a>
+                  {(cert.data.issuerUrl || cert.data.credentialUrl) && (
+                    <div class="flex flex-wrap gap-x-4 gap-y-1 mt-3">
+                      {cert.data.credentialUrl && (
+                        <a
+                          href={cert.data.credentialUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="inline-flex items-center gap-1 text-xs font-medium"
+                          style="color:var(--accent)"
+                        >
+                          Verify credential <span aria-hidden="true">↗</span>
+                          <span class="sr-only"> for {cert.data.title} (opens in new tab)</span>
+                        </a>
+                      )}
+                      {cert.data.issuerUrl && (
+                        <a
+                          href={cert.data.issuerUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="inline-flex items-center gap-1 text-xs font-medium"
+                          style="color:var(--accent)"
+                        >
+                          Issuer site <span aria-hidden="true">↗</span>
+                          <span class="sr-only"> for {cert.data.issuer} (opens in new tab)</span>
+                        </a>
+                      )}
+                    </div>
                   )}
                 </div>
               </Card>
@@ -155,3 +172,7 @@ const counts = groupOrder.map((key) => ({
     </div>
   </Container>
 </BaseLayout>
+
+<style>
+  .cert-anchor:hover { border-color: var(--accent) !important; color: var(--accent) !important; }
+</style>

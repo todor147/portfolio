@@ -35,7 +35,7 @@ const allTags = [...tagCounts.entries()]
 
 <BaseLayout
   title="Projects — Todor Aleksandrov"
-  description="A small, growing collection of things I've built — a four-person PHP/MySQL marketplace, a hand-coded charity microsite, and the Astro portfolio you're reading. Filter by stack."
+  description="Things I've built: an Android EV route planner, a four-person PHP/MySQL marketplace, this Astro portfolio and a hand-coded charity microsite. Filter by stack."
 >
   <Container size="wide" class="py-(--spacing-section)">
     <SectionHeader
@@ -46,6 +46,8 @@ const allTags = [...tagCounts.entries()]
       rule
     />
 
+    <h2 class="sr-only">All projects</h2>
+
     <!-- TAG FILTERS -->
     <div
       class="mt-12 mb-10 flex flex-wrap items-center gap-2"
@@ -54,20 +56,22 @@ const allTags = [...tagCounts.entries()]
     >
       <button
         type="button"
+        aria-pressed="true"
         class="proj-tag-btn active px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
         data-tag="all"
-        style="border-color: var(--accent); background: var(--accent); color: var(--color-cream);"
+        style="border-color: var(--accent); background: var(--accent); color: var(--on-accent, #FAF6F0);"
       >
-        All <span class="opacity-75 font-mono ml-1">{sorted.length}</span>
+        All <span class="font-mono ml-1">{sorted.length}</span>
       </button>
       {allTags.map((tag) => (
         <button
           type="button"
-          class="proj-tag-btn px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all hover:border-burgundy-600 hover:text-burgundy-600"
+          class="proj-tag-btn px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
           data-tag={tag.id}
-          style="border-color: color-mix(in oklab, var(--text) 15%, transparent); color: var(--text-soft);"
+          aria-pressed="false"
+          style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text-soft);"
         >
-          {tag.label} <span class="opacity-60 font-mono ml-1">{tag.count}</span>
+          {tag.label} <span class="font-mono ml-1" style="color: var(--text-soft);">{tag.count}</span>
         </button>
       ))}
     </div>
@@ -90,6 +94,7 @@ const allTags = [...tagCounts.entries()]
     <p
       id="proj-empty"
       hidden
+      role="status"
       class="mt-10 text-sm text-center"
       style="color:var(--text-soft)"
     >
@@ -97,6 +102,10 @@ const allTags = [...tagCounts.entries()]
     </p>
   </Container>
 </BaseLayout>
+
+<style>
+  .proj-tag-btn:not(.active):hover { border-color: var(--accent) !important; color: var(--accent) !important; }
+</style>
 
 <script>
   const buttons = document.querySelectorAll<HTMLButtonElement>(".proj-tag-btn");
@@ -107,12 +116,13 @@ const allTags = [...tagCounts.entries()]
     buttons.forEach((btn) => {
       const isActive = btn === active;
       btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-pressed", String(isActive));
       if (isActive) {
         btn.style.borderColor = "var(--accent)";
         btn.style.background = "var(--accent)";
-        btn.style.color = "var(--color-cream)";
+        btn.style.color = "var(--on-accent, #FAF6F0)";
       } else {
-        btn.style.borderColor = "color-mix(in oklab, var(--text) 15%, transparent)";
+        btn.style.borderColor = "var(--field-border, color-mix(in oklab, var(--text) 45%, transparent))";
         btn.style.background = "transparent";
         btn.style.color = "var(--text-soft)";
       }
