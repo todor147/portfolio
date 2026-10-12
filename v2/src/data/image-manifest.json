@@ -1,0 +1,648 @@
+{
+  "IRC.jpg": {
+    "width": 225,
+    "height": 225,
+    "webp": "IRC.webp",
+    "webpWidth": 225,
+    "variants": []
+  },
+  "PHECC.jpg": {
+    "width": 247,
+    "height": 135,
+    "webp": "PHECC.webp",
+    "webpWidth": 247,
+    "variants": []
+  },
+  "Swim-Ireland.png": {
+    "width": 484,
+    "height": 237,
+    "webp": "Swim-Ireland.webp",
+    "webpWidth": 484,
+    "variants": []
+  },
+  "WLAP.jpg": {
+    "width": 225,
+    "height": 225,
+    "webp": "WLAP.webp",
+    "webpWidth": 225,
+    "variants": []
+  },
+  "WS.jpg": {
+    "width": 225,
+    "height": 225,
+    "webp": "WS.webp",
+    "webpWidth": 225,
+    "variants": []
+  },
+  "about.jpg": {
+    "width": 800,
+    "height": 800,
+    "webp": "about.webp",
+    "webpWidth": 800,
+    "variants": []
+  },
+  "adare manor.png": {
+    "width": 225,
+    "height": 225,
+    "webp": "adare manor.webp",
+    "webpWidth": 225,
+    "variants": []
+  },
+  "agency work.jpg": {
+    "width": 2400,
+    "height": 1350,
+    "webp": "agency work.webp",
+    "webpWidth": 2000,
+    "variants": [
+      {
+        "src": "agency work-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "amcs.jpg": {
+    "width": 256,
+    "height": 256,
+    "webp": "amcs.webp",
+    "webpWidth": 256,
+    "variants": []
+  },
+  "arrow.jpg": {
+    "width": 980,
+    "height": 980,
+    "webp": "arrow.webp",
+    "webpWidth": 980,
+    "variants": [
+      {
+        "src": "arrow-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "aura.png": {
+    "width": 85,
+    "height": 84,
+    "webp": "aura.webp",
+    "webpWidth": 85,
+    "variants": []
+  },
+  "cellar-bottles/vecchia-romagna-etichetta-nera.jpg": {
+    "width": 1200,
+    "height": 1807,
+    "webp": "cellar-bottles/vecchia-romagna-etichetta-nera.webp",
+    "webpWidth": 1200,
+    "variants": [
+      {
+        "src": "cellar-bottles/vecchia-romagna-etichetta-nera-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-hero/orange.jpg": {
+    "width": 1280,
+    "height": 1707,
+    "webp": "cellar-hero/orange.webp",
+    "webpWidth": 1280,
+    "variants": [
+      {
+        "src": "cellar-hero/orange-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-hero/red.jpg": {
+    "width": 1600,
+    "height": 1060,
+    "webp": "cellar-hero/red.webp",
+    "webpWidth": 1600,
+    "variants": [
+      {
+        "src": "cellar-hero/red-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-hero/rose.jpg": {
+    "width": 1600,
+    "height": 1728,
+    "webp": "cellar-hero/rose.webp",
+    "webpWidth": 1600,
+    "variants": [
+      {
+        "src": "cellar-hero/rose-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-hero/sparkling.jpg": {
+    "width": 1280,
+    "height": 853,
+    "webp": "cellar-hero/sparkling.webp",
+    "webpWidth": 1280,
+    "variants": [
+      {
+        "src": "cellar-hero/sparkling-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-hero/spirit.jpg": {
+    "width": 1280,
+    "height": 1707,
+    "webp": "cellar-hero/spirit.webp",
+    "webpWidth": 1280,
+    "variants": [
+      {
+        "src": "cellar-hero/spirit-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-hero/sweet.jpg": {
+    "width": 1024,
+    "height": 768,
+    "webp": "cellar-hero/sweet.webp",
+    "webpWidth": 1024,
+    "variants": [
+      {
+        "src": "cellar-hero/sweet-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-hero/white.jpg": {
+    "width": 1280,
+    "height": 1707,
+    "webp": "cellar-hero/white.webp",
+    "webpWidth": 1280,
+    "variants": [
+      {
+        "src": "cellar-hero/white-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-og/orange.jpg": {
+    "width": 1000,
+    "height": 1334,
+    "webp": "cellar-og/orange.webp",
+    "webpWidth": 1000,
+    "variants": [
+      {
+        "src": "cellar-og/orange-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-og/red.jpg": {
+    "width": 1000,
+    "height": 662,
+    "webp": "cellar-og/red.webp",
+    "webpWidth": 1000,
+    "variants": [
+      {
+        "src": "cellar-og/red-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-og/rose.jpg": {
+    "width": 1000,
+    "height": 1080,
+    "webp": "cellar-og/rose.webp",
+    "webpWidth": 1000,
+    "variants": [
+      {
+        "src": "cellar-og/rose-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-og/sparkling.jpg": {
+    "width": 1000,
+    "height": 666,
+    "webp": "cellar-og/sparkling.webp",
+    "webpWidth": 1000,
+    "variants": [
+      {
+        "src": "cellar-og/sparkling-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-og/spirit.jpg": {
+    "width": 900,
+    "height": 1000,
+    "webp": "cellar-og/spirit.webp",
+    "webpWidth": 900,
+    "variants": []
+  },
+  "cellar-og/sweet.jpg": {
+    "width": 1000,
+    "height": 750,
+    "webp": "cellar-og/sweet.webp",
+    "webpWidth": 1000,
+    "variants": [
+      {
+        "src": "cellar-og/sweet-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-og/white.jpg": {
+    "width": 1000,
+    "height": 1334,
+    "webp": "cellar-og/white.webp",
+    "webpWidth": 1000,
+    "variants": [
+      {
+        "src": "cellar-og/white-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar.jpg": {
+    "width": 2400,
+    "height": 1351,
+    "webp": "cellar.webp",
+    "webpWidth": 2000,
+    "variants": [
+      {
+        "src": "cellar-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "ch indoors.jpg": {
+    "width": 2400,
+    "height": 1350,
+    "webp": "ch indoors.webp",
+    "webpWidth": 2000,
+    "variants": [
+      {
+        "src": "ch indoors-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "ch outdoors.jpg": {
+    "width": 2400,
+    "height": 1351,
+    "webp": "ch outdoors.webp",
+    "webpWidth": 2000,
+    "variants": [
+      {
+        "src": "ch outdoors-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cms intro.jpeg": {
+    "width": 1500,
+    "height": 1125,
+    "webp": "cms intro.webp",
+    "webpWidth": 1500,
+    "variants": [
+      {
+        "src": "cms intro-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cms.jpg": {
+    "width": 249,
+    "height": 295,
+    "webp": "cms.webp",
+    "webpWidth": 249,
+    "variants": []
+  },
+  "cnt.png": {
+    "width": 512,
+    "height": 512,
+    "webp": "cnt.webp",
+    "webpWidth": 512,
+    "variants": []
+  },
+  "devon inn.jpg": {
+    "width": 256,
+    "height": 256,
+    "webp": "devon inn.webp",
+    "webpWidth": 256,
+    "variants": []
+  },
+  "education.png": {
+    "width": 1300,
+    "height": 1390,
+    "webp": "education.webp",
+    "webpWidth": 1300,
+    "variants": [
+      {
+        "src": "education-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "educoach.png": {
+    "width": 1919,
+    "height": 910,
+    "webp": "educoach.webp",
+    "webpWidth": 1919,
+    "variants": [
+      {
+        "src": "educoach-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "ef set.jpg": {
+    "width": 180,
+    "height": 180,
+    "webp": "ef set.webp",
+    "webpWidth": 180,
+    "variants": []
+  },
+  "email.jpg": {
+    "width": 225,
+    "height": 225,
+    "webp": "email.webp",
+    "webpWidth": 225,
+    "variants": []
+  },
+  "enactus.jpg": {
+    "width": 866,
+    "height": 650,
+    "webp": "enactus.webp",
+    "webpWidth": 866,
+    "variants": []
+  },
+  "ev-route-optimizer-itinerary.webp": {
+    "width": 1080,
+    "height": 2400,
+    "webp": "ev-route-optimizer-itinerary.webp",
+    "webpWidth": 1080,
+    "variants": []
+  },
+  "ev-route-optimizer-plan.webp": {
+    "width": 1080,
+    "height": 2400,
+    "webp": "ev-route-optimizer-plan.webp",
+    "webpWidth": 1080,
+    "variants": []
+  },
+  "ev-route-optimizer.webp": {
+    "width": 1080,
+    "height": 2400,
+    "webp": "ev-route-optimizer.webp",
+    "webpWidth": 1080,
+    "variants": []
+  },
+  "experience.jpg": {
+    "width": 980,
+    "height": 917,
+    "webp": "experience.webp",
+    "webpWidth": 980,
+    "variants": [
+      {
+        "src": "experience-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "github.png": {
+    "width": 3840,
+    "height": 2160,
+    "webp": null,
+    "webpWidth": 0,
+    "variants": []
+  },
+  "graduation.jpg": {
+    "width": 960,
+    "height": 1792,
+    "webp": "graduation.webp",
+    "webpWidth": 960,
+    "variants": []
+  },
+  "leaving cert.jpg": {
+    "width": 1350,
+    "height": 2400,
+    "webp": "leaving cert.webp",
+    "webpWidth": 1125,
+    "variants": [
+      {
+        "src": "leaving cert-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "lib desk.jpg": {
+    "width": 2400,
+    "height": 1350,
+    "webp": "lib desk.webp",
+    "webpWidth": 2000,
+    "variants": [
+      {
+        "src": "lib desk-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "linkedin.png": {
+    "width": 225,
+    "height": 225,
+    "webp": null,
+    "webpWidth": 0,
+    "variants": []
+  },
+  "milford.png": {
+    "width": 1200,
+    "height": 675,
+    "webp": null,
+    "webpWidth": 0,
+    "variants": []
+  },
+  "mustard seed.jpg": {
+    "width": 750,
+    "height": 518,
+    "webp": "mustard seed.webp",
+    "webpWidth": 750,
+    "variants": []
+  },
+  "nbco.jpg": {
+    "width": 212,
+    "height": 300,
+    "webp": "nbco.webp",
+    "webpWidth": 212,
+    "variants": []
+  },
+  "pc build.jpg": {
+    "width": 1782,
+    "height": 2400,
+    "webp": "pc build.webp",
+    "webpWidth": 1485,
+    "variants": [
+      {
+        "src": "pc build-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "portfolio.png": {
+    "width": 1883,
+    "height": 801,
+    "webp": "portfolio.webp",
+    "webpWidth": 1883,
+    "variants": [
+      {
+        "src": "portfolio-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "profile pic.jpg": {
+    "width": 1800,
+    "height": 2400,
+    "webp": "profile pic.webp",
+    "webpWidth": 1500,
+    "variants": [
+      {
+        "src": "profile pic-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "project-1.png": {
+    "width": 1668,
+    "height": 877,
+    "webp": "project-1.webp",
+    "webpWidth": 1668,
+    "variants": [
+      {
+        "src": "project-1-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "rlss.jpg": {
+    "width": 300,
+    "height": 300,
+    "webp": "rlss.webp",
+    "webpWidth": 300,
+    "variants": []
+  },
+  "spirit award.jpg": {
+    "width": 680,
+    "height": 1024,
+    "webp": "spirit award.webp",
+    "webpWidth": 680,
+    "variants": []
+  },
+  "sta.png": {
+    "width": 223,
+    "height": 240,
+    "webp": null,
+    "webpWidth": 0,
+    "variants": []
+  },
+  "swimmax.png": {
+    "width": 225,
+    "height": 225,
+    "webp": null,
+    "webpWidth": 0,
+    "variants": []
+  },
+  "translit.jpg": {
+    "width": 900,
+    "height": 900,
+    "webp": "translit.webp",
+    "webpWidth": 900,
+    "variants": []
+  },
+  "uber eats.png": {
+    "width": 3500,
+    "height": 3500,
+    "webp": "uber eats.webp",
+    "webpWidth": 2000,
+    "variants": [
+      {
+        "src": "uber eats-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "ul in winter.jpg": {
+    "width": 2400,
+    "height": 1350,
+    "webp": "ul in winter.webp",
+    "webpWidth": 2000,
+    "variants": [
+      {
+        "src": "ul in winter-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "ul.png": {
+    "width": 225,
+    "height": 225,
+    "webp": "ul.webp",
+    "webpWidth": 225,
+    "variants": []
+  },
+  "ulsl work.jpg": {
+    "width": 1080,
+    "height": 1776,
+    "webp": "ulsl work.webp",
+    "webpWidth": 1080,
+    "variants": [
+      {
+        "src": "ulsl work-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "ulsl.jpg": {
+    "width": 200,
+    "height": 200,
+    "webp": "ulsl.webp",
+    "webpWidth": 200,
+    "variants": []
+  },
+  "vines in bg.jpg": {
+    "width": 2400,
+    "height": 848,
+    "webp": "vines in bg.webp",
+    "webpWidth": 2000,
+    "variants": [
+      {
+        "src": "vines in bg-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "waitering.jpg": {
+    "width": 1080,
+    "height": 1738,
+    "webp": "waitering.webp",
+    "webpWidth": 1080,
+    "variants": [
+      {
+        "src": "waitering-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "wrkwrk.png": {
+    "width": 225,
+    "height": 225,
+    "webp": "wrkwrk.webp",
+    "webpWidth": 225,
+    "variants": []
+  },
+  "wset.jpg": {
+    "width": 200,
+    "height": 200,
+    "webp": "wset.webp",
+    "webpWidth": 200,
+    "variants": []
+  }
+}

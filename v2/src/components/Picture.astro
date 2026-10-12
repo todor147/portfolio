@@ -1,16 +1,30 @@
 ---
 /**
- * <Picture> — serves WebP with a JPG/PNG fallback.
+ * <Picture> — serves responsive WebP with a JPG/PNG fallback.
  *
- * Pass the original asset filename (the one that lives in public/assets/).
- * The component emits a <picture> with the .webp variant first so modern
- * browsers grab the smaller file, and the original as the <img> fallback.
+ * Pass the original asset filename relative to public/assets/ (e.g.
+ * "profile pic.jpg" or "cellar-hero/red.jpg"); an absolute "/assets/..." path
+ * is also accepted. `scripts/optimize-images.mjs` writes
+ * src/data/image-manifest.json (original dimensions, WebP path and the 640 px
+ * variant). From it the component emits:
  *
- * Run `npm run optimize:images` to (re)generate the .webp variants.
+ *   <picture>
+ *     <source type="image/webp" srcset="<name>-640.webp 640w, <name>.webp NNNNw" sizes="…">
+ *     <img src="<original>" width height …>
+ *   </picture>
+ *
+ * Every URL is percent-encoded (filenames contain spaces). `sizes` defaults to
+ * "100vw" — pass a real value for anything narrower than the viewport so the
+ * browser can choose the 640 px variant. width/height come from the manifest
+ * unless overridden. Images without a manifest entry fall back to a plain
+ * (encoded) WebP source / original.
+ *
+ * Run `npm run optimize:images` to (re)generate the variants and manifest.
  */
+import manifest from "../data/image-manifest.json";
 
 interface Props {
-  src: string;                     // e.g. "profile pic.jpg" — original filename
+  src: string; // e.g. "profile pic.jpg" — original filename under public/assets/
   alt: string;
   class?: string;
   width?: number | string;
@@ -30,25 +44,67 @@ const {
   loading = "lazy",
   decoding = "async",
   fetchpriority,
-  sizes,
+  sizes = "100vw",
 } = Astro.props;
 
-const lastDot = src.lastIndexOf(".");
-const base = lastDot === -1 ? src : src.slice(0, lastDot);
-const webp = `/assets/${base}.webp`;
-const fallback = `/assets/${src}`;
+const key = src.replace(/^\/?assets\//, "").replace(/^\//, "");
+const url = (p: string) =>
+  "/assets/" + p.split("/").map(encodeURIComponent).join("/");
+
+type Entry = {
+  width: number;
+  height: number;
+  webp: string | null;
+  webpWidth: number;
+  variants: { src: string; width: number }[];
+};
+const entry = (manifest as Record<string, Entry>)[key];
+
+const lastDot = key.lastIndexOf(".");
+const base = lastDot === -1 ? key : key.slice(0, lastDot);
+const isWebpOriginal = key.toLowerCase().endsWith(".webp");
+
+let webpSrcset: string | undefined;
+if (entry) {
+  if (entry.webp && !isWebpOriginal) {
+    webpSrcset = [
+      ...entry.variants.map((v) => `${url(v.src)} ${v.width}w`),
+      `${url(entry.webp)} ${entry.webpWidth}w`,
+    ].join(", ");
+  }
+} else if (!isWebpOriginal) {
+  webpSrcset = url(`${base}.webp`);
+}
+
+const imgWidth = width ?? entry?.width;
+const imgHeight = height ?? entry?.height;
 ---
 
-<picture>
-  <source srcset={webp} type="image/webp" sizes={sizes} />
-  <img
-    src={fallback}
-    alt={alt}
-    class={className}
-    width={width}
-    height={height}
-    loading={loading}
-    decoding={decoding}
-    fetchpriority={fetchpriority}
-  />
-</picture>
+{
+  webpSrcset ? (
+    <picture>
+      <source srcset={webpSrcset} type="image/webp" sizes={sizes} />
+      <img
+        src={url(key)}
+        alt={alt}
+        class={className}
+        width={imgWidth}
+        height={imgHeight}
+        loading={loading}
+        decoding={decoding}
+        fetchpriority={fetchpriority}
+      />
+    </picture>
+  ) : (
+    <img
+      src={url(key)}
+      alt={alt}
+      class={className}
+      width={imgWidth}
+      height={imgHeight}
+      loading={loading}
+      decoding={decoding}
+      fetchpriority={fetchpriority}
+    />
+  )
+}
