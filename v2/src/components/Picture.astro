@@ -3,7 +3,7 @@
  * <Picture> — serves responsive WebP with a JPG/PNG fallback.
  *
  * Pass the original asset filename relative to public/assets/ (e.g.
- * "profile pic.jpg" or "cellar-hero/red.jpg"); an absolute "/assets/..." path
+ * "headshot.jpg" or "cellar-hero/red.jpg"); an absolute "/assets/..." path
  * is also accepted. `scripts/optimize-images.mjs` writes
  * src/data/image-manifest.json (original dimensions, WebP path and the 640 px
  * variant). From it the component emits:
@@ -24,7 +24,7 @@
 import manifest from "../data/image-manifest.json";
 
 interface Props {
-  src: string; // e.g. "profile pic.jpg" — original filename under public/assets/
+  src: string; // e.g. "headshot.jpg" — original filename under public/assets/
   alt: string;
   class?: string;
   width?: number | string;

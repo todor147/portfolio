@@ -578,6 +578,18 @@
     "webpWidth": 960,
     "variants": []
   },
+  "headshot.jpg": {
+    "width": 1600,
+    "height": 2000,
+    "webp": "headshot.webp",
+    "webpWidth": 1600,
+    "variants": [
+      {
+        "src": "headshot-640.webp",
+        "width": 640
+      }
+    ]
+  },
   "leaving cert.jpg": {
     "width": 1350,
     "height": 2400,
@@ -636,18 +648,6 @@
     "variants": [
       {
         "src": "portfolio-640.webp",
-        "width": 640
-      }
-    ]
-  },
-  "profile pic.jpg": {
-    "width": 1440,
-    "height": 1800,
-    "webp": "profile pic.webp",
-    "webpWidth": 1440,
-    "variants": [
-      {
-        "src": "profile pic-640.webp",
         "width": 640
       }
     ]
