@@ -18,7 +18,16 @@
     "height": 237,
     "webp": "Swim-Ireland.webp",
     "webpWidth": 484,
-    "variants": []
+    "variants": [
+      {
+        "src": "Swim-Ireland-160.webp",
+        "width": 160
+      },
+      {
+        "src": "Swim-Ireland-320.webp",
+        "width": 320
+      }
+    ]
   },
   "WLAP.jpg": {
     "width": 225,
@@ -39,7 +48,16 @@
     "height": 580,
     "webp": "about.webp",
     "webpWidth": 580,
-    "variants": []
+    "variants": [
+      {
+        "src": "about-160.webp",
+        "width": 160
+      },
+      {
+        "src": "about-320.webp",
+        "width": 320
+      }
+    ]
   },
   "adare manor.png": {
     "width": 225,
@@ -55,8 +73,20 @@
     "webpWidth": 2000,
     "variants": [
       {
-        "src": "agency work-640.webp",
-        "width": 640
+        "src": "agency work-160.webp",
+        "width": 160
+      },
+      {
+        "src": "agency work-320.webp",
+        "width": 320
+      },
+      {
+        "src": "agency work-512.webp",
+        "width": 512
+      },
+      {
+        "src": "agency work-720.webp",
+        "width": 720
       }
     ]
   },
@@ -79,35 +109,88 @@
     "height": 1024,
     "webp": "cellar-bottles/alta-alella-laieta-rose-brut-nature.webp",
     "webpWidth": 600,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/alta-alella-laieta-rose-brut-nature-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/alta-alella-laieta-rose-brut-nature-320.webp",
+        "width": 320
+      }
+    ]
   },
   "cellar-bottles/bessa-valley-enira-reserva-2018.jpg": {
     "width": 800,
     "height": 800,
     "webp": "cellar-bottles/bessa-valley-enira-reserva-2018.webp",
     "webpWidth": 800,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/bessa-valley-enira-reserva-2018-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/bessa-valley-enira-reserva-2018-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/bessa-valley-enira-reserva-2018-512.webp",
+        "width": 512
+      }
+    ]
   },
   "cellar-bottles/bessa-valley-grande-cuvee-2020.jpg": {
     "width": 800,
     "height": 800,
     "webp": "cellar-bottles/bessa-valley-grande-cuvee-2020.webp",
     "webpWidth": 800,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/bessa-valley-grande-cuvee-2020-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/bessa-valley-grande-cuvee-2020-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/bessa-valley-grande-cuvee-2020-512.webp",
+        "width": 512
+      }
+    ]
   },
   "cellar-bottles/bodegas-riojanas-gran-reserva-magnum.jpg": {
     "width": 373,
     "height": 919,
     "webp": "cellar-bottles/bodegas-riojanas-gran-reserva-magnum.webp",
     "webpWidth": 373,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/bodegas-riojanas-gran-reserva-magnum-160.webp",
+        "width": 160
+      }
+    ]
   },
   "cellar-bottles/bollinger-la-grande-annee-2014.jpg": {
     "width": 800,
     "height": 1219,
     "webp": "cellar-bottles/bollinger-la-grande-annee-2014.webp",
     "webpWidth": 800,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/bollinger-la-grande-annee-2014-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/bollinger-la-grande-annee-2014-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/bollinger-la-grande-annee-2014-512.webp",
+        "width": 512
+      }
+    ]
   },
   "cellar-bottles/bushmills-21-year-old.jpg": {
     "width": 1000,
@@ -116,8 +199,20 @@
     "webpWidth": 1000,
     "variants": [
       {
-        "src": "cellar-bottles/bushmills-21-year-old-640.webp",
-        "width": 640
+        "src": "cellar-bottles/bushmills-21-year-old-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/bushmills-21-year-old-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/bushmills-21-year-old-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-bottles/bushmills-21-year-old-720.webp",
+        "width": 720
       }
     ]
   },
@@ -126,7 +221,16 @@
     "height": 600,
     "webp": "cellar-bottles/edoardo-miroglio-mavrud-reserva-2022.webp",
     "webpWidth": 600,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/edoardo-miroglio-mavrud-reserva-2022-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/edoardo-miroglio-mavrud-reserva-2022-320.webp",
+        "width": 320
+      }
+    ]
   },
   "cellar-bottles/etienne-calsac-lechappee-belle-blanc-de-blancs.jpg": {
     "width": 1280,
@@ -135,8 +239,20 @@
     "webpWidth": 1280,
     "variants": [
       {
-        "src": "cellar-bottles/etienne-calsac-lechappee-belle-blanc-de-blancs-640.webp",
-        "width": 640
+        "src": "cellar-bottles/etienne-calsac-lechappee-belle-blanc-de-blancs-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/etienne-calsac-lechappee-belle-blanc-de-blancs-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/etienne-calsac-lechappee-belle-blanc-de-blancs-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-bottles/etienne-calsac-lechappee-belle-blanc-de-blancs-720.webp",
+        "width": 720
       }
     ]
   },
@@ -147,8 +263,20 @@
     "webpWidth": 813,
     "variants": [
       {
-        "src": "cellar-bottles/kopke-vintage-port-1999-640.webp",
-        "width": 640
+        "src": "cellar-bottles/kopke-vintage-port-1999-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/kopke-vintage-port-1999-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/kopke-vintage-port-1999-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-bottles/kopke-vintage-port-1999-720.webp",
+        "width": 720
       }
     ]
   },
@@ -159,8 +287,20 @@
     "webpWidth": 1000,
     "variants": [
       {
-        "src": "cellar-bottles/midleton-very-rare-200th-anniversary-28yo-640.webp",
-        "width": 640
+        "src": "cellar-bottles/midleton-very-rare-200th-anniversary-28yo-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/midleton-very-rare-200th-anniversary-28yo-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/midleton-very-rare-200th-anniversary-28yo-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-bottles/midleton-very-rare-200th-anniversary-28yo-720.webp",
+        "width": 720
       }
     ]
   },
@@ -169,7 +309,24 @@
     "height": 566,
     "webp": "cellar-bottles/museum-of-wine-melnik-shiroka-melnishka-loza-rose-2024.webp",
     "webpWidth": 960,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/museum-of-wine-melnik-shiroka-melnishka-loza-rose-2024-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/museum-of-wine-melnik-shiroka-melnishka-loza-rose-2024-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/museum-of-wine-melnik-shiroka-melnishka-loza-rose-2024-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-bottles/museum-of-wine-melnik-shiroka-melnishka-loza-rose-2024-720.webp",
+        "width": 720
+      }
+    ]
   },
   "cellar-bottles/royal-tokaji-gold-label-aszu-6-puttonyos-2017.jpg": {
     "width": 1000,
@@ -178,8 +335,20 @@
     "webpWidth": 1000,
     "variants": [
       {
-        "src": "cellar-bottles/royal-tokaji-gold-label-aszu-6-puttonyos-2017-640.webp",
-        "width": 640
+        "src": "cellar-bottles/royal-tokaji-gold-label-aszu-6-puttonyos-2017-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/royal-tokaji-gold-label-aszu-6-puttonyos-2017-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/royal-tokaji-gold-label-aszu-6-puttonyos-2017-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-bottles/royal-tokaji-gold-label-aszu-6-puttonyos-2017-720.webp",
+        "width": 720
       }
     ]
   },
@@ -188,7 +357,16 @@
     "height": 600,
     "webp": "cellar-bottles/taittinger-demi-sec-nv.webp",
     "webpWidth": 600,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/taittinger-demi-sec-nv-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/taittinger-demi-sec-nv-320.webp",
+        "width": 320
+      }
+    ]
   },
   "cellar-bottles/taittinger-rose-brut-nv.jpg": {
     "width": 1000,
@@ -197,8 +375,20 @@
     "webpWidth": 1000,
     "variants": [
       {
-        "src": "cellar-bottles/taittinger-rose-brut-nv-640.webp",
-        "width": 640
+        "src": "cellar-bottles/taittinger-rose-brut-nv-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/taittinger-rose-brut-nv-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/taittinger-rose-brut-nv-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-bottles/taittinger-rose-brut-nv-720.webp",
+        "width": 720
       }
     ]
   },
@@ -209,8 +399,20 @@
     "webpWidth": 1200,
     "variants": [
       {
-        "src": "cellar-bottles/vecchia-romagna-etichetta-nera-640.webp",
-        "width": 640
+        "src": "cellar-bottles/vecchia-romagna-etichetta-nera-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/vecchia-romagna-etichetta-nera-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/vecchia-romagna-etichetta-nera-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-bottles/vecchia-romagna-etichetta-nera-720.webp",
+        "width": 720
       }
     ]
   },
@@ -221,8 +423,20 @@
     "webpWidth": 1000,
     "variants": [
       {
-        "src": "cellar-bottles/veuve-clicquot-vintage-brut-1996-640.webp",
-        "width": 640
+        "src": "cellar-bottles/veuve-clicquot-vintage-brut-1996-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/veuve-clicquot-vintage-brut-1996-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/veuve-clicquot-vintage-brut-1996-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-bottles/veuve-clicquot-vintage-brut-1996-720.webp",
+        "width": 720
       }
     ]
   },
@@ -231,49 +445,132 @@
     "height": 1125,
     "webp": "cellar-bottles/villa-melnik-aplauz-melnik-55-premium-reserve.webp",
     "webpWidth": 750,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/villa-melnik-aplauz-melnik-55-premium-reserve-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/villa-melnik-aplauz-melnik-55-premium-reserve-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/villa-melnik-aplauz-melnik-55-premium-reserve-512.webp",
+        "width": 512
+      }
+    ]
   },
   "cellar-bottles/villa-melnik-orange-wine.jpg": {
     "width": 750,
     "height": 1125,
     "webp": "cellar-bottles/villa-melnik-orange-wine.webp",
     "webpWidth": 750,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/villa-melnik-orange-wine-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/villa-melnik-orange-wine-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/villa-melnik-orange-wine-512.webp",
+        "width": 512
+      }
+    ]
   },
   "cellar-bottles/villa-melnik-rare-varieties-melnik-1300-jubilee.jpg": {
     "width": 750,
     "height": 1125,
     "webp": "cellar-bottles/villa-melnik-rare-varieties-melnik-1300-jubilee.webp",
     "webpWidth": 750,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/villa-melnik-rare-varieties-melnik-1300-jubilee-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/villa-melnik-rare-varieties-melnik-1300-jubilee-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/villa-melnik-rare-varieties-melnik-1300-jubilee-512.webp",
+        "width": 512
+      }
+    ]
   },
   "cellar-bottles/villa-melnik-rare-varieties-shiroka-melnik-bush-vine.jpg": {
     "width": 750,
     "height": 1125,
     "webp": "cellar-bottles/villa-melnik-rare-varieties-shiroka-melnik-bush-vine.webp",
     "webpWidth": 750,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/villa-melnik-rare-varieties-shiroka-melnik-bush-vine-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/villa-melnik-rare-varieties-shiroka-melnik-bush-vine-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/villa-melnik-rare-varieties-shiroka-melnik-bush-vine-512.webp",
+        "width": 512
+      }
+    ]
   },
   "cellar-bottles/villa-melnik-sweet-wine-barrel-aged.jpg": {
     "width": 800,
     "height": 1200,
     "webp": "cellar-bottles/villa-melnik-sweet-wine-barrel-aged.webp",
     "webpWidth": 800,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/villa-melnik-sweet-wine-barrel-aged-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/villa-melnik-sweet-wine-barrel-aged-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/villa-melnik-sweet-wine-barrel-aged-512.webp",
+        "width": 512
+      }
+    ]
   },
   "cellar-bottles/vinex-slavyantsi-cabernet-sauvignon-special-reserva-2007.jpg": {
     "width": 375,
     "height": 500,
     "webp": "cellar-bottles/vinex-slavyantsi-cabernet-sauvignon-special-reserva-2007.webp",
     "webpWidth": 375,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/vinex-slavyantsi-cabernet-sauvignon-special-reserva-2007-160.webp",
+        "width": 160
+      }
+    ]
   },
   "cellar-bottles/vinprom-troyan-troyanska-slivova-special-reserva.jpg": {
     "width": 650,
     "height": 650,
     "webp": "cellar-bottles/vinprom-troyan-troyanska-slivova-special-reserva.webp",
     "webpWidth": 650,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/vinprom-troyan-troyanska-slivova-special-reserva-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/vinprom-troyan-troyanska-slivova-special-reserva-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/vinprom-troyan-troyanska-slivova-special-reserva-512.webp",
+        "width": 512
+      }
+    ]
   },
   "cellar-bottles/zaara-estate-dogma-mavrud-barrel-aged.jpg": {
     "width": 1000,
@@ -282,8 +579,20 @@
     "webpWidth": 1000,
     "variants": [
       {
-        "src": "cellar-bottles/zaara-estate-dogma-mavrud-barrel-aged-640.webp",
-        "width": 640
+        "src": "cellar-bottles/zaara-estate-dogma-mavrud-barrel-aged-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/zaara-estate-dogma-mavrud-barrel-aged-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/zaara-estate-dogma-mavrud-barrel-aged-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-bottles/zaara-estate-dogma-mavrud-barrel-aged-720.webp",
+        "width": 720
       }
     ]
   },
@@ -294,8 +603,20 @@
     "webpWidth": 1000,
     "variants": [
       {
-        "src": "cellar-bottles/zaara-estate-dogma-misket-640.webp",
-        "width": 640
+        "src": "cellar-bottles/zaara-estate-dogma-misket-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/zaara-estate-dogma-misket-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-bottles/zaara-estate-dogma-misket-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-bottles/zaara-estate-dogma-misket-720.webp",
+        "width": 720
       }
     ]
   },
@@ -304,7 +625,16 @@
     "height": 838,
     "webp": "cellar-bottles/zantho-eiswein-2020.webp",
     "webpWidth": 600,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-bottles/zantho-eiswein-2020-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/zantho-eiswein-2020-320.webp",
+        "width": 320
+      }
+    ]
   },
   "cellar-hero/orange.jpg": {
     "width": 1280,
@@ -313,8 +643,20 @@
     "webpWidth": 1280,
     "variants": [
       {
-        "src": "cellar-hero/orange-640.webp",
-        "width": 640
+        "src": "cellar-hero/orange-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-hero/orange-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-hero/orange-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-hero/orange-720.webp",
+        "width": 720
       }
     ]
   },
@@ -325,8 +667,20 @@
     "webpWidth": 1600,
     "variants": [
       {
-        "src": "cellar-hero/red-640.webp",
-        "width": 640
+        "src": "cellar-hero/red-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-hero/red-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-hero/red-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-hero/red-720.webp",
+        "width": 720
       }
     ]
   },
@@ -337,8 +691,20 @@
     "webpWidth": 1600,
     "variants": [
       {
-        "src": "cellar-hero/rose-640.webp",
-        "width": 640
+        "src": "cellar-hero/rose-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-hero/rose-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-hero/rose-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-hero/rose-720.webp",
+        "width": 720
       }
     ]
   },
@@ -349,8 +715,20 @@
     "webpWidth": 1280,
     "variants": [
       {
-        "src": "cellar-hero/sparkling-640.webp",
-        "width": 640
+        "src": "cellar-hero/sparkling-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-hero/sparkling-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-hero/sparkling-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-hero/sparkling-720.webp",
+        "width": 720
       }
     ]
   },
@@ -361,8 +739,20 @@
     "webpWidth": 1280,
     "variants": [
       {
-        "src": "cellar-hero/spirit-640.webp",
-        "width": 640
+        "src": "cellar-hero/spirit-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-hero/spirit-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-hero/spirit-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-hero/spirit-720.webp",
+        "width": 720
       }
     ]
   },
@@ -373,8 +763,20 @@
     "webpWidth": 1024,
     "variants": [
       {
-        "src": "cellar-hero/sweet-640.webp",
-        "width": 640
+        "src": "cellar-hero/sweet-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-hero/sweet-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-hero/sweet-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-hero/sweet-720.webp",
+        "width": 720
       }
     ]
   },
@@ -385,8 +787,20 @@
     "webpWidth": 1280,
     "variants": [
       {
-        "src": "cellar-hero/white-640.webp",
-        "width": 640
+        "src": "cellar-hero/white-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-hero/white-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-hero/white-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-hero/white-720.webp",
+        "width": 720
       }
     ]
   },
@@ -397,8 +811,20 @@
     "webpWidth": 1000,
     "variants": [
       {
-        "src": "cellar-og/orange-640.webp",
-        "width": 640
+        "src": "cellar-og/orange-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-og/orange-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-og/orange-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-og/orange-720.webp",
+        "width": 720
       }
     ]
   },
@@ -409,8 +835,20 @@
     "webpWidth": 1000,
     "variants": [
       {
-        "src": "cellar-og/red-640.webp",
-        "width": 640
+        "src": "cellar-og/red-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-og/red-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-og/red-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-og/red-720.webp",
+        "width": 720
       }
     ]
   },
@@ -421,8 +859,20 @@
     "webpWidth": 1000,
     "variants": [
       {
-        "src": "cellar-og/rose-640.webp",
-        "width": 640
+        "src": "cellar-og/rose-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-og/rose-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-og/rose-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-og/rose-720.webp",
+        "width": 720
       }
     ]
   },
@@ -433,8 +883,20 @@
     "webpWidth": 1000,
     "variants": [
       {
-        "src": "cellar-og/sparkling-640.webp",
-        "width": 640
+        "src": "cellar-og/sparkling-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-og/sparkling-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-og/sparkling-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-og/sparkling-720.webp",
+        "width": 720
       }
     ]
   },
@@ -443,7 +905,20 @@
     "height": 1000,
     "webp": "cellar-og/spirit.webp",
     "webpWidth": 900,
-    "variants": []
+    "variants": [
+      {
+        "src": "cellar-og/spirit-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-og/spirit-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-og/spirit-512.webp",
+        "width": 512
+      }
+    ]
   },
   "cellar-og/sweet.jpg": {
     "width": 1000,
@@ -452,8 +927,20 @@
     "webpWidth": 1000,
     "variants": [
       {
-        "src": "cellar-og/sweet-640.webp",
-        "width": 640
+        "src": "cellar-og/sweet-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-og/sweet-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-og/sweet-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-og/sweet-720.webp",
+        "width": 720
       }
     ]
   },
@@ -464,8 +951,20 @@
     "webpWidth": 1000,
     "variants": [
       {
-        "src": "cellar-og/white-640.webp",
-        "width": 640
+        "src": "cellar-og/white-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-og/white-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-og/white-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-og/white-720.webp",
+        "width": 720
       }
     ]
   },
@@ -476,8 +975,20 @@
     "webpWidth": 2000,
     "variants": [
       {
-        "src": "cellar-640.webp",
-        "width": 640
+        "src": "cellar-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cellar-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cellar-720.webp",
+        "width": 720
       }
     ]
   },
@@ -488,8 +999,20 @@
     "webpWidth": 2000,
     "variants": [
       {
-        "src": "ch indoors-640.webp",
-        "width": 640
+        "src": "ch indoors-160.webp",
+        "width": 160
+      },
+      {
+        "src": "ch indoors-320.webp",
+        "width": 320
+      },
+      {
+        "src": "ch indoors-512.webp",
+        "width": 512
+      },
+      {
+        "src": "ch indoors-720.webp",
+        "width": 720
       }
     ]
   },
@@ -500,8 +1023,20 @@
     "webpWidth": 2000,
     "variants": [
       {
-        "src": "ch outdoors-640.webp",
-        "width": 640
+        "src": "ch outdoors-160.webp",
+        "width": 160
+      },
+      {
+        "src": "ch outdoors-320.webp",
+        "width": 320
+      },
+      {
+        "src": "ch outdoors-512.webp",
+        "width": 512
+      },
+      {
+        "src": "ch outdoors-720.webp",
+        "width": 720
       }
     ]
   },
@@ -512,8 +1047,20 @@
     "webpWidth": 1500,
     "variants": [
       {
-        "src": "cms intro-640.webp",
-        "width": 640
+        "src": "cms intro-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cms intro-320.webp",
+        "width": 320
+      },
+      {
+        "src": "cms intro-512.webp",
+        "width": 512
+      },
+      {
+        "src": "cms intro-720.webp",
+        "width": 720
       }
     ]
   },
@@ -538,8 +1085,20 @@
     "webpWidth": 1919,
     "variants": [
       {
-        "src": "educoach-640.webp",
-        "width": 640
+        "src": "educoach-160.webp",
+        "width": 160
+      },
+      {
+        "src": "educoach-320.webp",
+        "width": 320
+      },
+      {
+        "src": "educoach-512.webp",
+        "width": 512
+      },
+      {
+        "src": "educoach-720.webp",
+        "width": 720
       }
     ]
   },
@@ -555,28 +1114,96 @@
     "height": 2400,
     "webp": "ev-route-optimizer-itinerary.webp",
     "webpWidth": 1080,
-    "variants": []
+    "variants": [
+      {
+        "src": "ev-route-optimizer-itinerary-160.webp",
+        "width": 160
+      },
+      {
+        "src": "ev-route-optimizer-itinerary-320.webp",
+        "width": 320
+      },
+      {
+        "src": "ev-route-optimizer-itinerary-512.webp",
+        "width": 512
+      },
+      {
+        "src": "ev-route-optimizer-itinerary-720.webp",
+        "width": 720
+      }
+    ]
   },
   "ev-route-optimizer-plan.webp": {
     "width": 1080,
     "height": 2400,
     "webp": "ev-route-optimizer-plan.webp",
     "webpWidth": 1080,
-    "variants": []
+    "variants": [
+      {
+        "src": "ev-route-optimizer-plan-160.webp",
+        "width": 160
+      },
+      {
+        "src": "ev-route-optimizer-plan-320.webp",
+        "width": 320
+      },
+      {
+        "src": "ev-route-optimizer-plan-512.webp",
+        "width": 512
+      },
+      {
+        "src": "ev-route-optimizer-plan-720.webp",
+        "width": 720
+      }
+    ]
   },
   "ev-route-optimizer.webp": {
     "width": 1080,
     "height": 2400,
     "webp": "ev-route-optimizer.webp",
     "webpWidth": 1080,
-    "variants": []
+    "variants": [
+      {
+        "src": "ev-route-optimizer-160.webp",
+        "width": 160
+      },
+      {
+        "src": "ev-route-optimizer-320.webp",
+        "width": 320
+      },
+      {
+        "src": "ev-route-optimizer-512.webp",
+        "width": 512
+      },
+      {
+        "src": "ev-route-optimizer-720.webp",
+        "width": 720
+      }
+    ]
   },
   "graduation.jpg": {
     "width": 960,
     "height": 1792,
     "webp": "graduation.webp",
     "webpWidth": 960,
-    "variants": []
+    "variants": [
+      {
+        "src": "graduation-160.webp",
+        "width": 160
+      },
+      {
+        "src": "graduation-320.webp",
+        "width": 320
+      },
+      {
+        "src": "graduation-512.webp",
+        "width": 512
+      },
+      {
+        "src": "graduation-720.webp",
+        "width": 720
+      }
+    ]
   },
   "headshot.jpg": {
     "width": 1600,
@@ -585,8 +1212,20 @@
     "webpWidth": 1600,
     "variants": [
       {
-        "src": "headshot-640.webp",
-        "width": 640
+        "src": "headshot-160.webp",
+        "width": 160
+      },
+      {
+        "src": "headshot-320.webp",
+        "width": 320
+      },
+      {
+        "src": "headshot-512.webp",
+        "width": 512
+      },
+      {
+        "src": "headshot-720.webp",
+        "width": 720
       }
     ]
   },
@@ -597,8 +1236,20 @@
     "webpWidth": 1125,
     "variants": [
       {
-        "src": "leaving cert-640.webp",
-        "width": 640
+        "src": "leaving cert-160.webp",
+        "width": 160
+      },
+      {
+        "src": "leaving cert-320.webp",
+        "width": 320
+      },
+      {
+        "src": "leaving cert-512.webp",
+        "width": 512
+      },
+      {
+        "src": "leaving cert-720.webp",
+        "width": 720
       }
     ]
   },
@@ -609,8 +1260,20 @@
     "webpWidth": 2000,
     "variants": [
       {
-        "src": "lib desk-640.webp",
-        "width": 640
+        "src": "lib desk-160.webp",
+        "width": 160
+      },
+      {
+        "src": "lib desk-320.webp",
+        "width": 320
+      },
+      {
+        "src": "lib desk-512.webp",
+        "width": 512
+      },
+      {
+        "src": "lib desk-720.webp",
+        "width": 720
       }
     ]
   },
@@ -619,7 +1282,20 @@
     "height": 518,
     "webp": "mustard seed.webp",
     "webpWidth": 750,
-    "variants": []
+    "variants": [
+      {
+        "src": "mustard seed-160.webp",
+        "width": 160
+      },
+      {
+        "src": "mustard seed-320.webp",
+        "width": 320
+      },
+      {
+        "src": "mustard seed-512.webp",
+        "width": 512
+      }
+    ]
   },
   "nbco.jpg": {
     "width": 212,
@@ -635,8 +1311,20 @@
     "webpWidth": 1485,
     "variants": [
       {
-        "src": "pc build-640.webp",
-        "width": 640
+        "src": "pc build-160.webp",
+        "width": 160
+      },
+      {
+        "src": "pc build-320.webp",
+        "width": 320
+      },
+      {
+        "src": "pc build-512.webp",
+        "width": 512
+      },
+      {
+        "src": "pc build-720.webp",
+        "width": 720
       }
     ]
   },
@@ -647,8 +1335,20 @@
     "webpWidth": 1440,
     "variants": [
       {
-        "src": "portfolio-640.webp",
-        "width": 640
+        "src": "portfolio-160.webp",
+        "width": 160
+      },
+      {
+        "src": "portfolio-320.webp",
+        "width": 320
+      },
+      {
+        "src": "portfolio-512.webp",
+        "width": 512
+      },
+      {
+        "src": "portfolio-720.webp",
+        "width": 720
       }
     ]
   },
@@ -659,8 +1359,20 @@
     "webpWidth": 1440,
     "variants": [
       {
-        "src": "project-1-640.webp",
-        "width": 640
+        "src": "project-1-160.webp",
+        "width": 160
+      },
+      {
+        "src": "project-1-320.webp",
+        "width": 320
+      },
+      {
+        "src": "project-1-512.webp",
+        "width": 512
+      },
+      {
+        "src": "project-1-720.webp",
+        "width": 720
       }
     ]
   },
@@ -676,7 +1388,20 @@
     "height": 1024,
     "webp": "spirit award.webp",
     "webpWidth": 680,
-    "variants": []
+    "variants": [
+      {
+        "src": "spirit award-160.webp",
+        "width": 160
+      },
+      {
+        "src": "spirit award-320.webp",
+        "width": 320
+      },
+      {
+        "src": "spirit award-512.webp",
+        "width": 512
+      }
+    ]
   },
   "sta.png": {
     "width": 223,
@@ -697,7 +1422,20 @@
     "height": 900,
     "webp": "translit.webp",
     "webpWidth": 900,
-    "variants": []
+    "variants": [
+      {
+        "src": "translit-160.webp",
+        "width": 160
+      },
+      {
+        "src": "translit-320.webp",
+        "width": 320
+      },
+      {
+        "src": "translit-512.webp",
+        "width": 512
+      }
+    ]
   },
   "uber eats.png": {
     "width": 3500,
@@ -706,8 +1444,20 @@
     "webpWidth": 2000,
     "variants": [
       {
-        "src": "uber eats-640.webp",
-        "width": 640
+        "src": "uber eats-160.webp",
+        "width": 160
+      },
+      {
+        "src": "uber eats-320.webp",
+        "width": 320
+      },
+      {
+        "src": "uber eats-512.webp",
+        "width": 512
+      },
+      {
+        "src": "uber eats-720.webp",
+        "width": 720
       }
     ]
   },
@@ -718,8 +1468,20 @@
     "webpWidth": 2000,
     "variants": [
       {
-        "src": "ul in winter-640.webp",
-        "width": 640
+        "src": "ul in winter-160.webp",
+        "width": 160
+      },
+      {
+        "src": "ul in winter-320.webp",
+        "width": 320
+      },
+      {
+        "src": "ul in winter-512.webp",
+        "width": 512
+      },
+      {
+        "src": "ul in winter-720.webp",
+        "width": 720
       }
     ]
   },
@@ -737,8 +1499,20 @@
     "webpWidth": 1080,
     "variants": [
       {
-        "src": "ulsl work-640.webp",
-        "width": 640
+        "src": "ulsl work-160.webp",
+        "width": 160
+      },
+      {
+        "src": "ulsl work-320.webp",
+        "width": 320
+      },
+      {
+        "src": "ulsl work-512.webp",
+        "width": 512
+      },
+      {
+        "src": "ulsl work-720.webp",
+        "width": 720
       }
     ]
   },
@@ -756,8 +1530,20 @@
     "webpWidth": 2000,
     "variants": [
       {
-        "src": "vines in bg-640.webp",
-        "width": 640
+        "src": "vines in bg-160.webp",
+        "width": 160
+      },
+      {
+        "src": "vines in bg-320.webp",
+        "width": 320
+      },
+      {
+        "src": "vines in bg-512.webp",
+        "width": 512
+      },
+      {
+        "src": "vines in bg-720.webp",
+        "width": 720
       }
     ]
   },
@@ -768,8 +1554,20 @@
     "webpWidth": 1080,
     "variants": [
       {
-        "src": "waitering-640.webp",
-        "width": 640
+        "src": "waitering-160.webp",
+        "width": 160
+      },
+      {
+        "src": "waitering-320.webp",
+        "width": 320
+      },
+      {
+        "src": "waitering-512.webp",
+        "width": 512
+      },
+      {
+        "src": "waitering-720.webp",
+        "width": 720
       }
     ]
   },

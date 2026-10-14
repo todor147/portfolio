@@ -113,7 +113,7 @@ const directEmail = SITE.email;
             ></textarea>
           </label>
 
-          <!-- hCaptcha via Web3Forms (zero-config, free plan). The script below renders it. -->
+          <!-- hCaptcha via Web3Forms (zero-config, free plan). Loaded on first interaction by scripts/contact-captcha.ts. -->
           <div class="h-captcha" data-captcha="true"></div>
 
           <div class="pt-2 flex flex-wrap items-center gap-3">
@@ -212,12 +212,6 @@ const directEmail = SITE.email;
     </div>
   </Container>
 
-  <!-- Match the captcha widget to the site theme (must run before the Web3Forms script loads hCaptcha). -->
-  <script is:inline>
-    (function () {
-      var el = document.querySelector(".h-captcha");
-      if (el) el.setAttribute("data-theme", document.documentElement.classList.contains("dark") ? "dark" : "light");
-    })();
-  </script>
-  <script is:inline src="https://web3forms.com/client/script.js" async defer></script>
+  <!-- Web3Forms/hCaptcha are loaded lazily on first form interaction. -->
+  <script src="../scripts/contact-captcha.ts"></script>
 </BaseLayout>

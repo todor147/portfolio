@@ -5,17 +5,18 @@
  * Pass the original asset filename relative to public/assets/ (e.g.
  * "headshot.jpg" or "cellar-hero/red.jpg"); an absolute "/assets/..." path
  * is also accepted. `scripts/optimize-images.mjs` writes
- * src/data/image-manifest.json (original dimensions, WebP path and the 640 px
- * variant). From it the component emits:
+ * src/data/image-manifest.json (original dimensions, WebP path and the 160/320/512/720 px
+ * variants). From it the component emits:
  *
  *   <picture>
- *     <source type="image/webp" srcset="<name>-640.webp 640w, <name>.webp NNNNw" sizes="…">
+ *     <source type="image/webp" srcset="<name>-160.webp 160w, <name>-320.webp 320w, <name>-512.webp 512w, <name>-720.webp 720w, <name>.webp NNNNw" sizes="…">
  *     <img src="<original>" width height …>
  *   </picture>
  *
  * Every URL is percent-encoded (filenames contain spaces). `sizes` defaults to
  * "100vw" — pass a real value for anything narrower than the viewport so the
- * browser can choose the 640 px variant. width/height come from the manifest
+ * browser can choose a smaller variant. WebP-only originals with variants get a
+ * plain <img srcset sizes> instead of a <picture>. width/height come from the manifest
  * unless overridden. Images without a manifest entry fall back to a plain
  * (encoded) WebP source / original.
  *
@@ -65,12 +66,15 @@ const base = lastDot === -1 ? key : key.slice(0, lastDot);
 const isWebpOriginal = key.toLowerCase().endsWith(".webp");
 
 let webpSrcset: string | undefined;
+let imgSrcset: string | undefined;
 if (entry) {
-  if (entry.webp && !isWebpOriginal) {
-    webpSrcset = [
+  if (entry.webp) {
+    const set = [
       ...entry.variants.map((v) => `${url(v.src)} ${v.width}w`),
       `${url(entry.webp)} ${entry.webpWidth}w`,
     ].join(", ");
+    if (!isWebpOriginal) webpSrcset = set;
+    else if (entry.variants.length) imgSrcset = set;
   }
 } else if (!isWebpOriginal) {
   webpSrcset = url(`${base}.webp`);
@@ -98,6 +102,8 @@ const imgHeight = height ?? entry?.height;
   ) : (
     <img
       src={url(key)}
+      srcset={imgSrcset}
+      sizes={imgSrcset ? sizes : undefined}
       alt={alt}
       class={className}
       width={imgWidth}

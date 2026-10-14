@@ -136,7 +136,7 @@ const sections = [
           alt={data.title}
           sizes={heroIsPortrait ? "(min-width: 768px) 320px, 70vw" : "100vw"}
           loading="eager"
-          fetchpriority="high"
+          fetchpriority={heroIsPortrait ? undefined : "high"}
           class={
             heroIsPortrait
               ? "h-auto max-h-[34rem] w-auto max-w-[70%] rounded-2xl border object-contain"

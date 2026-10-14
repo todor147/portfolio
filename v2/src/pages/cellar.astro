@@ -4,6 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Container from "../components/Container.astro";
 import Card from "../components/Card.astro";
 import Picture from "../components/Picture.astro";
+import manifest from "../data/image-manifest.json";
 import { styleConfig, locationConfig, styleColorVar, styleColorCss, styleImageFile } from "../lib/cellar";
 
 const bottlesRaw = (await getCollection("cellar")).sort((a, b) => a.data.order - b.data.order);
@@ -29,6 +30,15 @@ const bottlesWithMeta = bottlesRaw.map((b, i) => ({
 }));
 
 const bottles = bottlesWithMeta;
+
+// Bottle thumbnails are drawn at the tile's 192 px height (object-contain), so
+// their rendered width follows the photo's aspect ratio. Used for `sizes`.
+const thumbWidth = (src: string) => {
+  const dims = (manifest as Record<string, { width: number; height: number }>)[
+    src.replace(/^\/?assets\//, "").replace(/^\//, "")
+  ];
+  return dims ? Math.min(358, Math.ceil((192 * dims.width) / dims.height)) : 192;
+};
 
 // Flat arrays for filter buttons — Object.entries preserves insertion order
 const styleEntries    = Object.entries(styleConfig);
@@ -223,13 +233,13 @@ const styleColors     = Object.fromEntries(
           data-location={bottle.location}
           data-vintage={bottle.vintageSort}
         >
+          <!-- Stretched link: the bottle name is the link (short accessible
+               name); its ::after covers the card so the whole card is clickable. -->
           <Card
-            href={`/cellar/${bottle.slug}/`}
             hover
             variant="outline"
             padding="md"
-            class="h-full flex flex-col gap-4"
-            aria-label={`${bottle.name} — ${bottle.producer}`}
+            class="relative h-full flex flex-col gap-4 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-(--accent)"
           >
             <!-- Thumbnail (decorative: the bottle name is in the card text) -->
             <div
@@ -239,8 +249,8 @@ const styleColors     = Object.fromEntries(
               <Picture
                 src={bottle.thumb}
                 alt=""
-                class={bottle.thumbIsBottle ? "w-full h-full object-contain" : "w-full h-full object-cover"}
-                sizes="(min-width: 1024px) 380px, (min-width: 768px) 45vw, 90vw"
+                class={bottle.thumbIsBottle ? "h-full w-auto max-w-full object-contain" : "w-full h-full object-cover"}
+                sizes={bottle.thumbIsBottle ? `${thumbWidth(bottle.thumb)}px` : "(min-width: 1280px) 358px, (min-width: 1024px) 30vw, (min-width: 768px) 40vw, calc(100vw - 5rem)"}
                 loading="lazy"
               />
             </div>
@@ -267,7 +277,9 @@ const styleColors     = Object.fromEntries(
                   </span>
                 </div>
                 <h3 class="font-display text-[1.05rem] tracking-[-0.01em] leading-tight mt-2">
-                  {bottle.name}
+                  <a href={`/cellar/${bottle.slug}/`} class="after:absolute after:inset-0 after:rounded-2xl after:content-['']">
+                    {bottle.name}
+                  </a>
                 </h3>
               </div>
               {bottle.vintage && /^\d{4}$/.test(bottle.vintage) && (
@@ -371,11 +383,14 @@ const styleColors     = Object.fromEntries(
   // Keep the sticky controls directly below the (possibly wrapped) site header.
   const controls = document.getElementById("cellar-controls");
   const hdr = document.getElementById("site-nav");
-  function syncHeader() {
-    if (controls && hdr) controls.style.setProperty("--header-h", hdr.getBoundingClientRect().height + "px");
+  // ResizeObserver delivers the size without forcing a synchronous layout.
+  if (controls && hdr && "ResizeObserver" in window) {
+    new ResizeObserver((entries) => {
+      const box = entries[0].borderBoxSize?.[0];
+      const h = box ? box.blockSize : entries[0].target.getBoundingClientRect().height;
+      controls.style.setProperty("--header-h", h + "px");
+    }).observe(hdr);
   }
-  syncHeader();
-  window.addEventListener("resize", syncHeader);
 
   // Cache original DOM order
   const allCards = Array.from(grid.querySelectorAll("article"));

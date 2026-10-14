@@ -5,12 +5,16 @@
  *
  * Per source image:
  *   - <name>.webp      longest edge <= 2000 px, q78
- *   - <name>-640.webp  640 px wide, only when the source is wider than 960 px
+ *   - <name>-160.webp  160 px wide, only when the source is wider than 320 px (tall thumbnails)
+ *   - <name>-320.webp  320 px wide, only when the source is wider than 480 px
+ *   - <name>-512.webp  512 px wide, only when the source is wider than 640 px
+ *   - <name>-720.webp  720 px wide, only when the source is wider than 900 px
  *   - If the main WebP would be larger than the source (tiny PNG icons) it is
  *     not kept; the manifest records `webp: null` and the original is served.
  *
  * WebP-only files (no JPG/PNG sibling) are listed in the manifest with their
- * dimensions so <Picture> can emit width/height for them.
+ * dimensions so <Picture> can emit width/height for them, and get the same
+ * -160/-320/-512/-720 variants generated from the WebP itself.
  *
  * Outputs are regenerated when missing or older than the source; the manifest
  * is ALWAYS rebuilt. Metadata is dropped (sharp default). Exits non-zero on
@@ -26,8 +30,13 @@ const TARGET_DIR = "public/assets";
 const MANIFEST = "src/data/image-manifest.json";
 const EXTS = new Set([".jpg", ".jpeg", ".png"]);
 const MAX_EDGE = 2000;
-const SMALL_WIDTH = 640;
-const SMALL_THRESHOLD = 960;
+// Responsive variants: [width, emitted only when the source is wider than threshold]
+const VARIANTS = [
+  { width: 160, threshold: 320 },
+  { width: 320, threshold: 480 },
+  { width: 512, threshold: 640 },
+  { width: 720, threshold: 900 },
+];
 const QUALITY = 78;
 
 const rel = (p) => relative(TARGET_DIR, p).split("\\").join("/");
@@ -73,6 +82,40 @@ async function referencedInSrc(name) {
   return srcText.includes(name);
 }
 
+const LEGACY_WIDTHS = [480, 640];
+
+/** Generated variant files (absolute-ish paths as produced by walk()). */
+const variantPaths = new Set();
+
+/**
+ * Emit (or, when `emit` is false / not applicable, remove) the -<w>.webp
+ * variants of `source`, pushing the kept ones into `out`.
+ */
+async function makeVariants(source, base, width, out, emit = true) {
+  // Variants from earlier widths (480/640) are removed.
+  for (const w of LEGACY_WIDTHS) {
+    const file = `${base}-${w}.webp`;
+    if (await exists(file)) await unlink(file);
+  }
+  for (const { width: w, threshold } of VARIANTS) {
+    const file = `${base}-${w}.webp`;
+    if (emit && width > threshold) {
+      variantPaths.add(file);
+      if (await isStale(source, file)) {
+        await sharp(source, { failOn: "none" })
+          .rotate()
+          .resize({ width: w, withoutEnlargement: true })
+          .webp({ quality: QUALITY, effort: 5 })
+          .toFile(file);
+        generated++;
+      }
+      out.push({ src: rel(file), width: w });
+    } else if (await exists(file) && !variantPaths.has(file)) {
+      await unlink(file);
+    }
+  }
+}
+
 const all = await walk(TARGET_DIR);
 const sources = all.filter((p) => EXTS.has(parse(p).ext.toLowerCase()));
 const sourceBases = new Set(
@@ -86,7 +129,6 @@ for (const path of sources) {
   const ext = parse(path).ext;
   const base = path.slice(0, -ext.length);
   const out = `${base}.webp`;
-  const small = `${base}-${SMALL_WIDTH}.webp`;
 
   // sharp() with failOn "none" tolerates slightly corrupt JPEGs.
   const meta = await sharp(path, { failOn: "none" }).rotate().toBuffer({ resolveWithObject: true });
@@ -116,39 +158,38 @@ for (const path of sources) {
     entry.webp = rel(out);
     entry.webpWidth = wm.width;
 
-    if (width > SMALL_THRESHOLD) {
-      if (await isStale(path, small)) {
-        await sharp(path, { failOn: "none" })
-          .rotate()
-          .resize({ width: SMALL_WIDTH, withoutEnlargement: true })
-          .webp({ quality: QUALITY, effort: 5 })
-          .toFile(small);
-        generated++;
-      }
-      entry.variants.push({ src: rel(small), width: SMALL_WIDTH });
-    } else if (await exists(small)) {
-      await unlink(small);
-    }
+    await makeVariants(path, base, width, entry.variants);
     kept++;
-  } else if (await exists(small)) {
-    await unlink(small);
+  } else {
+    await makeVariants(path, base, width, entry.variants, false);
   }
   manifest[rel(path)] = entry;
 }
 
-// WebP-only assets: record dimensions so <Picture> can set width/height.
-for (const path of all) {
-  if (parse(path).ext.toLowerCase() !== ".webp") continue;
+// WebP-only assets: record dimensions so <Picture> can set width/height, and
+// derive the -320/-512/-720 variants from the WebP itself.
+const webpOnly = all.filter((p) => {
+  if (parse(p).ext.toLowerCase() !== ".webp") return false;
+  const base = p.slice(0, -5);
+  return !sourceBases.has(base);
+});
+// Variant files left from a previous run must not be mistaken for sources.
+const isVariantOfKnown = (base) => {
+  const m = /^(.*)-(160|320|512|720|480|640)$/.exec(base);
+  return !!m && (sourceBases.has(m[1]) || webpOnly.some((q) => q.slice(0, -5) === m[1]));
+};
+for (const path of webpOnly) {
   const base = path.slice(0, -5);
-  if (sourceBases.has(base)) continue; // generated output
-  if (/-640$/.test(base) && sourceBases.has(base.slice(0, -4))) continue;
+  if (isVariantOfKnown(base)) continue; // generated output
   const m = await sharp(path).metadata();
+  const variants = [];
+  await makeVariants(path, base, m.width, variants);
   manifest[rel(path)] = {
     width: m.width,
     height: m.height,
     webp: rel(path),
     webpWidth: m.width,
-    variants: [],
+    variants,
   };
 }
 

@@ -17,9 +17,9 @@ learnings: "The routing problem is harder than it looks because SoC is not just 
 ## Screenshots
 
 <div class="screenshot-grid">
-  <img src="/assets/ev-route-optimizer-plan.webp" width="1080" height="2400" loading="lazy" decoding="async" alt="Plan Route — origin, destination, battery parameters and connector type" />
-  <img src="/assets/ev-route-optimizer-itinerary.webp" width="1080" height="2400" loading="lazy" decoding="async" alt="Route Itinerary — charging stops, durations, arrival SoC, and quality score" />
-  <img src="/assets/ev-route-optimizer.webp" width="1080" height="2400" loading="lazy" decoding="async" alt="Turn-by-turn Navigation — MapLibre map with route line and speed/ETA HUD" />
+  <img src="/assets/ev-route-optimizer-plan.webp" srcset="/assets/ev-route-optimizer-plan-320.webp 320w, /assets/ev-route-optimizer-plan-512.webp 512w, /assets/ev-route-optimizer-plan-720.webp 720w, /assets/ev-route-optimizer-plan.webp 1080w" sizes="(max-width: 640px) 95vw, 220px" width="1080" height="2400" loading="lazy" decoding="async" alt="Plan Route — origin, destination, battery parameters and connector type" />
+  <img src="/assets/ev-route-optimizer-itinerary.webp" srcset="/assets/ev-route-optimizer-itinerary-320.webp 320w, /assets/ev-route-optimizer-itinerary-512.webp 512w, /assets/ev-route-optimizer-itinerary-720.webp 720w, /assets/ev-route-optimizer-itinerary.webp 1080w" sizes="(max-width: 640px) 95vw, 220px" width="1080" height="2400" loading="lazy" decoding="async" alt="Route Itinerary — charging stops, durations, arrival SoC, and quality score" />
+  <img src="/assets/ev-route-optimizer.webp" srcset="/assets/ev-route-optimizer-320.webp 320w, /assets/ev-route-optimizer-512.webp 512w, /assets/ev-route-optimizer-720.webp 720w, /assets/ev-route-optimizer.webp 1080w" sizes="(max-width: 640px) 95vw, 220px" width="1080" height="2400" loading="lazy" decoding="async" alt="Turn-by-turn Navigation — MapLibre map with route line and speed/ETA HUD" />
 </div>
 
 > A multi-stop EV route planner that treats charging as a first-class citizen of the search — not a post-processing step bolted onto a road-distance result.
