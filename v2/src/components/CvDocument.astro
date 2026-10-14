@@ -42,7 +42,7 @@ const achievements = variant.showAchievements
 const contactLinks = [
   { label: CONTACT.location, href: undefined },
   { label: CONTACT.email, href: `mailto:${CONTACT.email}` },
-  { label: CONTACT.phone, href: CONTACT.phoneHref },
+  { label: CONTACT.phone, href: CONTACT.phoneHref, printOnly: true },
   { label: CONTACT.site, href: CONTACT.siteHref },
   { label: CONTACT.linkedin, href: CONTACT.linkedinHref },
   { label: CONTACT.github, href: CONTACT.githubHref },
@@ -58,7 +58,7 @@ const contactLinks = [
     <p class="eyebrow mt-2">{variant.headline}</p>
     <ul class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm" style="color: var(--text-soft)">
       {contactLinks.map((c) => (
-        <li>
+        <li class={c.printOnly ? "hidden print:list-item" : undefined}>
           {c.href ? (
             <a
               href={c.href}

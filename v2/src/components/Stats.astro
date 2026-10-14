@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Container from "./Container.astro";
+import { isExpired } from "../lib/dates";
 
 const experience = await getCollection("experience");
 const certifications = await getCollection("certifications");
@@ -27,7 +28,7 @@ function categoryYears(category: string): number {
 
 const hospitalityYears = categoryYears("hospitality");
 const softwareYears = categoryYears("software");
-const certCount = certifications.length;
+const certCount = certifications.filter((c) => !isExpired(c.data.expires)).length;
 
 const stats = [
   { value: softwareYears.toFixed(1), unit: "yrs", label: "in software", since: "since 2024" },

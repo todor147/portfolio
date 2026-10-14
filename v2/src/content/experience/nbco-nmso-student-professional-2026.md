@@ -1,6 +1,6 @@
 ---
 title: Student Professional
-employer: National Building Control Office (NBCO) & National Market Surveillance Office (NMSO)
+employer: National Building Control and Market Surveillance Office (NBC&MSO)
 employerUrl: https://www.nbco.localgov.ie/
 location: Dublin, Ireland (remote)
 category: other
@@ -10,7 +10,7 @@ summary: Back with the Market Surveillance team — site visits, building inspec
 icon: nbco.jpg
 ---
 
-Returned in June 2026 for a second placement with the National Building Control Office and National Market Surveillance Office, working full-time and remotely over the summer as part of the Market Surveillance team. Attended numerous site visits and completed building inspection reports assessing compliance with construction product regulations.
+Returned in June 2026 for a second placement with the National Building Control and Market Surveillance Office (NBC&MSO), a shared service hosted by Dublin City Council, working full-time and remotely over the summer as part of the Market Surveillance team. Attended numerous site visits and completed building inspection reports assessing compliance with construction product regulations.
 
 Built extensive hands-on experience with Excel for compliance tracking and reporting, adding to the regulatory and inspection knowledge developed during the first placement.
 

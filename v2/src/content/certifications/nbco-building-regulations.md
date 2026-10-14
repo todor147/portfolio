@@ -1,6 +1,6 @@
 ---
 title: Building Regulation Requirements for Works to Existing Dwellings
-issuer: National Building Control Office (NBCO) & National Market Surveillance Office (NMSO)
+issuer: National Building Control and Market Surveillance Office (NBC&MSO)
 issuerUrl: https://www.nbco.localgov.ie/
 issued: "2025-06"
 category: other

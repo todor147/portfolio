@@ -4,7 +4,7 @@
  * focused views (software, wine, customer service) pull only the relevant
  * roles, certifications and skills.
  */
-import { byMostRecent, diffMonths, formatRange } from "./dates";
+import { byMostRecent, diffMonths, formatRange, isExpired } from "./dates";
 
 /**
  * Downloadable PDF per variant id (served from /public/assets). Generated from
@@ -305,6 +305,7 @@ interface CertData {
   title: string;
   issuer: string;
   issued: string;
+  expires?: string;
   category: string;
 }
 interface CertEntry {
@@ -317,5 +318,6 @@ export function selectCerts<T extends CertEntry>(entries: T[], v: CvVariant): T[
   const include = new Set(v.certIncludeSlugs ?? []);
   return entries
     .filter((e) => cats.has(e.data.category) || include.has(e.id))
+    .filter((e) => !isExpired(e.data.expires))
     .sort((a, b) => b.data.issued.localeCompare(a.data.issued));
 }

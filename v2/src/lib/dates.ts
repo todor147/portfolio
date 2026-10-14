@@ -81,3 +81,14 @@ export function byMostRecent(
   if (b.current && !a.current) return 1;
   return b.start.localeCompare(a.start);
 }
+
+/**
+ * True once a "YYYY-MM" expiry month has fully passed. A cert expiring
+ * "2027-02" counts as valid through the end of February 2027.
+ */
+export function isExpired(expires?: string, now: Date = new Date()): boolean {
+  if (!expires) return false;
+  const { year, month } = parse(expires);
+  // First instant of the month after expiry (Date handles month 12 -> Jan next year).
+  return now.getTime() >= new Date(year, month, 1).getTime();
+}

@@ -5,7 +5,7 @@ import Container from "../components/Container.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import Card from "../components/Card.astro";
 import Tag from "../components/Tag.astro";
-import { formatMonthYear } from "../lib/dates";
+import { formatMonthYear, isExpired } from "../lib/dates";
 
 const certifications = await getCollection("certifications");
 
@@ -123,7 +123,11 @@ const counts = groupOrder.map((key) => ({
                     {cert.data.expires && (
                       <>
                         <span aria-hidden="true">·</span>
-                        <span>Expires {formatMonthYear(cert.data.expires)}</span>
+                        {isExpired(cert.data.expires) ? (
+                          <span class="opacity-70">Expired {formatMonthYear(cert.data.expires)}</span>
+                        ) : (
+                          <span>Expires {formatMonthYear(cert.data.expires)}</span>
+                        )}
                       </>
                     )}
                   </div>
