@@ -82,7 +82,7 @@ const imgHeight = height ?? entry?.height;
 
 {
   webpSrcset ? (
-    <picture>
+    <picture class="contents">
       <source srcset={webpSrcset} type="image/webp" sizes={sizes} />
       <img
         src={url(key)}
