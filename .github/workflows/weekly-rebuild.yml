@@ -1,0 +1,23 @@
+name: Weekly rebuild
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Netlify build hook
+        env:
+          HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::notice::NETLIFY_BUILD_HOOK secret is not set, skipping. Create a build hook in Netlify (Site configuration > Build & deploy > Build hooks) and add its URL as a repository secret named NETLIFY_BUILD_HOOK (Settings > Secrets and variables > Actions)."
+            exit 0
+          fi
+          curl -fsS -X POST -d '{}' "$HOOK" > /dev/null
+          echo "Netlify build triggered."

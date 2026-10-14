@@ -11,7 +11,9 @@
     "preview": "astro preview",
     "astro": "astro",
     "optimize:images": "node scripts/optimize-images.mjs",
-    "cv:pdf": "node scripts/generate-cv-pdfs.mjs"
+    "cv:pdf": "node scripts/generate-cv-pdfs.mjs",
+    "check": "astro check",
+    "check:dist": "node scripts/check-dist.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
@@ -23,14 +25,19 @@
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.4.0",
     "satori": "^0.26.0",
-    "sharp": "^0.34.5",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.3.0"
   },
   "overrides": {
-    "vite": "^7"
+    "vite": "^7",
+    "sharp": "$sharp"
   },
   "allowScripts": {
     "esbuild@0.27.7": true,
-    "sharp@0.34.5": true
+    "sharp@0.35.5": true
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^5.9.3"
   }
 }

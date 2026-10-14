@@ -20,10 +20,10 @@ interface Row {
 const dialog = document.getElementById("cmdk-dialog") as HTMLDialogElement | null;
 const input = document.getElementById("cmdk-input") as HTMLInputElement | null;
 const list = document.getElementById("cmdk-list") as HTMLElement | null;
-const status = document.getElementById("cmdk-status") as HTMLElement | null;
+const statusEl = document.getElementById("cmdk-status") as HTMLElement | null;
 const message = document.getElementById("cmdk-message") as HTMLElement | null;
 
-if (dialog && input && list && status && message) {
+if (dialog && input && list && statusEl && message) {
   const platform =
     (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform ??
     navigator.platform ??
@@ -176,10 +176,10 @@ if (dialog && input && list && status && message) {
     input!.setAttribute("aria-expanded", rows.length > 0 ? "true" : "false");
     if (rows.length === 0) {
       showMessage("Nothing matches. Try a different word.");
-      status!.textContent = "No results";
+      statusEl!.textContent = "No results";
     } else {
       showMessage(null);
-      status!.textContent = `${rows.length} result${rows.length === 1 ? "" : "s"}`;
+      statusEl!.textContent = `${rows.length} result${rows.length === 1 ? "" : "s"}`;
     }
     setActive(0, false);
     list!.scrollTop = 0;
@@ -188,7 +188,7 @@ if (dialog && input && list && status && message) {
   async function openPalette() {
     if (dialog!.open) return;
     input!.value = "";
-    status!.textContent = "";
+    statusEl!.textContent = "";
     dialog!.showModal();
     document.body.style.overflow = "hidden";
     requestAnimationFrame(() => input!.focus());
