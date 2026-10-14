@@ -7,6 +7,9 @@ style: "white"
 note: "Aromatic white from the Sakar foothills. White flowers, green apple, citrus zest, a delicate muscat note — built on freshness."
 location: "bulgaria"
 order: 150
+heroImage: "/assets/cellar-bottles/zaara-estate-dogma-misket.jpg"
+heroCredit: "Photo: CASAVINO (retailer)"
+heroCreditUrl: "https://casavino.bg/zaara-dogma-misket-0-75-l"
 ---
 
 "Misket" isn't one grape in Bulgaria — it's a whole family of them, scattered across different corners of the country and rarely interchangeable. This bottle is a good excuse to actually untangle that.

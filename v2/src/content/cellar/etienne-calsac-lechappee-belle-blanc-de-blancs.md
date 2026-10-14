@@ -7,6 +7,9 @@ style: "sparkling"
 note: "Grower Champagne, 100% Chardonnay from Avize. Multi-vintage blend built on reserve wine, disgorged July 2025. Extra Brut — precise and mineral rather than showy."
 location: "france"
 order: 260
+heroImage: "/assets/cellar-bottles/etienne-calsac-lechappee-belle-blanc-de-blancs.jpg"
+heroCredit: "Photo: Fatcork (retailer)"
+heroCreditUrl: "https://fatcork.com/products/lechappee-belle-extra-brut-3"
 ---
 
 Most of what's in this cellar comes from grandes marques — the big houses whose names do a lot of the talking before the wine gets a chance to. This one's the opposite: a grower Champagne, made start to finish by the person who grew the grapes, from a single village most people outside the trade have never heard of.
