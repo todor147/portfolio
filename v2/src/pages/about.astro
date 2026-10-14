@@ -7,7 +7,10 @@ import Card from "../components/Card.astro";
 import Tag from "../components/Tag.astro";
 import Button from "../components/Button.astro";
 import Picture from "../components/Picture.astro";
+import { cvVariants } from "../lib/cv";
 import { byMostRecent, formatRange, formatMonthYear, isExpired } from "../lib/dates";
+import { breadcrumbs, personId } from "../lib/structured-data";
+import { SITE } from "../lib/site";
 
 const experience = await getCollection("experience");
 const certifications = await getCollection("certifications");
@@ -54,6 +57,10 @@ const educationJourney = [...education].sort((a, b) => a.data.order - b.data.ord
 const hospitalityYears = categoryYears("hospitality");
 const softwareYears = categoryYears("software");
 
+const technicalSkills = cvVariants.find((v) => v.id === "software")?.skills ?? [];
+const serviceSkills = cvVariants.find((v) => v.id === "wine")?.skills.slice(0, 1) ?? [];
+const skillGroups = [...technicalSkills, ...serviceSkills];
+
 const funFacts = [
   "Builds PCs for fun",
   "Swim Ireland qualified swim teacher",
@@ -65,11 +72,24 @@ const funFacts = [
 const currentSoftwareRole = experience
   .filter((e) => e.data.category === "software" && e.data.current)
   .sort((a, b) => byMostRecent(a.data, b.data))[0];
+
+const site = Astro.site ?? new URL(SITE.url);
+const aboutLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    url: new URL("/about/", site).href,
+    mainEntity: { "@id": personId(site) },
+  },
+  breadcrumbs([{ name: "Home", path: "/" }, { name: "About", path: "/about/" }], site),
+];
 ---
 
 <BaseLayout
   title="About — Todor Aleksandrov"
   description="The CS-meets-sommelier path: who I am, where I'm working, what I'm learning, and the small things that make the picture whole."
+  ogType="profile"
+  structuredData={aboutLd}
 >
   <Container size="wide" class="py-(--spacing-section) space-y-16">
     <SectionHeader
@@ -291,6 +311,27 @@ const currentSoftwareRole = experience
         )}
       </Card>
     </div>
+
+    <!-- SKILLS -->
+    <section class="pt-12">
+      <SectionHeader
+        eyebrow="Toolbox"
+        title="Skills & tech stack"
+        subtitle="What I work with day to day, plus the hospitality skills behind the service side."
+      />
+      <div class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {skillGroups.map((g) => (
+          <Card variant="surface" class="flex flex-col gap-3" data-reveal>
+            <h3 class="eyebrow">{g.group}</h3>
+            <ul class="flex flex-wrap gap-2">
+              {g.items.map((item) => (
+                <li><Tag variant="default" size="md">{item}</Tag></li>
+              ))}
+            </ul>
+          </Card>
+        ))}
+      </div>
+    </section>
 
     <!-- EDUCATION JOURNEY -->
     <section class="pt-12">

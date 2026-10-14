@@ -79,7 +79,7 @@ const sorted = phrases.sort((a, b) => {
       <button
         type="button"
         aria-pressed="true"
-        class="phrase-cat-btn active px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
+        class="phrase-cat-btn active inline-flex items-center min-h-10 px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
         data-category="all"
         style="border-color: #C4A6D4; background: #C4A6D4; color: #1F1A2E;"
       >
@@ -88,7 +88,7 @@ const sorted = phrases.sort((a, b) => {
       {counts.map((cat) => (
         <button
           type="button"
-          class="phrase-cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
+          class="phrase-cat-btn inline-flex items-center min-h-10 px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
           data-category={cat.id}
           aria-pressed="false"
           style="border-color: rgba(196, 166, 212, 0.35); color: rgba(245, 240, 232, 0.75);"
@@ -157,30 +157,20 @@ const sorted = phrases.sort((a, b) => {
 </section>
 
 <script>
+  import { initChipGroup } from "../scripts/filter-chips";
+
   const buttons = document.querySelectorAll<HTMLButtonElement>(".phrase-cat-btn");
   const cards = document.querySelectorAll<HTMLElement>(".phrase-card");
   const empty = document.getElementById("phrase-empty");
 
-  function activate(active: HTMLButtonElement) {
-    buttons.forEach((btn) => {
-      const isActive = btn === active;
-      btn.classList.toggle("active", isActive);
-      btn.setAttribute("aria-pressed", String(isActive));
-      if (isActive) {
-        btn.style.borderColor = "#C4A6D4";
-        btn.style.background = "#C4A6D4";
-        btn.style.color = "#1F1A2E";
-      } else {
-        btn.style.borderColor = "rgba(196, 166, 212, 0.35)";
-        btn.style.background = "transparent";
-        btn.style.color = "rgba(245, 240, 232, 0.75)";
-      }
-    });
-  }
-
-  buttons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      activate(btn);
+  initChipGroup(buttons, {
+    activeStyle: { "border-color": "#C4A6D4", background: "#C4A6D4", color: "#1F1A2E" },
+    inactiveStyle: {
+      "border-color": "rgba(196, 166, 212, 0.35)",
+      background: "transparent",
+      color: "rgba(245, 240, 232, 0.75)",
+    },
+    onChange(btn) {
       const cat = btn.dataset.category ?? "all";
       let anyVisible = false;
       cards.forEach((card) => {
@@ -189,6 +179,6 @@ const sorted = phrases.sort((a, b) => {
         if (visible) anyVisible = true;
       });
       if (empty) empty.hidden = anyVisible;
-    });
+    },
   });
 </script>

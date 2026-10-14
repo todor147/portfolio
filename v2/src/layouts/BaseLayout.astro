@@ -16,6 +16,10 @@ interface Props {
   noindex?: boolean;
   /** Omit canonical + og:url (e.g. the 404 page) */
   noCanonical?: boolean;
+  /** og:type (default "website") */
+  ogType?: "website" | "article" | "profile";
+  /** Extra JSON-LD block(s), rendered after the Person block */
+  structuredData?: object | object[];
 }
 
 const {
@@ -25,7 +29,10 @@ const {
   ogImage: ogImageProp,
   noindex = false,
   noCanonical = false,
+  ogType = "website",
+  structuredData,
 } = Astro.props;
+const extraLd = structuredData === undefined ? [] : Array.isArray(structuredData) ? structuredData : [structuredData];
 
 const _pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
 const _autoSlug = _pathname === "/" ? "home" : _pathname.slice(1).split("/")[0];
@@ -104,7 +111,7 @@ const websiteLd = {
     <!-- Open Graph / social -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     {!noCanonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:type" content="image/jpeg" />
@@ -142,6 +149,7 @@ const websiteLd = {
     <!-- JSON-LD -->
     <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
     {isHome && <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />}
+    {extraLd.map((ld) => <script type="application/ld+json" set:html={JSON.stringify(ld)} />)}
 
     <script is:inline>
       // Apply theme before paint to avoid flash

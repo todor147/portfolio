@@ -26,8 +26,7 @@ const message = document.getElementById("cmdk-message") as HTMLElement | null;
 if (dialog && input && list && statusEl && message) {
   const platform =
     (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform ??
-    navigator.platform ??
-    "";
+    navigator.userAgent;
   const shortcutLabel = /Mac|iPhone|iPad/i.test(platform) ? "⌘K" : "Ctrl K";
   document.querySelectorAll<HTMLElement>("[data-palette-shortcut]").forEach((node) => {
     node.textContent = shortcutLabel;

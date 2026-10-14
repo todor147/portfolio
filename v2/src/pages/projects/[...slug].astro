@@ -1,10 +1,12 @@
 ---
 import { getCollection, render } from "astro:content";
+import { SITE } from "../../lib/site";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Container from "../../components/Container.astro";
 import Button from "../../components/Button.astro";
 import Tag from "../../components/Tag.astro";
 import Picture from "../../components/Picture.astro";
+import { breadcrumbs, clean, personId } from "../../lib/structured-data";
 import manifest from "../../data/image-manifest.json";
 
 export async function getStaticPaths() {
@@ -40,6 +42,32 @@ const metaDescription = (() => {
   return cut.slice(0, cut.lastIndexOf(" ")).replace(/[\s,;:.\-–—]+$/, "") + "…";
 })();
 
+const _site = Astro.site ?? new URL(SITE.url);
+const _url = new URL(Astro.url.pathname, _site).href;
+const projectLd = clean({
+  "@context": "https://schema.org",
+  "@type": data.githubUrl ? "SoftwareSourceCode" : "CreativeWork",
+  name: data.title,
+  description: data.description,
+  url: _url,
+  codeRepository: data.githubUrl,
+  programmingLanguage: data.githubUrl ? data.stack : undefined,
+  keywords: [...data.tags, ...data.stack].join(", "),
+  author: { "@id": personId(_site) },
+  image: data.image ? new URL(`/assets/${data.image.replace(/^\/?assets\//, "").replace(/^\//, "")}`, _site).href : undefined,
+});
+const structuredData = [
+  projectLd,
+  breadcrumbs(
+    [
+      { name: "Home", path: "/" },
+      { name: "Projects", path: "/projects/" },
+      { name: data.title, path: Astro.url.pathname },
+    ],
+    _site,
+  ),
+];
+
 const sections = [
   data.problem && { num: "01", label: "The problem", body: data.problem },
   data.approach && { num: "02", label: "The approach", body: data.approach },
@@ -51,6 +79,8 @@ const sections = [
 <BaseLayout
   title={`${data.title} — Project · Todor Aleksandrov`}
   description={metaDescription}
+  ogType="article"
+  structuredData={structuredData}
 >
   <Container size="narrow" class="pt-12 md:pt-16">
     <a

@@ -57,7 +57,7 @@ const allTags = [...tagCounts.entries()]
       <button
         type="button"
         aria-pressed="true"
-        class="proj-tag-btn active px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
+        class="proj-tag-btn active inline-flex items-center min-h-10 px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
         data-tag="all"
         style="border-color: var(--accent); background: var(--accent); color: var(--on-accent, #FAF6F0);"
       >
@@ -66,7 +66,7 @@ const allTags = [...tagCounts.entries()]
       {allTags.map((tag) => (
         <button
           type="button"
-          class="proj-tag-btn px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
+          class="proj-tag-btn inline-flex items-center min-h-10 px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
           data-tag={tag.id}
           aria-pressed="false"
           style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text-soft);"
@@ -108,30 +108,24 @@ const allTags = [...tagCounts.entries()]
 </style>
 
 <script>
+  import { initChipGroup } from "../../scripts/filter-chips";
+
   const buttons = document.querySelectorAll<HTMLButtonElement>(".proj-tag-btn");
   const cells = document.querySelectorAll<HTMLElement>(".proj-cell");
   const empty = document.getElementById("proj-empty");
 
-  function setActive(active: HTMLButtonElement) {
-    buttons.forEach((btn) => {
-      const isActive = btn === active;
-      btn.classList.toggle("active", isActive);
-      btn.setAttribute("aria-pressed", String(isActive));
-      if (isActive) {
-        btn.style.borderColor = "var(--accent)";
-        btn.style.background = "var(--accent)";
-        btn.style.color = "var(--on-accent, #FAF6F0)";
-      } else {
-        btn.style.borderColor = "var(--field-border, color-mix(in oklab, var(--text) 45%, transparent))";
-        btn.style.background = "transparent";
-        btn.style.color = "var(--text-soft)";
-      }
-    });
-  }
-
-  buttons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      setActive(btn);
+  initChipGroup(buttons, {
+    activeStyle: {
+      "border-color": "var(--accent)",
+      background: "var(--accent)",
+      color: "var(--on-accent, #FAF6F0)",
+    },
+    inactiveStyle: {
+      "border-color": "var(--field-border, color-mix(in oklab, var(--text) 45%, transparent))",
+      background: "transparent",
+      color: "var(--text-soft)",
+    },
+    onChange(btn) {
       const tag = btn.dataset.tag ?? "all";
       let anyVisible = false;
       cells.forEach((cell) => {
@@ -141,6 +135,6 @@ const allTags = [...tagCounts.entries()]
         if (visible) anyVisible = true;
       });
       if (empty) empty.hidden = anyVisible;
-    });
+    },
   });
 </script>

@@ -6,6 +6,8 @@ interface Props {
   align?: "left" | "center";
   rule?: boolean;
   level?: 1 | 2 | 3;
+  /** Smaller H1 + tighter spacing for utility pages (CV, contact). */
+  compact?: boolean;
   class?: string;
 }
 
@@ -16,27 +18,28 @@ const {
   align = "left",
   rule = false,
   level = 2,
+  compact = false,
   class: className = "",
 } = Astro.props;
 
 const alignClass = align === "center" ? "text-center mx-auto" : "text-left";
 const Heading = `h${level}` as keyof HTMLElementTagNameMap;
 const headingSize = {
-  1: "text-(length:--text-display) leading-[1.02]",
+  1: compact ? "text-(length:--text-h1) leading-[1.05]" : "text-(length:--text-display) leading-[1.02]",
   2: "text-(length:--text-h1) leading-[1.05]",
   3: "text-(length:--text-h2) leading-[1.1]",
 }[level];
 ---
 
-<header data-reveal={level === 1 ? undefined : ""} class:list={["max-w-3xl space-y-4", alignClass, className]}>
+<header data-reveal={level === 1 ? undefined : ""} class:list={[compact ? "max-w-3xl space-y-2" : "max-w-3xl space-y-4", alignClass, className]}>
   {eyebrow && <p class="eyebrow">{eyebrow}</p>}
   <Heading class:list={["font-display tracking-[-0.02em]", headingSize]}>
     {title}
   </Heading>
   {subtitle && (
-    <p class="text-lg leading-relaxed" style="color: var(--text-soft)">
+    <p class:list={["leading-relaxed", compact ? "text-base" : "text-lg"]} style="color: var(--text-soft)">
       {subtitle}
     </p>
   )}
-  {rule && <hr class="rule mt-6" />}
+  {rule && <hr class:list={["rule", compact ? "mt-4" : "mt-6"]} />}
 </header>

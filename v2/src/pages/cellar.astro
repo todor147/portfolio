@@ -148,7 +148,7 @@ const styleColors     = Object.fromEntries(
         <div class="flex flex-wrap gap-1.5" role="group" aria-label="Filter by style">
           <button
             type="button"
-            class="cellar-style-btn px-3 py-1 rounded-full text-xs font-medium border transition-colors"
+            class="cellar-style-btn min-h-10 px-3.5 py-1.5 rounded-full text-xs font-medium border transition-colors"
             data-style=""
             aria-pressed="true"
             style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text);"
@@ -158,7 +158,7 @@ const styleColors     = Object.fromEntries(
           {styleEntries.map(([key, cfg]) => (
             <button
               type="button"
-              class="cellar-style-btn inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border transition-colors"
+              class="cellar-style-btn inline-flex items-center gap-1.5 min-h-10 px-3.5 py-1.5 rounded-full text-xs font-medium border transition-colors"
               data-style={key}
               aria-pressed="false"
               style={`border-color: color-mix(in oklab, ${styleColors[key]} 45%, transparent); color: ${styleColors[key]};`}
@@ -175,7 +175,7 @@ const styleColors     = Object.fromEntries(
         <div class="flex flex-wrap gap-1.5" role="group" aria-label="Filter by location">
           <button
             type="button"
-            class="cellar-loc-btn px-3 py-1 rounded-full text-xs font-medium border transition-colors"
+            class="cellar-loc-btn min-h-10 px-3.5 py-1.5 rounded-full text-xs font-medium border transition-colors"
             data-location=""
             aria-pressed="true"
             style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text);"
@@ -185,7 +185,7 @@ const styleColors     = Object.fromEntries(
           {locationEntries.map(([key, label]) => (
             <button
               type="button"
-              class="cellar-loc-btn px-3 py-1 rounded-full text-xs font-medium border transition-colors"
+              class="cellar-loc-btn min-h-10 px-3.5 py-1.5 rounded-full text-xs font-medium border transition-colors"
               data-location={key}
               aria-pressed="false"
               style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text-soft);"

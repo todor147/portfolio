@@ -2,6 +2,8 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Container from "../../components/Container.astro";
+import { breadcrumbs } from "../../lib/structured-data";
+import { SITE } from "../../lib/site";
 import Picture from "../../components/Picture.astro";
 import { styleConfig, locationConfig, styleImageFile, styleImageFit, styleColorVar, styleColorCss } from "../../lib/cellar";
 
@@ -40,12 +42,21 @@ const locationLabel = locationConfig[data.location];
 const hasRealPhoto = Boolean(data.heroImage);
 const heroImage = data.heroImage ?? `/assets/cellar-hero/${styleImageFile[data.style]}`;
 const heroFit = hasRealPhoto ? "contain" : styleImageFit[data.style];
+const cellarLd = breadcrumbs(
+  [
+    { name: "Home", path: "/" },
+    { name: "Cellar", path: "/cellar/" },
+    { name: data.name, path: Astro.url.pathname },
+  ],
+  Astro.site ?? new URL(SITE.url),
+);
 ---
 
 <BaseLayout
   title={pageTitle}
   description={clip(data.note)}
   ogImage={`/og/cellar-${bottle.id}.jpg`}
+  structuredData={cellarLd}
 >
   <Fragment set:html={`<style>${styleColorCss}</style>`} />
   <Container size="narrow" class="pt-12 md:pt-16">

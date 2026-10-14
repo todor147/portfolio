@@ -124,7 +124,7 @@ function gradeClass(g: string) {
             type="button"
             data-year={y}
             aria-pressed={y === "all" ? "true" : "false"}
-            class="year-btn text-xs font-medium px-3 py-1.5 rounded-full border transition-colors"
+            class="year-btn inline-flex items-center min-h-10 text-xs font-medium px-3.5 py-1.5 rounded-full border transition-colors"
             style={y === "all"
               ? "background: var(--accent); color: var(--on-accent, #FAF6F0); border-color: var(--accent);"
               : "background: transparent; color: var(--text-soft); border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent));"}
@@ -258,6 +258,8 @@ function gradeClass(g: string) {
 </style>
 
 <script>
+  import { initChipGroup } from "../scripts/filter-chips";
+
   const searchEl = document.getElementById("ts-search") as HTMLInputElement;
   const tbody    = document.getElementById("ts-body") as HTMLTableSectionElement;
   const emptyEl  = document.getElementById("ts-empty") as HTMLElement;
@@ -314,24 +316,21 @@ function gradeClass(g: string) {
 
   searchEl.addEventListener("input", applyFilters);
 
-  yearBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
+  initChipGroup(yearBtns, {
+    activeStyle: {
+      background: "var(--accent)",
+      color: "var(--on-accent, #FAF6F0)",
+      "border-color": "var(--accent)",
+    },
+    inactiveStyle: {
+      background: "transparent",
+      color: "var(--text-soft)",
+      "border-color": "var(--field-border, color-mix(in oklab, var(--text) 45%, transparent))",
+    },
+    onChange(btn) {
       activeYear = btn.dataset.year ?? "all";
-      yearBtns.forEach(b => {
-        const active = b.dataset.year === activeYear;
-        b.setAttribute("aria-pressed", String(active));
-        if (active) {
-          b.style.background = "var(--accent)";
-          b.style.color      = "var(--on-accent, #FAF6F0)";
-          b.style.borderColor= "var(--accent)";
-        } else {
-          b.style.background = "transparent";
-          b.style.color      = "var(--text-soft)";
-          b.style.borderColor= "var(--field-border, color-mix(in oklab, var(--text) 45%, transparent))";
-        }
-      });
       applyFilters();
-    });
+    },
   });
 
   sortThs.forEach(th => {

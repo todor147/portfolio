@@ -1,9 +1,10 @@
 ---
 interface Props {
   categories: { id: string; label: string; count: number }[];
+  highlightCount: number;
 }
 
-const { categories } = Astro.props;
+const { categories, highlightCount } = Astro.props;
 const total = categories.reduce((sum, c) => sum + c.count, 0);
 ---
 
@@ -35,8 +36,17 @@ const total = categories.reduce((sum, c) => sum + c.count, 0);
     <div class="flex flex-wrap items-center gap-2 lg:flex-1 lg:justify-end" role="group" aria-label="Filter by category">
       <button
         type="button"
+        class="exp-cat-btn inline-flex items-center min-h-10 px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
+        data-category="highlights"
+        aria-pressed="false"
+        style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text-soft);"
+      >
+        Highlights <span class="font-mono ml-1">{highlightCount}</span>
+      </button>
+      <button
+        type="button"
         aria-pressed="true"
-        class="exp-cat-btn active px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
+        class="exp-cat-btn active inline-flex items-center min-h-10 px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
         data-category="all"
         style="border-color: var(--accent); background: var(--accent); color: var(--on-accent, #FAF6F0);"
       >
@@ -45,7 +55,7 @@ const total = categories.reduce((sum, c) => sum + c.count, 0);
       {categories.map((cat) => (
         <button
           type="button"
-          class="exp-cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
+          class="exp-cat-btn inline-flex items-center min-h-10 px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase border transition-all"
           data-category={cat.id}
           aria-pressed="false"
           style="border-color: var(--field-border, color-mix(in oklab, var(--text) 45%, transparent)); color: var(--text-soft);"
@@ -56,6 +66,7 @@ const total = categories.reduce((sum, c) => sum + c.count, 0);
     </div>
   </div>
 
+  <p id="exp-count" role="status" aria-live="polite" class="text-xs mt-3 lg:text-right" style="color:var(--text-soft)"></p>
   <p
     id="exp-empty-state"
     hidden
@@ -72,77 +83,89 @@ const total = categories.reduce((sum, c) => sum + c.count, 0);
 </style>
 
 <script>
-  const filtersRoot = document.getElementById("exp-filters");
+  import { initChipGroup } from "../scripts/filter-chips";
+
   const search = document.getElementById("exp-search") as HTMLInputElement | null;
-  const buttons = document.querySelectorAll<HTMLButtonElement>(".exp-cat-btn");
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>(".exp-cat-btn"));
   const items = document.querySelectorAll<HTMLDetailsElement>(".experience-item");
   const yearGroups = document.querySelectorAll<HTMLElement>("[data-year-group]");
   const empty = document.getElementById("exp-empty-state");
+  const countEl = document.getElementById("exp-count");
 
-  let activeCategory = "all";
+  // Without JS every entry stays visible; the default view is only applied here.
+  let activeCategory = "highlights";
   let activeQuery = "";
 
-  function activateButton(cat: string) {
-    buttons.forEach((btn) => {
-      const active = btn.dataset.category === cat;
-      btn.classList.toggle("active", active);
-      btn.setAttribute("aria-pressed", String(active));
-      if (active) {
-        btn.style.borderColor = "var(--accent)";
-        btn.style.background = "var(--accent)";
-        btn.style.color = "var(--on-accent, #FAF6F0)";
-      } else {
-        btn.style.borderColor = "var(--field-border, color-mix(in oklab, var(--text) 45%, transparent))";
-        btn.style.background = "transparent";
-        btn.style.color = "var(--text-soft)";
-      }
-    });
+  function matchesCategory(item: HTMLElement, cat: string) {
+    if (cat === "all") return true;
+    if (cat === "highlights") return item.dataset.featured === "true";
+    return item.dataset.category === cat;
   }
 
   function apply() {
-    let anyVisible = false;
+    let visibleCount = 0;
 
     items.forEach((item) => {
-      const cat = item.dataset.category ?? "";
       const hay = item.dataset.search ?? "";
-      const catMatch = activeCategory === "all" || cat === activeCategory;
-      const queryMatch = !activeQuery || hay.includes(activeQuery);
-      const visible = catMatch && queryMatch;
+      const visible =
+        matchesCategory(item, activeCategory) && (!activeQuery || hay.includes(activeQuery));
       item.hidden = !visible;
-      if (visible) anyVisible = true;
+      if (visible) visibleCount++;
     });
 
     yearGroups.forEach((group) => {
-      const visibleItems = group.querySelectorAll<HTMLDetailsElement>(
-        ".experience-item:not([hidden])",
-      );
-      group.hidden = visibleItems.length === 0;
+      group.hidden = group.querySelectorAll(".experience-item:not([hidden])").length === 0;
     });
 
-    if (empty) empty.hidden = anyVisible;
+    if (empty) empty.hidden = visibleCount > 0;
+    if (countEl) {
+      countEl.textContent = visibleCount
+        ? `Showing ${visibleCount} of ${items.length} roles`
+        : "";
+    }
   }
 
-  buttons.forEach((btn) => {
-    btn.addEventListener("click", () => {
+  const chips = initChipGroup(buttons, {
+    activeStyle: {
+      "border-color": "var(--accent)",
+      background: "var(--accent)",
+      color: "var(--on-accent, #FAF6F0)",
+    },
+    inactiveStyle: {
+      "border-color": "var(--field-border, color-mix(in oklab, var(--text) 45%, transparent))",
+      background: "transparent",
+      color: "var(--text-soft)",
+    },
+    onChange(btn) {
       activeCategory = btn.dataset.category ?? "all";
-      activateButton(activeCategory);
       apply();
-    });
+    },
   });
+
+  function selectCategory(cat: string) {
+    const btn = buttons.find((b) => b.dataset.category === cat);
+    if (!btn) return;
+    activeCategory = cat;
+    chips.select(btn);
+  }
 
   search?.addEventListener("input", () => {
     activeQuery = search.value.trim().toLowerCase();
+    // Searching spans every role, so reflect that in the chip state.
+    if (activeQuery && activeCategory !== "all") selectCategory("all");
     apply();
   });
 
-  // Auto-expand a deep-linked entry
-  if (location.hash) {
-    const target = document.getElementById(location.hash.slice(1));
-    if (target && target.tagName === "DETAILS") {
-      (target as HTMLDetailsElement).open = true;
-      requestAnimationFrame(() => {
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    }
+  // Deep-linked entry: show everything if it would be filtered out, then expand it
+  const target = location.hash ? document.getElementById(location.hash.slice(1)) : null;
+  const deepLink = target && target.tagName === "DETAILS" ? (target as HTMLDetailsElement) : null;
+  selectCategory(deepLink && !matchesCategory(deepLink, "highlights") ? "all" : "highlights");
+  apply();
+
+  if (deepLink) {
+    deepLink.open = true;
+    requestAnimationFrame(() => {
+      deepLink.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }
 </script>

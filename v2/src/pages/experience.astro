@@ -35,14 +35,17 @@ const categoryCounts = sorted.reduce<Record<string, number>>((acc, e) => {
   return acc;
 }, {});
 
+const highlightCount = sorted.filter((e) => e.data.featured).length;
+
+// Software first, then the rest by size.
 const categories = Object.entries(categoryCounts)
-  .sort((a, b) => b[1] - a[1])
+  .sort((a, b) => Number(b[0] === "software") - Number(a[0] === "software") || b[1] - a[1])
   .map(([id, count]) => ({ id, label: categoryLabels[id] ?? id, count }));
 ---
 
 <BaseLayout
   title="Experience — Todor Aleksandrov"
-  description={`${sorted.length} roles across software, hospitality, education and lifeguarding. Filter by category or search by keyword.`}
+  description={`${sorted.length} roles across software, hospitality, education and lifeguarding. Highlights by default; filter by category or search by keyword.`}
 >
   <Container size="wide" class="py-(--spacing-section)">
     <SectionHeader
@@ -54,7 +57,7 @@ const categories = Object.entries(categoryCounts)
     />
 
     <div class="mt-12">
-      <ExperienceFilters categories={categories} />
+      <ExperienceFilters categories={categories} highlightCount={highlightCount} />
 
       <div class="relative">
         <!-- Vertical timeline rail -->
