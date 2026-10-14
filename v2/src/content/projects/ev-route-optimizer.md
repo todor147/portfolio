@@ -2,14 +2,14 @@
 title: EV Route Optimizer
 tagline: A* routing for electric vehicles, with live charging stops
 description: An Android app that plans multi-stop EV road trips end-to-end — real-time charging station insertion via OpenChargeMap, GraphHopper road routing, Open-Meteo weather effects, OBD-II Bluetooth SoC reading, and turn-by-turn MapLibre navigation. Built with Jetpack Compose and a custom A* engine over a (waypoint × SoC) state space.
-image: ev-route-optimizer.webp
+image: ev-route-optimizer-itinerary.webp
 tags: ["kotlin", "android", "jetpack-compose", "maps", "ev", "routing"]
 stack: ["Kotlin 2.2", "Jetpack Compose", "Material 3", "MapLibre", "Room", "Koin", "Retrofit", "WorkManager"]
 githubUrl: https://github.com/todor147/ev-route-optimizer
 featured: true
 order: 1
 problem: "Every popular EV navigation app treats charging stops as an afterthought — they slot in a single stop along the fastest road, ignoring your current battery level, your charger type, real-time station availability, ambient temperature effects on range, and the compound cost of going above 80% SoC on a tapered charge curve. The result is routes that look fast on paper but leave you range-anxious on the motorway."
-approach: "Built a custom A* search engine over a two-dimensional state space: (waypoint index × state-of-charge). Each node is a (location, SoC) pair; edges are road segments whose energy cost comes from a physics model accounting for speed-dependent aerodynamic drag, rolling resistance, elevation gradient, temperature derating, and HVAC overhead. The charging model applies a non-linear taper above 80% SoC. Four optimisation modes (Fastest, Fewest Stops, Balanced, Eco) weight the heuristic differently. The engine dominance-prunes states, so it never expands a node if a cheaper path to the same location at higher SoC already exists."
+approach: "Built a custom A* search engine over a two-dimensional state space: (waypoint index × state-of-charge). Each node is a (location, SoC) pair; edges are road segments whose energy cost comes from a physics model accounting for speed-dependent aerodynamic drag, rolling resistance, elevation gradient, temperature derating, and HVAC overhead. The charging model applies a non-linear taper above 80% SoC. Four optimisation modes (Fastest, Fewest Stops, Cheapest Charging, Battery Friendly) weight the heuristic differently. The engine dominance-prunes states, so it never expands a node if a cheaper path to the same location at higher SoC already exists."
 contribution: "Sole developer — A* engine, energy and charging models, all four API integrations (GraphHopper, OpenChargeMap, Open-Meteo, Photon), OBD-II Bluetooth SoC reader, Room caching, WorkManager prefetch, calendar integration, and the full Compose UI with MapLibre navigation."
 learnings: "The routing problem is harder than it looks because SoC is not just a constraint — it is part of the search state. Treating it that way (rather than post-processing a road route) is what allows the engine to find routes that would never emerge from a road-distance-only search: a slightly longer road segment that bypasses a detour to a slow charger, or a route that arrives at a fast charger with exactly enough margin to charge quickly and press on. The other hard lesson was the energy model: an overly aggressive speed-consumption curve caused the engine to over-insert stops on motorways. Calibrating it against real-world EV consumption data (80% rolling resistance, 20% aerodynamic drag growing with v²) brought the stop count in line with what drivers actually experience."
 ---
@@ -28,6 +28,10 @@ EV Route Optimizer plans electric-vehicle road trips end-to-end: you enter origi
 
 The app integrates four live APIs — **GraphHopper** for road segments and elevation, **OpenChargeMap** for real-time charging station data, **Open-Meteo** for temperature and weather, and **Photon** for geocoding — and reads current state-of-charge directly from the vehicle via an **OBD-II ELM327 Bluetooth** adapter.
 
+## Architecture
+
+<img src="/assets/ev-route-optimizer-architecture.svg" width="360" height="640" loading="lazy" decoding="async" alt="Architecture diagram: Compose screens and a MapLibre map sit on a shared PlanViewModel, which uses the RoutingEngine (A*), EnergyModel, ChargingModel and CalibrationStore plus Route, Station, Weather, Geocoding and OBD repositories; those call the GraphHopper, OpenChargeMap, Open-Meteo and Photon APIs, cache in a Room database and read SoC from an ELM327 Bluetooth adapter; a WorkManager worker pre-warms the caches." style="width:100%;max-width:360px;height:auto;margin-inline:auto" />
+
 ## How the routing engine works
 
 The A* search operates over a **(waypoint, SoC)** state space. Every node is a `(location, battery%)` pair. Edges are road segments whose cost is computed from a physics-based energy model:
@@ -45,8 +49,21 @@ The A* search operates over a **(waypoint, SoC)** state space. Every node is a `
 |---|---|
 | **Fastest** | Minimise total trip time including charge sessions |
 | **Fewest Stops** | Minimise number of charging stops |
-| **Balanced** | Weighted blend of time and comfort margin |
-| **Eco** | Minimise energy cost; prefers lower speeds and gentler charge profiles |
+| **Cheapest Charging** | Minimise charging cost using per-network tariff inference |
+| **Battery Friendly** | Gentler charge cycles and moderate speeds |
+
+## Results
+
+| Metric | Value | Source in repo |
+|---|---|---|
+| Unit tests | 25 (9 charging model, 8 energy model, 8 routing engine) | `app/src/test/.../domain/engine/{ChargingModelTest,EnergyModelTest,RoutingEngineTest}.kt` |
+| Optimisation modes | 4 | `domain/model/Models.kt` (`OptimizationMode`) |
+| SoC resolution in the search | 5% buckets | `RoutingEngine.kt` (`socStepPercent`) |
+| Documented routing scale | Dominance pruning keeps the search tractable on 250+ km routes | `README.md` |
+| Live data sources | 4 APIs (GraphHopper, OpenChargeMap, Open-Meteo, Photon) | `data/remote/api/`, `README.md` |
+| Route and station cache TTL | 6 hours | `RouteRepository.kt`, `StationRepository.kt` |
+
+The repository documents no benchmark timings or dataset sizes, so none are claimed here.
 
 ## Key features
 

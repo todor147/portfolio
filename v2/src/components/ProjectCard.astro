@@ -2,6 +2,7 @@
 import Card from "./Card.astro";
 import Tag from "./Tag.astro";
 import Picture from "./Picture.astro";
+import manifest from "../data/image-manifest.json";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -12,6 +13,11 @@ interface Props {
 const { project, size = "default" } = Astro.props;
 const { data, id } = project;
 const showAllStack = size === "feature";
+const dims = data.image
+  ? (manifest as Record<string, { width: number; height: number }>)[data.image]
+  : undefined;
+// Portrait phone screenshots: show whole (contain) instead of cropping to the card box.
+const isPortrait = !!dims && dims.height > dims.width * 1.2;
 const visibleStack = showAllStack ? data.stack : data.stack.slice(0, 3);
 ---
 
@@ -34,7 +40,7 @@ const visibleStack = showAllStack ? data.stack : data.stack.slice(0, 3);
         src={data.image}
         alt=""
         sizes={size === "feature" ? "(min-width: 1024px) 50vw, 100vw" : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
-        class="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-105"
+        class={isPortrait ? "w-full h-full object-contain p-3 transition-transform duration-500 group-hover/card:scale-105" : "w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-105"}
       />
     </div>
   )}

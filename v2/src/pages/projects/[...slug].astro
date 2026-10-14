@@ -4,6 +4,8 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Container from "../../components/Container.astro";
 import Button from "../../components/Button.astro";
 import Tag from "../../components/Tag.astro";
+import Picture from "../../components/Picture.astro";
+import manifest from "../../data/image-manifest.json";
 
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
@@ -22,6 +24,13 @@ export async function getStaticPaths() {
 const { project, prev, next } = Astro.props;
 const { data } = project;
 const { Content } = await render(project);
+
+// Portrait screenshots (phone captures) are shown whole on a soft surface
+// instead of being cropped by the landscape hero box.
+const heroDims = data.image
+  ? (manifest as Record<string, { width: number; height: number }>)[data.image]
+  : undefined;
+const heroIsPortrait = !!heroDims && heroDims.height > heroDims.width * 1.2;
 
 const metaDescription = (() => {
   if (data.tagline && data.tagline.length <= 160) return data.tagline;
@@ -86,14 +95,23 @@ const sections = [
   {data.image && (
     <Container size="wide" class="mt-12 md:mt-16">
       <div
-        class="aspect-[16/9] rounded-3xl overflow-hidden border"
+        class:list={[
+          "rounded-3xl overflow-hidden border",
+          heroIsPortrait ? "flex justify-center py-6 md:py-8" : "aspect-[16/9]",
+        ]}
         style="border-color: color-mix(in oklab, var(--text) 10%, transparent); background: color-mix(in oklab, var(--text) 4%, transparent);"
       >
-        <img
-          src={encodeURI(`/assets/${data.image}`)}
+        <Picture
+          src={data.image}
           alt={data.title}
-          class="w-full h-full object-cover"
+          sizes={heroIsPortrait ? "(min-width: 768px) 320px, 70vw" : "100vw"}
+          loading="eager"
           fetchpriority="high"
+          class={
+            heroIsPortrait
+              ? "h-auto max-h-[34rem] w-auto max-w-[70%] rounded-2xl border object-contain"
+              : "w-full h-full object-cover"
+          }
         />
       </div>
     </Container>

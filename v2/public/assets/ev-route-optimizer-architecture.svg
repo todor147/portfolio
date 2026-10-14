@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 640" role="img" aria-labelledby="t d" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title id="t">EV Route Optimizer architecture</title>
+<desc id="d">Layered diagram. Compose screens and a MapLibre map talk to a shared PlanViewModel. The view model uses the domain engine (RoutingEngine A star search, EnergyModel, ChargingModel, CalibrationStore) and the repositories (Route, Station, Weather, Geocoding, ObdSocReader, Automation). Repositories call the GraphHopper, OpenChargeMap, Open-Meteo and Photon APIs through Retrofit, cache in a Room database, and read state of charge from an ELM327 OBD-II Bluetooth adapter. A WorkManager TripPrefetchWorker pre-warms the caches in the background.</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1L9 5L0 9z" fill="#475569"/></marker></defs>
+<rect width="360" height="640" rx="12" fill="#f8fafc"/>
+<g font-size="11" fill="#0f172a" text-anchor="middle">
+<text x="180" y="22" font-size="13" font-weight="700">EV Route Optimizer - architecture</text>
+
+<rect x="12" y="34" width="336" height="92" rx="8" fill="#e0f2fe" stroke="#0369a1"/>
+<text x="180" y="50" font-weight="700" fill="#075985">ui/ - Jetpack Compose + Material 3</text>
+<rect x="22" y="58" width="100" height="26" rx="5" fill="#fff" stroke="#0369a1"/><text x="72" y="75">PlanScreen</text>
+<rect x="130" y="58" width="100" height="26" rx="5" fill="#fff" stroke="#0369a1"/><text x="180" y="75">ItineraryScreen</text>
+<rect x="238" y="58" width="100" height="26" rx="5" fill="#fff" stroke="#0369a1"/><text x="288" y="75">ResultsScreen</text>
+<rect x="22" y="92" width="152" height="26" rx="5" fill="#fff" stroke="#0369a1"/><text x="98" y="109">NavigationScreen</text>
+<rect x="182" y="92" width="156" height="26" rx="5" fill="#fff" stroke="#0369a1"/><text x="260" y="109">MapScreen (MapLibre)</text>
+
+<path d="M180 126V144" stroke="#475569" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="12" y="146" width="336" height="40" rx="8" fill="#ede9fe" stroke="#6d28d9"/>
+<text x="180" y="163" font-weight="700" fill="#5b21b6">PlanViewModel</text>
+<text x="180" y="178" font-size="10">single instance shared by all screens (Koin)</text>
+
+<path d="M96 186V206M264 186V206" stroke="#475569" stroke-width="1.5" marker-end="url(#a)"/>
+<rect x="12" y="208" width="168" height="154" rx="8" fill="#dcfce7" stroke="#15803d"/>
+<text x="96" y="224" font-weight="700" fill="#166534">domain/engine</text>
+<rect x="22" y="232" width="148" height="44" rx="5" fill="#fff" stroke="#15803d"/>
+<text x="96" y="249" font-weight="700">RoutingEngine</text><text x="96" y="264" font-size="10">A* over (waypoint, SoC)</text>
+<rect x="22" y="284" width="148" height="22" rx="5" fill="#fff" stroke="#15803d"/><text x="96" y="299">EnergyModel</text>
+<rect x="22" y="312" width="148" height="22" rx="5" fill="#fff" stroke="#15803d"/><text x="96" y="327">ChargingModel</text>
+<rect x="22" y="338" width="148" height="20" rx="5" fill="#fff" stroke="#15803d"/><text x="96" y="352">CalibrationStore</text>
+
+<rect x="192" y="208" width="156" height="154" rx="8" fill="#fef3c7" stroke="#b45309"/>
+<text x="270" y="224" font-weight="700" fill="#92400e">data/repository</text>
+<g font-size="10.5">
+<rect x="200" y="232" width="140" height="19" rx="5" fill="#fff" stroke="#b45309"/><text x="270" y="245">RouteRepository</text>
+<rect x="200" y="255" width="140" height="19" rx="5" fill="#fff" stroke="#b45309"/><text x="270" y="268">StationRepository</text>
+<rect x="200" y="278" width="140" height="19" rx="5" fill="#fff" stroke="#b45309"/><text x="270" y="291">WeatherRepository</text>
+<rect x="200" y="301" width="140" height="19" rx="5" fill="#fff" stroke="#b45309"/><text x="270" y="314">GeocodingRepository</text>
+<rect x="200" y="324" width="140" height="19" rx="5" fill="#fff" stroke="#b45309"/><text x="270" y="337">ObdSocReader</text>
+<rect x="200" y="347" width="140" height="11" rx="3" fill="#fff" stroke="#b45309"/><text x="270" y="356" font-size="9">AutomationRepository</text>
+</g>
+<path d="M170 290H190" stroke="#475569" stroke-width="1.5" stroke-dasharray="3 2" marker-end="url(#a)"/>
+
+<path d="M240 362V390M300 362V390M200 362V390" stroke="#475569" stroke-width="1.5" marker-end="url(#a)"/>
+
+<rect x="12" y="392" width="224" height="112" rx="8" fill="#fce7f3" stroke="#be185d"/>
+<text x="124" y="408" font-weight="700" fill="#9d174d">data/remote - Retrofit + Moshi</text>
+<rect x="22" y="416" width="204" height="20" rx="5" fill="#fff" stroke="#be185d"/><text x="124" y="430">GraphHopperApi - roads, elevation</text>
+<rect x="22" y="440" width="204" height="20" rx="5" fill="#fff" stroke="#be185d"/><text x="124" y="454">OpenChargeMapApi - chargers</text>
+<rect x="22" y="464" width="204" height="20" rx="5" fill="#fff" stroke="#be185d"/><text x="124" y="478">OpenMeteoApi - temperature</text>
+<rect x="22" y="488" width="204" height="12" rx="3" fill="#fff" stroke="#be185d"/><text x="124" y="498" font-size="9.5">PhotonApi - geocoding</text>
+
+<rect x="246" y="392" width="102" height="52" rx="8" fill="#f1f5f9" stroke="#475569"/>
+<text x="297" y="410" font-weight="700">Room DB</text>
+<text x="297" y="424" font-size="10">AppDatabase</text>
+<text x="297" y="437" font-size="9.5">route / station / prefs</text>
+<rect x="246" y="452" width="102" height="52" rx="8" fill="#f1f5f9" stroke="#475569"/>
+<text x="297" y="470" font-weight="700">OBD-II</text>
+<text x="297" y="484" font-size="10">ELM327 adapter</text>
+<text x="297" y="497" font-size="9.5">Bluetooth, SoC</text>
+
+<rect x="12" y="524" width="336" height="64" rx="8" fill="#ccfbf1" stroke="#0f766e"/>
+<text x="180" y="541" font-weight="700" fill="#115e59">automation/ - WorkManager</text>
+<text x="180" y="556">TripPrefetchWorker, ReminderScheduler,</text>
+<text x="180" y="570">TripReminderReceiver</text>
+<text x="180" y="583" font-size="10">pre-warms route and weather caches</text>
+
+<text x="180" y="612" font-size="10" fill="#475569">Solid arrows: calls / data flow. Dashed: engine inputs.</text>
+<text x="180" y="626" font-size="10" fill="#475569">Source: github.com/todor147/ev-route-optimizer</text>
+</g>
+</svg>
