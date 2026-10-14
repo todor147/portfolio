@@ -4,7 +4,9 @@ import satori from "satori";
 import { Resvg } from "@resvg/resvg-js";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import sharp from "sharp";
 import { styleImageFile } from "../../lib/cellar";
+import { OG_PAGES, SITE } from "../../lib/site";
 
 const inter = readFileSync(
   resolve("node_modules/@fontsource/inter/files/inter-latin-400-normal.woff"),
@@ -18,23 +20,7 @@ const frauncesItalic = readFileSync(
 
 type Page = { title: string; description: string; image?: string };
 
-const PAGES: Record<string, Page> = {
-  home:           { title: "Todor Aleksandrov",    description: "Software Engineer · Sommelier · Lifeguard · Interpreter" },
-  about:          { title: "About",                description: "The CS-meets-sommelier path" },
-  experience:     { title: "Experience",           description: "Software, hospitality, aquatics, and more" },
-  projects:       { title: "Projects",             description: "Full-stack web applications and side projects" },
-  cv:             { title: "CV",                   description: "General · Software · Wine & Hospitality · Customer Service" },
-  contact:        { title: "Get in touch",         description: "Software roles, wine questions, or just to say hello" },
-  sommelier:      { title: "Wine",                 description: "Junior Sommelier · WSET Level 2 Merit · CMS Introductory" },
-  water:          { title: "Water",                description: "Lifeguard · Duty Manager · PHECC FAR · Swim Ireland L2" },
-  language:       { title: "Language",             description: "Bulgarian–English interpreter · EFSET C2 Proficient" },
-  certifications: { title: "Certifications",       description: "WSET, PHECC, RLSS, Swim Ireland, and professional quals" },
-  transcript:     { title: "Academic Transcript",  description: "BSc Computer Systems · UL · 2:1 Honours · QCA 3.06" },
-  now:            { title: "Now",                  description: "What I'm working on, learning, and drinking this month" },
-  uses:           { title: "Uses",                 description: "Tools, hardware, wine kit, and what's in the cellar" },
-  gallery:        { title: "Gallery",              description: "Photos from service, travel, and sport" },
-  cellar:         { title: "Cellar",               description: "A personal inventory of wine and spirits" },
-};
+const PAGES: Record<string, Page> = OG_PAGES;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const pagePaths = Object.entries(PAGES).map(([slug, props]) => ({ params: { slug }, props }));
@@ -72,8 +58,14 @@ export const GET: APIRoute = async ({ props }) => {
     .render()
     .asPng();
 
-  return new Response(new Uint8Array(png), {
-    headers: { "Content-Type": "image/png" },
+  // JPEG keeps the social cards small (~4x lighter than PNG).
+  const jpeg = await sharp(png)
+    .resize(1200, 630)
+    .jpeg({ quality: 80, mozjpeg: true })
+    .toBuffer();
+
+  return new Response(new Uint8Array(jpeg), {
+    headers: { "Content-Type": "image/jpeg" },
   });
 };
 
@@ -111,7 +103,7 @@ function ogTemplate(title: string, description: string, imageDataUri?: string) {
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
               },
-              children: "todors-portfolio.netlify.app",
+              children: SITE.host,
             },
           },
           // Middle: title + description
@@ -171,7 +163,7 @@ function ogTemplate(title: string, description: string, imageDataUri?: string) {
                       fontStyle: "italic",
                       color: "#C28892",
                     },
-                    children: "Todor Aleksandrov",
+                    children: SITE.name,
                   },
                 },
               ],

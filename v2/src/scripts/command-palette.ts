@@ -227,6 +227,10 @@ if (dialog && input && list && statusEl && message) {
   // Any element with data-palette-open opens the palette (delegated)
   document.addEventListener("click", (e) => {
     const target = e.target as Element | null;
+    if (target?.closest("[data-palette-close]")) {
+      closePalette();
+      return;
+    }
     if (target?.closest("[data-palette-open]")) {
       e.preventDefault();
       void openPalette();

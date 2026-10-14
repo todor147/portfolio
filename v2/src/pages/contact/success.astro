@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Container from "../../components/Container.astro";
 import Button from "../../components/Button.astro";
+import { MAILTO } from "../../lib/site";
 ---
 
 <BaseLayout
@@ -28,7 +29,7 @@ import Button from "../../components/Button.astro";
     <div class="mt-10 flex flex-wrap justify-center gap-3">
       <Button href="/" arrow>Back to home</Button>
       <Button
-        href="mailto:todor_147@abv.bg"
+        href={MAILTO}
         variant="outline"
       >
         Email me directly

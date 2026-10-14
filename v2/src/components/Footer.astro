@@ -1,11 +1,12 @@
 ---
 import Container from "./Container.astro";
+import { FOOTER, MAILTO, SITE, pick } from "../lib/site";
 
 const year = new Date().getFullYear();
 const socials = [
-  { href: "https://www.linkedin.com/in/todoraleksandrov/", label: "LinkedIn" },
-  { href: "https://github.com/todor147", label: "GitHub" },
-  { href: "mailto:todor_147@abv.bg", label: "Email" },
+  { href: SITE.linkedin.url, label: SITE.linkedin.label },
+  { href: SITE.github.url, label: SITE.github.label },
+  { href: MAILTO, label: "Email" },
 ];
 ---
 
@@ -15,42 +16,37 @@ const socials = [
   <Container size="wide" class="py-12 grid gap-10 sm:grid-cols-3 lg:grid-cols-5 items-start">
     <div>
       <p class="font-display text-2xl tracking-[-0.01em]">
-        Todor Aleksandrov
+        {SITE.name}
       </p>
       <p class="mt-2 text-sm" style="color: var(--text-soft)">
-        Limerick, Ireland · Junior Software Engineer at VMotion IT Solutions.
+        {SITE.location} · Junior Software Engineer at VMotion IT Solutions.
       </p>
     </div>
 
     <nav aria-label="Footer">
       <p class="eyebrow mb-3">Pages</p>
       <ul class="space-y-0.5 text-sm">
-        <li><a href="/about/" class="hover:text-(--accent) transition-colors inline-block py-1">About</a></li>
-        <li><a href="/experience/" class="hover:text-(--accent) transition-colors inline-block py-1">Experience</a></li>
-        <li><a href="/projects/" class="hover:text-(--accent) transition-colors inline-block py-1">Projects</a></li>
-        <li><a href="/cv/" class="hover:text-(--accent) transition-colors inline-block py-1">CV</a></li>
-        <li><a href="/certifications/" class="hover:text-(--accent) transition-colors inline-block py-1">Certifications</a></li>
-        <li><a href="/transcript/" class="hover:text-(--accent) transition-colors inline-block py-1">Transcript</a></li>
-        <li><a href="/contact/" class="hover:text-(--accent) transition-colors inline-block py-1">Contact</a></li>
+        {pick(FOOTER.pages).map((r) => (
+          <li><a href={r.href} class="hover:text-(--accent) transition-colors inline-block py-1">{r.footerLabel ?? r.label}</a></li>
+        ))}
       </ul>
     </nav>
 
     <nav aria-label="Trades">
       <p class="eyebrow mb-3">Three trades</p>
       <ul class="space-y-0.5 text-sm">
-        <li><a href="/sommelier/" class="hover:text-(--accent) transition-colors inline-block py-1">Wine — Sommelier</a></li>
-        <li><a href="/water/" class="hover:text-(--accent) transition-colors inline-block py-1">Water — Lifeguard</a></li>
-        <li><a href="/language/" class="hover:text-(--accent) transition-colors inline-block py-1">Language — Interpreter</a></li>
+        {pick(FOOTER.trades).map((r) => (
+          <li><a href={r.href} class="hover:text-(--accent) transition-colors inline-block py-1">{r.footerLabel ?? r.label}</a></li>
+        ))}
       </ul>
     </nav>
 
     <nav aria-label="Explore">
       <p class="eyebrow mb-3">Explore</p>
       <ul class="space-y-0.5 text-sm">
-        <li><a href="/gallery/" class="hover:text-(--accent) transition-colors inline-block py-1">Gallery</a></li>
-        <li><a href="/cellar/" class="hover:text-(--accent) transition-colors inline-block py-1">Cellar</a></li>
-        <li><a href="/now/" class="hover:text-(--accent) transition-colors inline-block py-1">Now</a></li>
-        <li><a href="/uses/" class="hover:text-(--accent) transition-colors inline-block py-1">Uses</a></li>
+        {pick(FOOTER.explore).map((r) => (
+          <li><a href={r.href} class="hover:text-(--accent) transition-colors inline-block py-1">{r.footerLabel ?? r.label}</a></li>
+        ))}
       </ul>
     </nav>
 
@@ -86,7 +82,7 @@ const socials = [
       class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs"
       style="color: var(--text-soft)"
     >
-      <p>© {year} Todor Aleksandrov. All rights reserved.</p>
+      <p>© {year} {SITE.name}. All rights reserved.</p>
       <p>
         Built with <a
           href="https://astro.build"

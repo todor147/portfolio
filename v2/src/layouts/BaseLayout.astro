@@ -4,6 +4,7 @@ import NavBar from "../components/NavBar.astro";
 import Footer from "../components/Footer.astro";
 import CommandPalette from "../components/CommandPalette.astro";
 import interLatinUrl from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
+import { KNOWN_OG_SLUGS, SITE } from "../lib/site";
 import frauncesLatinUrl from "@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url";
 
 interface Props {
@@ -26,15 +27,11 @@ const {
   noCanonical = false,
 } = Astro.props;
 
-const KNOWN_OG_SLUGS = new Set([
-  "home","about","experience","projects","cv","contact",
-  "sommelier","water","language","certifications","transcript","now","uses","gallery","cellar",
-]);
 const _pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
 const _autoSlug = _pathname === "/" ? "home" : _pathname.slice(1).split("/")[0];
-const ogImage = ogImageProp ?? `/og/${KNOWN_OG_SLUGS.has(_autoSlug) ? _autoSlug : "home"}.png`;
+const ogImage = ogImageProp ?? `/og/${KNOWN_OG_SLUGS.has(_autoSlug) ? _autoSlug : "home"}.jpg`;
 
-const siteUrl = Astro.site ?? new URL("https://todors-portfolio.netlify.app");
+const siteUrl = Astro.site ?? new URL(SITE.url);
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
 const ogImageUrl = new URL(ogImage, siteUrl).href;
 const ogImageAlt = title;
@@ -45,7 +42,7 @@ const personLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   "@id": personId,
-  name: "Todor Aleksandrov",
+  name: SITE.name,
   url: siteUrl.href,
   image: new URL("/assets/about.jpg", siteUrl).href,
   description:
@@ -78,10 +75,7 @@ const personLd = {
     "Lifeguarding and aquatics management",
     "Bulgarian–English interpretation",
   ],
-  sameAs: [
-    "https://www.linkedin.com/in/todoraleksandrov/",
-    "https://github.com/todor147",
-  ],
+  sameAs: [SITE.linkedin.url, SITE.github.url],
   knowsLanguage: ["en", "bg"],
 };
 
@@ -113,7 +107,7 @@ const websiteLd = {
     <meta property="og:type" content="website" />
     {!noCanonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={ogImageAlt} />
@@ -130,8 +124,8 @@ const websiteLd = {
     <link rel="preload" as="font" type="font/woff2" href={frauncesLatinUrl} crossorigin />
 
     <!-- Identity -->
-    <link rel="me" href="https://www.linkedin.com/in/todoraleksandrov/" />
-    <link rel="me" href="https://github.com/todor147" />
+    <link rel="me" href={SITE.linkedin.url} />
+    <link rel="me" href={SITE.github.url} />
 
     <!-- Search Console verification -->
     <meta name="google-site-verification" content="CzSQIkG-e7JWolxO6VO6eLVBgdy_uuctdVm5AWeKc64" />

@@ -1,25 +1,12 @@
 ---
 import Container from "./Container.astro";
 import ThemeToggle from "./ThemeToggle.astro";
+import { NAV, pick, SITE } from "../lib/site";
 
-const primaryLinks = [
-  { href: "/about/",      label: "About"      },
-  { href: "/experience/", label: "Experience" },
-  { href: "/projects/",   label: "Projects"   },
-  { href: "/cv/",         label: "CV"         },
-  { href: "/sommelier/",  label: "Wine"       },
-  { href: "/water/",      label: "Water"      },
-  { href: "/language/",   label: "Language"   },
-];
+const primaryLinks = pick(NAV.primary);
 
-const moreLinks = [
-  { href: "/certifications/", label: "Certifications", note: "Qualifications across five areas"    },
-  { href: "/gallery/",        label: "Gallery",        note: "Photos from service, travel & sport" },
-  { href: "/cellar/",         label: "Cellar",         note: "Personal wine and spirit inventory"  },
-  { href: "/transcript/",     label: "Transcript",     note: "Full BSc academic record"            },
-  { href: "/now/",            label: "Now",            note: "What I'm currently working on"       },
-  { href: "/uses/",           label: "Uses",           note: "Tools, hardware, and daily carry"    },
-];
+
+const moreLinks = pick(NAV.more);
 
 // Mobile: CV + Contact pinned as buttons, then everything else.
 const mobileRest = primaryLinks.filter((l) => l.href !== "/cv/");
@@ -40,7 +27,7 @@ const activeCue = "underline decoration-2 underline-offset-[6px]";
       class="font-display text-xl tracking-[-0.01em] hover:text-(--accent) transition-colors"
       style="color: var(--text)"
     >
-      Todor Aleksandrov
+      {SITE.name}
     </a>
 
     <nav aria-label="Primary" class="hidden lg:flex items-center gap-0.5">

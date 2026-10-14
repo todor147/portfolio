@@ -5,6 +5,7 @@
  * roles, certifications and skills.
  */
 import { byMostRecent, diffMonths, formatRange, isExpired } from "./dates";
+import { SITE } from "./site";
 
 /**
  * Downloadable PDF per variant id (served from /public/assets). Generated from
@@ -22,18 +23,18 @@ export const CV_PDFS: Record<string, string> = {
 export const GENERAL_PDF = CV_PDFS.general;
 
 export const CONTACT = {
-  name: "Todor Aleksandrov",
-  location: "Limerick, Ireland",
-  email: "todor_147@abv.bg",
+  name: SITE.name,
+  location: SITE.location,
+  email: SITE.email,
   phone: "+353 89 469 4333",
   phoneHref: "tel:+353894694333",
-  site: "todors-portfolio.netlify.app",
-  siteHref: "https://todors-portfolio.netlify.app",
-  linkedin: "linkedin.com/in/todoraleksandrov",
-  linkedinHref: "https://www.linkedin.com/in/todoraleksandrov/",
-  github: "github.com/todor147",
-  githubHref: "https://github.com/todor147",
-  languages: "English — bilingual (C2) · Bulgarian — native",
+  site: SITE.host,
+  siteHref: SITE.url,
+  linkedin: SITE.linkedin.display,
+  linkedinHref: SITE.linkedin.url,
+  github: SITE.github.display,
+  githubHref: SITE.github.url,
+  languages: SITE.languages,
 };
 
 export interface SkillGroup {

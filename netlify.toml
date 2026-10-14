@@ -37,6 +37,7 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy        = "strict-origin-when-cross-origin"
     Permissions-Policy     = "camera=(), microphone=(), geolocation=()"
-    # 'unsafe-inline' is required by Astro inline scripts/define:vars and style attributes.
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self' https://api.web3forms.com; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+    # Content-Security-Policy is NOT set here: it is generated at build time into
+    # dist/_headers by v2/scripts/csp-headers.mjs (inline-script hashes). Setting a
+    # second CSP header would intersect with it and break hCaptcha.
     Cross-Origin-Opener-Policy = "same-origin"

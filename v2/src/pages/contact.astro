@@ -4,8 +4,9 @@ import Container from "../components/Container.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import Card from "../components/Card.astro";
 import Button from "../components/Button.astro";
+import { MAILTO, SITE } from "../lib/site";
 
-const siteUrl = Astro.site ?? new URL("https://todors-portfolio.netlify.app");
+const siteUrl = Astro.site ?? new URL(SITE.url);
 const successUrl = new URL("/contact/success/", siteUrl).href;
 
 // Web3Forms — free unlimited form-to-email forwarding. The page also shows
@@ -13,7 +14,7 @@ const successUrl = new URL("/contact/success/", siteUrl).href;
 const ACCESS_KEY = "df998354-20cb-4e32-a6fa-22af30c21f3e";
 
 const formAction = "https://api.web3forms.com/submit";
-const directEmail = "todor_147@abv.bg";
+const directEmail = SITE.email;
 ---
 
 <BaseLayout
@@ -111,6 +112,9 @@ const directEmail = "todor_147@abv.bg";
             ></textarea>
           </label>
 
+          <!-- hCaptcha via Web3Forms (zero-config, free plan). The script below renders it. -->
+          <div class="h-captcha" data-captcha="true"></div>
+
           <div class="pt-2 flex flex-wrap items-center gap-3">
             <Button type="submit" arrow>Send message</Button>
             <p class="text-xs" style="color:var(--text-soft)">
@@ -128,9 +132,9 @@ const directEmail = "todor_147@abv.bg";
             <li class="flex items-baseline justify-between gap-3">
               <span class="text-sm" style="color:var(--text-soft)">Email</span>
               <a
-                href="mailto:todor_147@abv.bg"
+                href={MAILTO}
                 class="text-sm font-medium hover:text-(--accent) transition-colors"
-              >todor_147@abv.bg</a>
+              >{SITE.email}</a>
             </li>
           </ul>
         </Card>
@@ -140,23 +144,23 @@ const directEmail = "todor_147@abv.bg";
           <ul class="space-y-3">
             <li>
               <a
-                href="https://www.linkedin.com/in/todoraleksandrov/"
+                href={SITE.linkedin.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="flex items-baseline justify-between gap-3 group/link"
               >
-                <span class="text-sm font-medium group-hover/link:text-(--accent) transition-colors">LinkedIn</span>
+                <span class="text-sm font-medium group-hover/link:text-(--accent) transition-colors">{SITE.linkedin.label}</span>
                 <span aria-hidden="true" style="color:var(--text-soft)" class="text-xs">↗</span>
               </a>
             </li>
             <li>
               <a
-                href="https://github.com/todor147"
+                href={SITE.github.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="flex items-baseline justify-between gap-3 group/link"
               >
-                <span class="text-sm font-medium group-hover/link:text-(--accent) transition-colors">GitHub</span>
+                <span class="text-sm font-medium group-hover/link:text-(--accent) transition-colors">{SITE.github.label}</span>
                 <span aria-hidden="true" style="color:var(--text-soft)" class="text-xs">↗</span>
               </a>
             </li>
@@ -206,4 +210,13 @@ const directEmail = "todor_147@abv.bg";
       </aside>
     </div>
   </Container>
+
+  <!-- Match the captcha widget to the site theme (must run before the Web3Forms script loads hCaptcha). -->
+  <script is:inline>
+    (function () {
+      var el = document.querySelector(".h-captcha");
+      if (el) el.setAttribute("data-theme", document.documentElement.classList.contains("dark") ? "dark" : "light");
+    })();
+  </script>
+  <script is:inline src="https://web3forms.com/client/script.js" async defer></script>
 </BaseLayout>

@@ -2,15 +2,9 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Container from "../components/Container.astro";
 import Button from "../components/Button.astro";
+import { NOT_FOUND_LINKS, ROUTES } from "../lib/site";
 
-const suggestions = [
-  { href: "/", label: "Home" },
-  { href: "/about/", label: "About" },
-  { href: "/experience/", label: "Experience" },
-  { href: "/projects/", label: "Projects" },
-  { href: "/sommelier/", label: "Sommelier" },
-  { href: "/contact/", label: "Contact" },
-];
+const suggestions = NOT_FOUND_LINKS.map((l) => ({ href: ROUTES[l.route].href, label: l.label }));
 ---
 
 <BaseLayout

@@ -1,6 +1,7 @@
 ---
 import Container from "./Container.astro";
 import Button from "./Button.astro";
+import { MAILTO, SITE } from "../lib/site";
 ---
 
 <section class="pt-(--spacing-section) pb-(--spacing-section)">
@@ -43,10 +44,10 @@ import Button from "./Button.astro";
             <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </a>
           <a
-            href="mailto:todor_147@abv.bg"
+            href={MAILTO}
             class="inline-flex items-center gap-2 rounded-full border border-cream/60 px-7 py-3.5 font-medium hover:bg-cream/10 transition-colors"
           >
-            todor_147@abv.bg
+            {SITE.email}
           </a>
         </div>
       </div>

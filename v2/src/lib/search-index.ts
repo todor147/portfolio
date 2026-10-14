@@ -5,6 +5,7 @@
  */
 import { getCollection } from "astro:content";
 import { cvVariants, CV_PDFS } from "./cv";
+import { MAILTO, ROUTES, SEARCH_PAGES_AFTER_CV, SEARCH_PAGES_BEFORE_CV, SITE, type Route, type RouteKey } from "./site";
 
 export interface SearchItem {
   /** Group heading, e.g. "Page", "Role". */
@@ -45,25 +46,18 @@ export async function buildSearchIndex(): Promise<SearchItem[]> {
 
   // Top-level pages
   const catCount = new Set(certifications.map((c) => c.data.category)).size;
+  const pageItem = (key: RouteKey, note?: string) => {
+    const r: Route = ROUTES[key];
+    return item("Page", r.search?.title ?? r.label, note ?? r.search?.note, r.href, r.search?.extra);
+  };
   items.push(
-    item("Page", "Home", "The hero & featured", "/"),
-    item("Page", "About", "Bio + bento + education journey", "/about/"),
-    item("Page", "Experience", "Timeline of every role", "/experience/"),
-    item("Page", "Projects", "Filterable project grid", "/projects/"),
-    item("Page", "Certifications", `${certifications.length} certs in ${catCount} categories`, "/certifications/", "credentials courses"),
-    item("Page", "CV", "Curriculum vitae, in four tailored versions", "/cv/", "cv resume résumé curriculum vitae"),
+    ...SEARCH_PAGES_BEFORE_CV.map((k) => pageItem(k)),
+    pageItem("certifications", `${certifications.length} certs in ${catCount} categories`),
+    pageItem("cv"),
     ...cvVariants.map((v) =>
       item("Page", `CV: ${v.label}`, v.blurb, `/cv/${v.id}/`, "cv resume résumé"),
     ),
-    item("Page", "Transcript", "University grades & results", "/transcript/", "grades results marks degree university"),
-    item("Page", "Cellar", "Bottles I own and have tasted", "/cellar/", "wine bottles collection"),
-    item("Page", "Wine — Sommelier", "33-dish pairing tool", "/sommelier/"),
-    item("Page", "Water — Lifeguard", "Emergency-scenario tool", "/water/"),
-    item("Page", "Language — Interpreter", "Bulgarian phrasebook", "/language/"),
-    item("Page", "Gallery", "Photos, with a lightbox", "/gallery/", "photos images"),
-    item("Page", "Now", "What I'm doing this month", "/now/"),
-    item("Page", "Uses", "Tools & gear", "/uses/", "setup hardware software"),
-    item("Page", "Contact", "Send a message", "/contact/", "email message hire"),
+    ...SEARCH_PAGES_AFTER_CV.map((k) => pageItem(k)),
   );
 
   // Downloads and external links
@@ -71,9 +65,9 @@ export async function buildSearchIndex(): Promise<SearchItem[]> {
     ...cvVariants.map((v) =>
       item("Link", `Download CV (PDF): ${v.label}`, `${v.headline}, PDF`, CV_PDFS[v.id], `cv resume résumé pdf download ${v.id.replace("-", " ")} ${v.label.toLowerCase()}`),
     ),
-    item("Link", "LinkedIn", "todoraleksandrov", "https://www.linkedin.com/in/todoraleksandrov/"),
-    item("Link", "GitHub", "todor147", "https://github.com/todor147"),
-    item("Link", "Email", "todor_147@abv.bg", "mailto:todor_147@abv.bg", "contact message"),
+    item("Link", SITE.linkedin.label, SITE.linkedin.handle, SITE.linkedin.url),
+    item("Link", SITE.github.label, SITE.github.handle, SITE.github.url),
+    item("Link", "Email", SITE.email, MAILTO, "contact message"),
   );
 
   experience.forEach((e) =>
