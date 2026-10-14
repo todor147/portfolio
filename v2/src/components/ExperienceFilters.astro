@@ -82,6 +82,15 @@ const total = categories.reduce((sum, c) => sum + c.count, 0);
   .exp-cat-btn:not(.active):hover { border-color: var(--accent) !important; color: var(--accent) !important; }
 </style>
 
+<style is:global>
+  /* The script opens on "Highlights". Hide the other roles from first paint
+     (JS on only, before the script takes over) so the list doesn't jump. */
+  html.js:not(.exp-ready) .experience-item[data-featured="false"],
+  html.js:not(.exp-ready) [data-year-group]:not(:has(.experience-item[data-featured="true"])) {
+    display: none;
+  }
+</style>
+
 <script>
   import { initChipGroup } from "../scripts/filter-chips";
 
@@ -161,6 +170,8 @@ const total = categories.reduce((sum, c) => sum + c.count, 0);
   const deepLink = target && target.tagName === "DETAILS" ? (target as HTMLDetailsElement) : null;
   selectCategory(deepLink && !matchesCategory(deepLink, "highlights") ? "all" : "highlights");
   apply();
+  // Hand over from the pre-paint CSS (see the <style is:global> above) to the script.
+  document.documentElement.classList.add("exp-ready");
 
   if (deepLink) {
     deepLink.open = true;
