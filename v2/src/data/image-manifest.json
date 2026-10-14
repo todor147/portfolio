@@ -35,10 +35,10 @@
     "variants": []
   },
   "about.jpg": {
-    "width": 800,
-    "height": 800,
+    "width": 580,
+    "height": 580,
     "webp": "about.webp",
-    "webpWidth": 800,
+    "webpWidth": 580,
     "variants": []
   },
   "adare manor.png": {
@@ -74,6 +74,134 @@
     "webpWidth": 85,
     "variants": []
   },
+  "cellar-bottles/alta-alella-laieta-rose-brut-nature.jpg": {
+    "width": 600,
+    "height": 1024,
+    "webp": "cellar-bottles/alta-alella-laieta-rose-brut-nature.webp",
+    "webpWidth": 600,
+    "variants": []
+  },
+  "cellar-bottles/bessa-valley-enira-reserva-2018.jpg": {
+    "width": 800,
+    "height": 800,
+    "webp": "cellar-bottles/bessa-valley-enira-reserva-2018.webp",
+    "webpWidth": 800,
+    "variants": []
+  },
+  "cellar-bottles/bessa-valley-grande-cuvee-2020.jpg": {
+    "width": 800,
+    "height": 800,
+    "webp": "cellar-bottles/bessa-valley-grande-cuvee-2020.webp",
+    "webpWidth": 800,
+    "variants": []
+  },
+  "cellar-bottles/bodegas-riojanas-gran-reserva-magnum.jpg": {
+    "width": 373,
+    "height": 919,
+    "webp": "cellar-bottles/bodegas-riojanas-gran-reserva-magnum.webp",
+    "webpWidth": 373,
+    "variants": []
+  },
+  "cellar-bottles/bollinger-la-grande-annee-2014.jpg": {
+    "width": 800,
+    "height": 1219,
+    "webp": "cellar-bottles/bollinger-la-grande-annee-2014.webp",
+    "webpWidth": 800,
+    "variants": []
+  },
+  "cellar-bottles/bushmills-21-year-old.jpg": {
+    "width": 1000,
+    "height": 1000,
+    "webp": "cellar-bottles/bushmills-21-year-old.webp",
+    "webpWidth": 1000,
+    "variants": [
+      {
+        "src": "cellar-bottles/bushmills-21-year-old-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-bottles/edoardo-miroglio-mavrud-reserva-2022.jpg": {
+    "width": 600,
+    "height": 600,
+    "webp": "cellar-bottles/edoardo-miroglio-mavrud-reserva-2022.webp",
+    "webpWidth": 600,
+    "variants": []
+  },
+  "cellar-bottles/etienne-calsac-lechappee-belle-blanc-de-blancs.jpg": {
+    "width": 1280,
+    "height": 1280,
+    "webp": "cellar-bottles/etienne-calsac-lechappee-belle-blanc-de-blancs.webp",
+    "webpWidth": 1280,
+    "variants": [
+      {
+        "src": "cellar-bottles/etienne-calsac-lechappee-belle-blanc-de-blancs-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-bottles/kopke-vintage-port-1999.jpg": {
+    "width": 976,
+    "height": 2400,
+    "webp": "cellar-bottles/kopke-vintage-port-1999.webp",
+    "webpWidth": 813,
+    "variants": [
+      {
+        "src": "cellar-bottles/kopke-vintage-port-1999-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-bottles/midleton-very-rare-200th-anniversary-28yo.jpg": {
+    "width": 1000,
+    "height": 1250,
+    "webp": "cellar-bottles/midleton-very-rare-200th-anniversary-28yo.webp",
+    "webpWidth": 1000,
+    "variants": [
+      {
+        "src": "cellar-bottles/midleton-very-rare-200th-anniversary-28yo-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-bottles/museum-of-wine-melnik-shiroka-melnishka-loza-rose-2024.jpg": {
+    "width": 960,
+    "height": 566,
+    "webp": "cellar-bottles/museum-of-wine-melnik-shiroka-melnishka-loza-rose-2024.webp",
+    "webpWidth": 960,
+    "variants": []
+  },
+  "cellar-bottles/royal-tokaji-gold-label-aszu-6-puttonyos-2017.jpg": {
+    "width": 1000,
+    "height": 1500,
+    "webp": "cellar-bottles/royal-tokaji-gold-label-aszu-6-puttonyos-2017.webp",
+    "webpWidth": 1000,
+    "variants": [
+      {
+        "src": "cellar-bottles/royal-tokaji-gold-label-aszu-6-puttonyos-2017-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-bottles/taittinger-demi-sec-nv.jpg": {
+    "width": 600,
+    "height": 600,
+    "webp": "cellar-bottles/taittinger-demi-sec-nv.webp",
+    "webpWidth": 600,
+    "variants": []
+  },
+  "cellar-bottles/taittinger-rose-brut-nv.jpg": {
+    "width": 1000,
+    "height": 1000,
+    "webp": "cellar-bottles/taittinger-rose-brut-nv.webp",
+    "webpWidth": 1000,
+    "variants": [
+      {
+        "src": "cellar-bottles/taittinger-rose-brut-nv-640.webp",
+        "width": 640
+      }
+    ]
+  },
   "cellar-bottles/vecchia-romagna-etichetta-nera.jpg": {
     "width": 1200,
     "height": 1807,
@@ -85,6 +213,98 @@
         "width": 640
       }
     ]
+  },
+  "cellar-bottles/veuve-clicquot-vintage-brut-1996.jpg": {
+    "width": 1000,
+    "height": 1414,
+    "webp": "cellar-bottles/veuve-clicquot-vintage-brut-1996.webp",
+    "webpWidth": 1000,
+    "variants": [
+      {
+        "src": "cellar-bottles/veuve-clicquot-vintage-brut-1996-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-bottles/villa-melnik-aplauz-melnik-55-premium-reserve.jpg": {
+    "width": 750,
+    "height": 1125,
+    "webp": "cellar-bottles/villa-melnik-aplauz-melnik-55-premium-reserve.webp",
+    "webpWidth": 750,
+    "variants": []
+  },
+  "cellar-bottles/villa-melnik-orange-wine.jpg": {
+    "width": 750,
+    "height": 1125,
+    "webp": "cellar-bottles/villa-melnik-orange-wine.webp",
+    "webpWidth": 750,
+    "variants": []
+  },
+  "cellar-bottles/villa-melnik-rare-varieties-melnik-1300-jubilee.jpg": {
+    "width": 750,
+    "height": 1125,
+    "webp": "cellar-bottles/villa-melnik-rare-varieties-melnik-1300-jubilee.webp",
+    "webpWidth": 750,
+    "variants": []
+  },
+  "cellar-bottles/villa-melnik-rare-varieties-shiroka-melnik-bush-vine.jpg": {
+    "width": 750,
+    "height": 1125,
+    "webp": "cellar-bottles/villa-melnik-rare-varieties-shiroka-melnik-bush-vine.webp",
+    "webpWidth": 750,
+    "variants": []
+  },
+  "cellar-bottles/villa-melnik-sweet-wine-barrel-aged.jpg": {
+    "width": 800,
+    "height": 1200,
+    "webp": "cellar-bottles/villa-melnik-sweet-wine-barrel-aged.webp",
+    "webpWidth": 800,
+    "variants": []
+  },
+  "cellar-bottles/vinex-slavyantsi-cabernet-sauvignon-special-reserva-2007.jpg": {
+    "width": 375,
+    "height": 500,
+    "webp": "cellar-bottles/vinex-slavyantsi-cabernet-sauvignon-special-reserva-2007.webp",
+    "webpWidth": 375,
+    "variants": []
+  },
+  "cellar-bottles/vinprom-troyan-troyanska-slivova-special-reserva.jpg": {
+    "width": 650,
+    "height": 650,
+    "webp": "cellar-bottles/vinprom-troyan-troyanska-slivova-special-reserva.webp",
+    "webpWidth": 650,
+    "variants": []
+  },
+  "cellar-bottles/zaara-estate-dogma-mavrud-barrel-aged.jpg": {
+    "width": 1000,
+    "height": 1000,
+    "webp": "cellar-bottles/zaara-estate-dogma-mavrud-barrel-aged.webp",
+    "webpWidth": 1000,
+    "variants": [
+      {
+        "src": "cellar-bottles/zaara-estate-dogma-mavrud-barrel-aged-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-bottles/zaara-estate-dogma-misket.jpg": {
+    "width": 1000,
+    "height": 1000,
+    "webp": "cellar-bottles/zaara-estate-dogma-misket.webp",
+    "webpWidth": 1000,
+    "variants": [
+      {
+        "src": "cellar-bottles/zaara-estate-dogma-misket-640.webp",
+        "width": 640
+      }
+    ]
+  },
+  "cellar-bottles/zantho-eiswein-2020.jpg": {
+    "width": 600,
+    "height": 838,
+    "webp": "cellar-bottles/zantho-eiswein-2020.webp",
+    "webpWidth": 600,
+    "variants": []
   },
   "cellar-hero/orange.jpg": {
     "width": 1280,
@@ -409,10 +629,10 @@
     ]
   },
   "portfolio.png": {
-    "width": 1883,
-    "height": 801,
+    "width": 1440,
+    "height": 613,
     "webp": "portfolio.webp",
-    "webpWidth": 1883,
+    "webpWidth": 1440,
     "variants": [
       {
         "src": "portfolio-640.webp",
@@ -421,10 +641,10 @@
     ]
   },
   "profile pic.jpg": {
-    "width": 1800,
-    "height": 2400,
+    "width": 1440,
+    "height": 1800,
     "webp": "profile pic.webp",
-    "webpWidth": 1500,
+    "webpWidth": 1440,
     "variants": [
       {
         "src": "profile pic-640.webp",
@@ -433,10 +653,10 @@
     ]
   },
   "project-1.png": {
-    "width": 1668,
-    "height": 877,
+    "width": 1440,
+    "height": 757,
     "webp": "project-1.webp",
-    "webpWidth": 1668,
+    "webpWidth": 1440,
     "variants": [
       {
         "src": "project-1-640.webp",
