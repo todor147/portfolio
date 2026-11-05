@@ -1,6 +1,7 @@
 ---
 title: Food and Beverage Assistant
 employer: The Devon Inn Hotel
+employerShort: "Devon Inn"
 employerUrl: https://www.devoninnhotel.ie/
 location: Templeglantine, Co. Limerick, Ireland
 category: hospitality

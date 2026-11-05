@@ -1,0 +1,850 @@
+---
+import { getCollection } from "astro:content";
+import { formatMonthYear, formatRange, formatDuration } from "../lib/dates";
+import {
+  categoryLabels,
+  categoryOrder,
+  monthIndex,
+  indexToYm,
+  currentYm,
+  todayPosition,
+} from "../lib/experience";
+
+/**
+ * "How the roles overlap": a concurrency strip plus a Gantt of every role.
+ * Fully server-rendered; the client script only adds the tooltip, crosshair and keyboard stepping.
+ */
+
+const entries = await getCollection("experience");
+const now = new Date();
+const nowYm = currentYm(now);
+const nowIdx = monthIndex(nowYm);
+const todayPos = todayPosition(now);
+
+interface Stint {
+  id: string;
+  title: string;
+  employer: string;
+  category: string;
+  startIdx: number;
+  /** Last month, inclusive. */
+  endIdx: number;
+  current: boolean;
+  featured: boolean;
+  range: string;
+  months: number;
+}
+
+const stints: Stint[] = entries.map((e) => {
+  const d = e.data;
+  const startIdx = monthIndex(d.start);
+  const endIdx = d.current ? nowIdx : d.end ? monthIndex(d.end) : startIdx;
+  const months = endIdx - startIdx + 1;
+  return {
+    id: e.id,
+    title: d.title,
+    employer: d.employer,
+    category: d.category,
+    startIdx,
+    endIdx,
+    current: d.current,
+    featured: d.featured,
+    range: formatRange(d.start, d.end, d.current),
+    months,
+  };
+});
+const shortOf = new Map(entries.map((e) => [e.id, e.data.employerShort ?? e.data.employer]));
+const short = (s: Stint) => shortOf.get(s.id) ?? s.employer;
+
+// ── Time domain: first start (minus a month) .. end of the current month (plus a month) ──
+const firstIdx = Math.min(...stints.map((s) => s.startIdx));
+const d0 = firstIdx - 1;
+// Future end dates stretch the domain so bars never overflow the track.
+const d1 = Math.max(nowIdx, ...stints.map((s) => s.endIdx)) + 2;
+const span = d1 - d0;
+const pct = (m: number) => ((m - d0) / span) * 100;
+const round2 = (n: number) => Math.round(n * 100) / 100;
+const pct2 = (m: number) => round2(Math.min(Math.max(pct(m), 0), 100));
+
+// ── Concurrency per month ──
+const monthCount = nowIdx - firstIdx + 1;
+const active: number[][] = Array.from({ length: monthCount }, () => []);
+stints.forEach((s, i) => {
+  for (let m = Math.max(s.startIdx, firstIdx); m <= Math.min(s.endIdx, nowIdx); m++) {
+    active[m - firstIdx].push(i);
+  }
+});
+// List each month's roles in Gantt group order, so the readout matches the chart.
+const catRank = (c: string) => {
+  const i = (categoryOrder as readonly string[]).indexOf(c);
+  return i === -1 ? categoryOrder.length : i;
+};
+active.forEach((a) =>
+  a.sort(
+    (x, y) =>
+      catRank(stints[x].category) - catRank(stints[y].category) ||
+      stints[x].startIdx - stints[y].startIdx ||
+      x - y,
+  ),
+);
+const counts = active.map((a) => a.length);
+const peak = Math.max(...counts);
+const peakMonths = counts.flatMap((c, i) => (c === peak ? [firstIdx + i] : []));
+const nowCount = counts[nowIdx - firstIdx] ?? 0;
+
+// Peak months as consecutive runs, e.g. "Jun – Aug 2026".
+const peakRuns: [number, number][] = [];
+for (const m of peakMonths) {
+  const last = peakRuns[peakRuns.length - 1];
+  if (last && last[1] === m - 1) last[1] = m;
+  else peakRuns.push([m, m]);
+}
+function runLabel([a, b]: [number, number]): string {
+  const ya = Math.floor(a / 12);
+  const yb = Math.floor(b / 12);
+  const A = formatMonthYear(indexToYm(a));
+  if (a === b) return A;
+  const B = formatMonthYear(indexToYm(b));
+  return ya === yb ? `${A.slice(0, 3)} – ${B}` : `${A} – ${B}`;
+}
+const peakLabel = peakRuns.map(runLabel).join(", ");
+const nowLabel = formatMonthYear(nowYm);
+
+// ── Strip geometry (viewBox 1000 x 100, stretched) ──
+const yMax = peak + 1;
+const X = (m: number) => Math.round(((m - d0) / span) * 10000) / 10;
+const Y = (v: number) => Math.round((100 - (v / yMax) * 100) * 10) / 10;
+// One step per month; the last step stops at Today, like every current bar.
+let steps = "";
+counts.forEach((c, i) => {
+  const m = firstIdx + i;
+  if (i > 0) steps += ` V${Y(c)}`;
+  steps += ` H${X(i === counts.length - 1 ? todayPos : m + 1)}`;
+});
+const lineOnly = `M${X(firstIdx)} ${Y(counts[0])}${steps}`;
+const areaPath = `M${X(firstIdx)} 100 V${Y(counts[0])}${steps} V100 Z`;
+const tickStep = yMax > 8 ? 4 : yMax > 4 ? 2 : 1;
+const ticks: number[] = [];
+for (let v = tickStep; v < yMax; v += tickStep) ticks.push(v);
+
+const peakCenter = (peakRuns[0][0] + peakRuns[0][1] + 1) / 2;
+const peakX = pct2(peakCenter);
+const peakAlign = peakX > 82 ? "end" : peakX < 12 ? "start" : "mid";
+
+const stripData = {
+  first: firstIdx,
+  ymax: yMax,
+  roles: stints.map((s) => [s.title, short(s), s.category]),
+  by: active,
+};
+
+// ── Gridlines (one per January) + Today line, as one background shared by every track ──
+const years: number[] = [];
+for (let y = Math.ceil((d0 + 1) / 12); y * 12 < d1; y++) years.push(y);
+// Leading label for the months before the first January (no gridline).
+const leadYear =
+  years.length && d0 % 12 !== 0 && years[0] * 12 - d0 >= 3 ? Math.floor(d0 / 12) : null;
+const gridLayers = years
+  .map((y) => `linear-gradient(var(--xt-grid),var(--xt-grid)) ${pct2(y * 12)}% 0/1px 100% no-repeat`)
+  .concat(
+    `linear-gradient(var(--xt-today),var(--xt-today)) ${pct2(todayPos)}% 0/2px 100% no-repeat`,
+  )
+  .join(",");
+
+// ── Gantt rows: merge stints with the same title + employer ──
+interface Row {
+  key: string;
+  title: string;
+  employer: string;
+  short: string;
+  category: string;
+  stints: Stint[];
+  first: number;
+  featured: boolean;
+  current: boolean;
+}
+const rowMap = new Map<string, Row>();
+for (const s of stints) {
+  const key = `${s.category}|${s.title}|${s.employer}`;
+  let r = rowMap.get(key);
+  if (!r) {
+    r = {
+      key,
+      title: s.title,
+      employer: s.employer,
+      short: short(s),
+      category: s.category,
+      stints: [],
+      first: s.startIdx,
+      featured: false,
+      current: false,
+    };
+    rowMap.set(key, r);
+  }
+  r.stints.push(s);
+  r.first = Math.min(r.first, s.startIdx);
+  r.featured ||= s.featured;
+  r.current ||= s.current;
+}
+const rows = [...rowMap.values()];
+const orderedCats = [
+  ...categoryOrder.filter((c) => rows.some((r) => r.category === c)),
+  ...[...new Set(rows.map((r) => r.category))].filter(
+    (c) => !(categoryOrder as readonly string[]).includes(c),
+  ),
+];
+const groups = orderedCats.map((cat) => ({
+  cat,
+  label: categoryLabels[cat] ?? cat,
+  count: stints.filter((s) => s.category === cat).length,
+  rows: rows.filter((r) => r.category === cat).sort((a, b) => a.first - b.first),
+}));
+
+function barStyle(s: Stint): string {
+  const left = pct2(s.startIdx);
+  const right = s.current ? Math.max(todayPos, s.startIdx + 1) : s.endIdx + 1;
+  const width = round2(Math.max(pct2(right) - left, 0.1));
+  return `--l:${left};--w:${width}`;
+}
+function barLabel(s: Stint): string {
+  return `${s.title}, ${s.employer}: ${s.range}, ${formatDuration(s.months)}`;
+}
+
+// ── Table twin ──
+const chronological = [...stints].sort((a, b) => a.startIdx - b.startIdx || a.endIdx - b.endIdx);
+const sameSet = (a: number[], b: number[]) => a.length === b.length && a.every((v, i) => v === b[i]);
+const runs: { from: number; to: number; set: number[] }[] = [];
+active.forEach((set, i) => {
+  const m = firstIdx + i;
+  const last = runs[runs.length - 1];
+  if (last && sameSet(last.set, set)) last.to = m;
+  else runs.push({ from: m, to: m, set });
+});
+const period = (from: number, to: number) =>
+  from === to
+    ? formatMonthYear(indexToYm(from))
+    : `${formatMonthYear(indexToYm(from))} – ${formatMonthYear(indexToYm(to))}`;
+
+const stripLabel = `Roles per month, ${formatMonthYear(indexToYm(firstIdx))} to ${nowLabel}. Busiest: ${peak} roles in ${peakLabel}. Now: ${nowCount} (${nowLabel}).`;
+const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
+---
+
+<figure
+  id="timeline"
+  class="xt"
+  data-xt
+  data-d0={d0}
+  data-d1={d1}
+  data-first={firstIdx}
+  data-now={nowIdx}
+  data-today={todayPos}
+  aria-labelledby="xt-title"
+  style={`--xt-grid-bg:${gridLayers}`}
+>
+  <a class="xt-skip" href="#exp-filters">Skip the chart</a>
+  <div class="xt-head">
+    <p class="eyebrow">At a glance</p>
+    <h2 id="xt-title" class="font-display xt-h2">How the roles overlap</h2>
+    <p class="xt-lede">
+      Each bar is one stretch in a role, grouped by type. The strip on top counts the roles active in each month. Select a bar to jump to its entry.
+    </p>
+  </div>
+
+  <dl class="xt-stats">
+    <div class="xt-stat">
+      <dt>Positions</dt>
+      <dd class="xt-num">{stints.length}</dd>
+      <dd class="xt-sub">since {formatMonthYear(indexToYm(firstIdx))}</dd>
+    </div>
+    <div class="xt-stat">
+      <dt>{peakMonths.length === 1 ? "Busiest month" : "Busiest months"}</dt>
+      <dd class="xt-num">{peak}</dd>
+      <dd class="xt-sub">roles &middot; {peakLabel}</dd>
+    </div>
+    <div class="xt-stat">
+      <dt>Active now</dt>
+      <dd class="xt-num">{nowCount}</dd>
+      <dd class="xt-sub">roles &middot; {nowLabel}</dd>
+    </div>
+  </dl>
+
+  <ul class="xt-legend" aria-label="Role types">
+    {groups.map((g) => (
+      <li>
+        <span class="xt-swatch" data-cat={g.cat} aria-hidden="true"></span>
+        <span class="xt-legend-label">{g.label}</span>
+        <span class="xt-legend-count">{g.count}</span>
+      </li>
+    ))}
+  </ul>
+
+  <div class="xt-chart">
+    <p id="xt-strip-desc" class="sr-only">{stripLabel} Use the arrow keys to step through months.</p>
+    <!-- Concurrency strip -->
+    <div class="xt-row xt-strip-row">
+      <div class="xt-label">
+        <p class="xt-strip-title">Roles per month</p>
+        <p class="xt-strip-sub">Active in the same month</p>
+      </div>
+      <div class="xt-track xt-strip-track">
+        <div
+          class="xt-strip"
+          tabindex="0"
+          role="slider"
+          aria-label="Roles per month"
+          aria-orientation="horizontal"
+          aria-valuemin={firstIdx}
+          aria-valuemax={nowIdx}
+          aria-valuenow={nowIdx}
+          aria-valuetext={`${nowLabel}: ${nowCount} roles`}
+          aria-describedby="xt-strip-desc"
+          data-strip={JSON.stringify(stripData)}
+        >
+          <svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            {ticks.map((v) => (
+              <line class="xt-ygrid" x1="0" x2="1000" y1={Y(v)} y2={Y(v)}></line>
+            ))}
+            <path class="xt-area" d={areaPath}></path>
+            <path class="xt-line" d={lineOnly}></path>
+          </svg>
+          <div class="xt-yticks" aria-hidden="true">
+            {ticks.map((v) => (
+              <span style={`bottom:${(v / yMax) * 100}%`}>{v}</span>
+            ))}
+          </div>
+          <span
+            class="xt-peak"
+            data-align={peakAlign}
+            style={`left:${peakX}%;bottom:calc(${(peak / yMax) * 100}% + 4px)`}
+            aria-hidden="true">Peak {peak}</span
+          >
+          <span class="xt-cross" hidden aria-hidden="true"><i></i></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Axis (top) -->
+    <div class="xt-row xt-axis-row" aria-hidden="true">
+      <div class="xt-label"></div>
+      <div class="xt-track xt-axis">
+        {leadYear !== null && (
+          <span class="xt-year xt-year-lead" style="left:0%">
+            <span class="xt-y-full">{leadYear}</span><span class="xt-y-short">&rsquo;{String(leadYear).slice(2)}</span>
+          </span>
+        )}
+        {years.map((y) => (
+          <span class="xt-year" style={`left:${pct2(y * 12)}%`}>
+            <span class="xt-y-full">{y}</span><span class="xt-y-short">&rsquo;{String(y).slice(2)}</span>
+          </span>
+        ))}
+        <span class="xt-today-l" style={`left:${pct2(todayPos)}%`}>
+          Today<span class="xt-today-m"> &middot; {todayShortMonth} {now.getFullYear()}</span>
+        </span>
+      </div>
+    </div>
+
+    {groups.map((g) => (
+      <div class="xt-group">
+        <div class="xt-row xt-gh-row">
+          <div class="xt-label">
+            <h3 class="xt-gh">
+              <span class="xt-swatch" data-cat={g.cat} aria-hidden="true"></span>
+              {g.label}
+              <span class="xt-gh-count">{g.count}</span>
+            </h3>
+          </div>
+          <div class="xt-track xt-gh-track" aria-hidden="true"></div>
+        </div>
+        <ul class="xt-rows">
+          {g.rows.map((r) => (
+            <li class="xt-row xt-role">
+              <div class="xt-label">
+                <span class:list={["xt-title", { "xt-feat": r.featured }]}>{r.title}</span><span class="xt-emp">&nbsp;&middot; {r.short}</span>{r.current && <>&nbsp;<span class="xt-now">Now</span></>}
+              </div>
+              <div class="xt-track" data-cat={r.category}>
+                {r.stints.map((s) => (
+                  <a
+                    class="xt-bar"
+                    href={`#${s.id}`}
+                    style={barStyle(s)}
+                    aria-label={barLabel(s)}
+                    data-dur={formatDuration(s.months)}
+                    data-title={s.title}
+                    data-emp={s.employer}
+                    data-range={s.range}
+                    data-cat={s.category}
+                    data-catlabel={g.label}
+                  ></a>
+                ))}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+
+    <!-- Axis (bottom) -->
+    <div class="xt-row xt-axis-row xt-axis-bottom" aria-hidden="true">
+      <div class="xt-label"></div>
+      <div class="xt-track xt-axis">
+        {leadYear !== null && (
+          <span class="xt-year xt-year-lead" style="left:0%">
+            <span class="xt-y-full">{leadYear}</span><span class="xt-y-short">&rsquo;{String(leadYear).slice(2)}</span>
+          </span>
+        )}
+        {years.map((y) => (
+          <span class="xt-year" style={`left:${pct2(y * 12)}%`}>
+            <span class="xt-y-full">{y}</span><span class="xt-y-short">&rsquo;{String(y).slice(2)}</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <div class="xt-tip" hidden aria-hidden="true">
+    <p class="xt-tip-v"></p>
+    <p class="xt-tip-a"></p>
+    <p class="xt-tip-b"></p>
+    <p class="xt-tip-c"></p>
+    <p class="xt-tip-k"><i class="xt-key"></i><span></span></p>
+    <ul class="xt-tip-list"></ul>
+  </div>
+
+  <p class="xt-note">
+    Dates are recorded by month, so a role that ends and one that starts in the same month both count towards it. Bold titles are highlights.
+  </p>
+
+  <details class="xt-table">
+    <summary>Show as a table</summary>
+
+    <div class="xt-scroll" role="region" aria-label="Roles table, scrollable" tabindex="0">
+      <table>
+        <caption>All roles, in chronological order</caption>
+        <thead>
+          <tr>
+            <th scope="col">Role</th>
+            <th scope="col">Employer</th>
+            <th scope="col">Category</th>
+            <th scope="col">From</th>
+            <th scope="col">To</th>
+            <th scope="col">Length</th>
+          </tr>
+        </thead>
+        <tbody>
+          {chronological.map((s) => (
+            <tr>
+              <th scope="row"><a href={`#${s.id}`}>{s.title}</a></th>
+              <td>
+                <span class="xt-emp-full">{s.employer}</span>
+                <span class="xt-emp-short">{short(s)}</span>
+              </td>
+              <td class="xt-nw">{categoryLabels[s.category] ?? s.category}</td>
+              <td class="xt-nw">{formatMonthYear(indexToYm(s.startIdx))}</td>
+              <td class="xt-nw">{s.current ? "Present" : formatMonthYear(indexToYm(s.endIdx))}</td>
+              <td class="xt-nw">{formatDuration(s.months)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="xt-scroll" role="region" aria-label="Roles per month table, scrollable" tabindex="0">
+      <table>
+        <caption>Roles active per month (consecutive months with the same roles are merged)</caption>
+        <thead>
+          <tr>
+            <th scope="col">Period</th>
+            <th scope="col">Active</th>
+            <th scope="col">Roles</th>
+          </tr>
+        </thead>
+        <tbody>
+          {runs.map((r) => (
+            <tr>
+              <th scope="row" class="xt-nw">{period(r.from, r.to)}</th>
+              <td class="xt-nw">{r.set.length}</td>
+              <td class="xt-roles">{r.set.map((i) => `${stints[i].title} (${short(stints[i])})`).join("; ")}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </details>
+</figure>
+
+<style is:global>
+  .xt {
+    /* Category palette, validated against the card surface (--bg). */
+    --xt-software: #2a78d6;
+    --xt-education: #eb6834;
+    --xt-hospitality: #1baf7a;
+    --xt-lifeguarding: #eda100;
+    --xt-other: #e87ba4;
+    --xt-interpretation: #008300;
+    --xt-delivery: #6250d6;
+    --xt-grid: color-mix(in oklab, var(--text) 10%, transparent);
+    --xt-today: var(--accent);
+    --xt-lw: clamp(13rem, 24vw, 17rem);
+
+    position: relative;
+    margin: 0;
+    padding: clamp(1rem, 2.5vw, 1.75rem);
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid color-mix(in oklab, var(--text) 12%, transparent);
+    border-radius: 1.25rem;
+    min-width: 0;
+  }
+  @media (min-width: 1024px) {
+    .xt { --xt-lw: clamp(17rem, 26vw, 21rem); }
+  }
+  :root.dark .xt {
+    --xt-software: #3987e5;
+    --xt-education: #d95926;
+    --xt-hospitality: #199e70;
+    --xt-lifeguarding: #c98500;
+    --xt-other: #d55181;
+    --xt-interpretation: #008300;
+    --xt-delivery: #9085e9;
+  }
+  .xt [data-cat="software"] { --c: var(--xt-software); }
+  .xt [data-cat="education"] { --c: var(--xt-education); }
+  .xt [data-cat="hospitality"] { --c: var(--xt-hospitality); }
+  .xt [data-cat="lifeguarding"] { --c: var(--xt-lifeguarding); }
+  .xt [data-cat="other"] { --c: var(--xt-other); }
+  .xt [data-cat="interpretation"] { --c: var(--xt-interpretation); }
+  .xt [data-cat="delivery"] { --c: var(--xt-delivery); }
+
+  .xt :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* Header */
+  .xt-h2 { font-size: clamp(1.75rem, 3vw, 2.25rem); line-height: 1.1; margin-top: 0.4rem; }
+  .xt-lede { margin-top: 0.6rem; max-width: 40rem; font-size: 0.9375rem; line-height: 1.55; color: var(--text-soft); }
+
+  /* Stats: Inter, proportional figures */
+  .xt-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem 1.5rem; margin: 1.5rem 0 0; font-family: var(--font-sans); }
+  .xt-stat dt { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.04em; color: var(--text-soft); }
+  .xt-stat .xt-num { margin: 0.1rem 0 0; font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; font-variant-numeric: proportional-nums; color: var(--text); }
+  .xt-stat .xt-sub { margin: 0.15rem 0 0; font-size: 0.8125rem; line-height: 1.35; color: var(--text-soft); }
+
+  /* Legend */
+  .xt-legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; margin: 1.25rem 0 0; padding: 0; list-style: none; font-size: 0.8125rem; }
+  .xt-legend li { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .xt-swatch { display: inline-block; flex: none; width: 12px; height: 12px; border-radius: 3px; background: var(--c); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .xt-legend-label { color: var(--text); }
+  .xt-legend-count { color: var(--text-soft); font-variant-numeric: tabular-nums; }
+
+  /* Chart grid: every row shares the same two columns so gridlines line up */
+  .xt-chart { margin-top: 1.5rem; position: relative; }
+  .xt-row { display: grid; grid-template-columns: var(--xt-lw) minmax(0, 1fr); align-items: stretch; margin: 0; padding: 0; list-style: none; }
+  .xt-rows { margin: 0; padding: 0; list-style: none; }
+  .xt-label { min-width: 0; padding: 0.3rem 0.9rem 0.3rem 0; font-size: 0.8125rem; line-height: 1.3; align-self: center; overflow-wrap: anywhere; }
+  .xt-track { position: relative; container-type: inline-size; min-height: 28px; background: var(--xt-grid-bg); }
+  .xt-title { color: var(--text); font-weight: 450; }
+  .xt-title.xt-feat { font-weight: 650; }
+  .xt-emp { color: var(--text-soft); }
+  .xt-now { display: inline; margin-left: 0.15rem; padding: 0 0.3rem; font-size: 0.6875rem; font-weight: 600; line-height: 1.35; letter-spacing: 0.03em; text-transform: uppercase; color: var(--accent); border: 1px solid color-mix(in oklab, var(--accent) 55%, transparent); border-radius: 4px; vertical-align: 1px; white-space: nowrap; }
+
+  /* Group heads */
+  .xt-group { margin-top: 0; }
+  .xt-gh-row .xt-track { min-height: calc(30px + 0.5rem); border-bottom: 1px solid var(--xt-grid); }
+  .xt-gh-row .xt-label { border-bottom: 1px solid var(--xt-grid); padding-top: 0.8rem; padding-bottom: 0.4rem; align-self: end; }
+  .xt-gh { display: flex; align-items: center; gap: 0.5rem; margin: 0; font-family: var(--font-sans); font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.02em; line-height: 1.3; color: var(--text); }
+  .xt-gh-count { color: var(--text-soft); font-weight: 450; font-variant-numeric: tabular-nums; }
+
+  /* Bars */
+  /* The element is the 24px target; the visible 12px bar is painted inside it. */
+  .xt-bar { position: absolute; top: 50%; height: 24px; left: calc(var(--l) * 1%); width: max(24px, calc(var(--w) * 1%)); margin-left: min(0px, calc((var(--w) * 1% - 24px) / 2)); transform: translateY(-50%); background: none; border-radius: 4px; }
+  .xt-bar::before { content: ""; position: absolute; inset-block: 6px; left: 50%; width: calc(var(--w) * 1cqw); translate: -50% 0; border-radius: 4px; background: var(--c); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .xt-bar:hover::before { filter: brightness(1.14) saturate(1.05); }
+  .xt-bar:focus-visible { outline-offset: 1px; }
+
+  /* Strip */
+  .xt-strip-row { margin-bottom: 0; }
+  .xt-strip-title { margin: 0; font-weight: 600; color: var(--text); }
+  .xt-strip-sub { margin: 0.1rem 0 0; color: var(--text-soft); font-size: 0.75rem; }
+  .xt-strip-track { min-height: 108px; }
+  .xt-strip { position: absolute; inset: 0 0 4px 0; border-bottom: 1px solid var(--xt-grid); touch-action: pan-y; cursor: crosshair; }
+  .xt-strip svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; }
+  .xt-ygrid { stroke: var(--xt-grid); stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .xt-area { fill: color-mix(in oklab, var(--accent) 10%, transparent); stroke: none; }
+  .xt-line { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  .xt-yticks span { position: absolute; right: 100%; margin-right: 0.5rem; transform: translateY(50%); font-size: 0.6875rem; line-height: 1; color: var(--text-soft); font-variant-numeric: tabular-nums; }
+  .xt-peak { position: absolute; font-size: 0.75rem; font-weight: 600; line-height: 1; white-space: nowrap; color: var(--text); pointer-events: none; transform: translateX(-50%); }
+  .xt-peak[data-align="end"] { transform: translateX(-100%); }
+  .xt-peak[data-align="start"] { transform: none; }
+  .xt-cross { position: absolute; top: 0; bottom: 0; width: 0; pointer-events: none; border-left: 1px solid var(--text); }
+  .xt-cross i { position: absolute; left: -4px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px var(--bg); }
+
+  /* Axis */
+  .xt-axis-row .xt-track { min-height: 22px; }
+  .xt-year { position: absolute; top: 5px; padding-left: 4px; font-size: 0.6875rem; line-height: 1; color: var(--text-soft); font-variant-numeric: tabular-nums; }
+  .xt-y-short { display: none; }
+  .xt-today-l { position: absolute; top: 3px; transform: translateX(-100%); padding-right: 5px; font-size: 0.6875rem; font-weight: 600; line-height: 1.2; white-space: nowrap; color: var(--accent); }
+  .xt-axis-bottom .xt-track { min-height: 20px; }
+
+  /* Tooltip */
+  .xt-tip { position: absolute; z-index: 5; top: 0; left: 0; max-width: min(18rem, calc(100% - 16px)); padding: 0.55rem 0.7rem; background: var(--bg); color: var(--text); border: 1px solid color-mix(in oklab, var(--text) 22%, transparent); border-radius: 0.6rem; box-shadow: 0 6px 20px color-mix(in oklab, #000 18%, transparent); font-size: 0.75rem; line-height: 1.35; pointer-events: none; }
+  .xt-tip[hidden], .xt-tip [hidden] { display: none; }
+  .xt-tip p { margin: 0; }
+  .xt-tip-v { font-size: 0.9375rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .xt-tip-a { margin-top: 0.1rem; color: var(--text); font-weight: 500; }
+  .xt-tip-b, .xt-tip-c { color: var(--text-soft); }
+  .xt-tip-k { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.3rem; color: var(--text-soft); }
+  .xt-key { display: inline-block; flex: none; width: 14px; height: 3px; border-radius: 2px; background: var(--c); }
+  .xt-tip-list { margin: 0.3rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.2rem; color: var(--text-soft); }
+  .xt-tip-list li { display: flex; align-items: baseline; gap: 0.4rem; }
+  .xt-tip-list .xt-key { transform: translateY(-2px); }
+
+  /* Table twin */
+  .xt-table { margin-top: 1.5rem; border-top: 1px solid var(--xt-grid); padding-top: 1rem; font-size: 0.8125rem; }
+  .xt-table > summary { cursor: pointer; display: inline-flex; align-items: center; min-height: 24px; font-weight: 500; color: var(--accent); }
+  .xt-scroll { max-width: 100%; overflow-x: auto; margin-top: 1rem; }
+  .xt-table table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+  .xt-table caption { text-align: left; padding-bottom: 0.5rem; font-weight: 600; color: var(--text); }
+  .xt-table th, .xt-table td { padding: 0.35rem 0.75rem 0.35rem 0; text-align: left; vertical-align: top; border-bottom: 1px solid var(--xt-grid); color: var(--text-soft); }
+  .xt-table thead th { color: var(--text); font-weight: 600; white-space: nowrap; }
+  .xt-table tbody th { color: var(--text); font-weight: 500; font-family: var(--font-sans); letter-spacing: 0; line-height: 1.35; }
+  .xt-table a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+  .xt-table a:hover { color: var(--accent); }
+  .xt-table .xt-nw { white-space: nowrap; }
+  .xt-table .xt-roles { min-width: 14rem; }
+  .xt-emp-short { display: none; }
+  .xt-note { margin: 0.75rem 0 0; max-width: 40rem; font-size: 0.75rem; line-height: 1.45; color: var(--text-soft); }
+
+  /* Skip link: hidden until focused */
+  .xt-skip { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .xt-skip:focus { width: auto; height: auto; margin: 0; padding: 0.3rem 0.6rem; top: 0.5rem; left: 0.5rem; z-index: 6; overflow: visible; clip-path: none; background: var(--bg); color: var(--accent); border: 1px solid var(--accent); border-radius: 0.4rem; font-size: 0.8125rem; }
+  html:not(.js) .xt-skip { display: none; }
+
+  /* Narrow screens: label above its track, abbreviated years */
+  @media (max-width: 639.98px) {
+    .xt-stats { gap: 0.75rem 0.5rem; }
+    .xt-stat .xt-sub { font-size: 0.75rem; }
+    .xt-emp-full { display: none; }
+    .xt-emp-short { display: inline; }
+    /* Lines are painted on the whole row so they run behind the label text instead of breaking at it. */
+    .xt-role { background: var(--xt-grid-bg); }
+    .xt-role .xt-track { background: none; }
+    .xt-label > span { background: var(--bg); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+    .xt-row { grid-template-columns: minmax(0, 1fr); }
+    .xt-label { padding: 0.45rem 0 0.1rem; align-self: auto; }
+    .xt-axis-row .xt-label, .xt-gh-row .xt-track { display: none; }
+    .xt-gh-row .xt-label { border-bottom: 1px solid var(--xt-grid); padding-top: 1rem; padding-bottom: 0.4rem; }
+    .xt-role .xt-track { min-height: 24px; }
+    .xt-strip-track { min-height: 92px; margin-top: 0.4rem; }
+    .xt-axis-row .xt-track { min-height: 34px; }
+    .xt-today-l { top: 17px; }
+    .xt-axis-bottom .xt-track { min-height: 22px; }
+    .xt-y-full, .xt-today-m { display: none; }
+    .xt-y-short { display: inline; }
+    .xt-yticks span { right: auto; left: 0; margin: 0 0 0 3px; transform: translateY(-110%); }
+    .xt-strip-sub { display: none; }
+  }
+
+  @media (forced-colors: active) {
+    .xt { --xt-grid: GrayText; --xt-today: Highlight; border-color: CanvasText; }
+    .xt-bar::before, .xt-swatch, .xt-key { forced-color-adjust: none; background: CanvasText; }
+    /* Gradients (gridlines, Today line) are dropped in forced colors, so opt the tracks out and use system colours. */
+    .xt-track { forced-color-adjust: none; }
+    .xt-line { stroke: CanvasText; }
+    .xt-area { fill: none; }
+    .xt-year, .xt-now, .xt-yticks span, .xt-peak { color: CanvasText; }
+    .xt-today-l { color: Highlight; }
+    .xt-strip { border-color: GrayText; }
+    .xt-ygrid { stroke: GrayText; }
+    .xt-cross { border-color: CanvasText; }
+    .xt-cross i { background: Highlight; box-shadow: 0 0 0 2px Canvas; }
+  }
+</style>
+
+<script>
+  import { formatMonthYear } from "../lib/dates";
+  import { indexToYm } from "../lib/experience";
+
+  const root = document.querySelector<HTMLElement>("[data-xt]");
+  if (root) init(root);
+
+  function init(root: HTMLElement) {
+    const d0 = Number(root.dataset.d0);
+    const d1 = Number(root.dataset.d1);
+    const span = d1 - d0;
+    const nowIdx = Number(root.dataset.now);
+    const todayPos = Number(root.dataset.today);
+    const strip = root.querySelector<HTMLElement>(".xt-strip");
+    const tip = root.querySelector<HTMLElement>(".xt-tip");
+    const cross = root.querySelector<HTMLElement>(".xt-cross");
+    if (!strip || !tip) return;
+
+    const q = <T extends HTMLElement>(sel: string) => tip.querySelector<T>(sel)!;
+    const tv = q(".xt-tip-v");
+    const ta = q(".xt-tip-a");
+    const tb = q(".xt-tip-b");
+    const tc = q(".xt-tip-c");
+    const tk = q(".xt-tip-k");
+    const tkText = tk.querySelector<HTMLElement>("span")!;
+    const tl = q<HTMLUListElement>(".xt-tip-list");
+
+    type StripData = { first: number; ymax: number; roles: [string, string, string][]; by: number[][] };
+    const data = JSON.parse(strip.dataset.strip ?? "null") as StripData | null;
+
+    let hovering = false;
+    /** What the tooltip currently shows, so pointermove can skip redundant rebuilds. */
+    let shown: "bar" | "strip" | null = null;
+
+    function hide() {
+      tip!.hidden = true;
+      shown = null;
+      if (cross) cross.hidden = true;
+    }
+    /**
+     * Place the tooltip next to the anchor rect (viewport coordinates), on the preferred side
+     * when it fits below the sticky header / above the viewport bottom, otherwise on the other.
+     */
+    function place(anchorX: number, a: DOMRect, prefer: "above" | "below") {
+      tip!.hidden = false;
+      const w = tip!.offsetWidth;
+      const h = tip!.offsetHeight;
+      const f = root.getBoundingClientRect();
+      const left = Math.min(Math.max(anchorX - f.left - w / 2, 8), Math.max(8, root.clientWidth - w - 8));
+      const safeTop = (document.getElementById("site-nav")?.getBoundingClientRect().bottom ?? 0) + 8;
+      const fitsAbove = a.top - h - 8 >= safeTop;
+      const fitsBelow = a.bottom + 8 + h <= window.innerHeight - 8;
+      const below = prefer === "below" ? fitsBelow || !fitsAbove : !fitsAbove;
+      const topVp = below ? a.bottom + 8 : a.top - h - 8;
+      tip!.style.left = `${left}px`;
+      tip!.style.top = `${topVp - f.top}px`;
+    }
+
+    // ── Bars ──
+    function showBar(bar: HTMLElement) {
+      const d = bar.dataset;
+      tv.textContent = d.dur ?? "";
+      ta.textContent = d.title ?? "";
+      tb.textContent = d.emp ?? "";
+      tc.textContent = d.range ?? "";
+      tkText.textContent = d.catlabel ?? "";
+      tk.querySelector<HTMLElement>(".xt-key")!.dataset.cat = d.cat ?? "";
+      [ta, tb, tc, tk].forEach((e) => (e.hidden = false));
+      tl.hidden = true;
+      tl.replaceChildren();
+      const r = bar.getBoundingClientRect();
+      shown = "bar";
+      place(r.left + r.width / 2, r, "above");
+    }
+    root.addEventListener("pointerover", (e) => {
+      if ((e as PointerEvent).pointerType === "touch") return;
+      const bar = (e.target as Element).closest<HTMLElement>(".xt-bar");
+      if (bar) showBar(bar);
+    });
+    root.addEventListener("pointerout", (e) => {
+      const bar = (e.target as Element).closest<HTMLElement>(".xt-bar");
+      if (bar && !bar.contains(e.relatedTarget as Node | null)) hide();
+    });
+    root.addEventListener("focusin", (e) => {
+      const bar = (e.target as Element).closest<HTMLElement>(".xt-bar");
+      if (bar) showBar(bar);
+    });
+    root.addEventListener("focusout", (e) => {
+      const t = e.target as Element;
+      if (t.closest(".xt-bar") || t === strip) hide();
+    });
+
+    // ── Strip ──
+    let month = nowIdx;
+    function showMonth(m: number) {
+      if (!data) return;
+      const first = data.first;
+      const next = Math.min(Math.max(m, first), nowIdx);
+      // Same month, same tooltip: nothing to rebuild or re-measure.
+      if (next === month && shown === "strip" && !tip!.hidden) return;
+      month = next;
+      const list = data.by[month - first] ?? [];
+      const label = formatMonthYear(indexToYm(month));
+      tv.textContent = `${list.length} role${list.length === 1 ? "" : "s"}`;
+      ta.textContent = label;
+      ta.hidden = false;
+      [tb, tc, tk].forEach((e) => (e.hidden = true));
+      tl.hidden = false;
+      strip!.setAttribute("aria-valuenow", String(month));
+      tl.replaceChildren(
+        ...list.map((i) => {
+          const [title, emp, cat] = data.roles[i];
+          const li = document.createElement("li");
+          const key = document.createElement("i");
+          key.className = "xt-key";
+          key.dataset.cat = cat;
+          const span = document.createElement("span");
+          span.textContent = `${title} · ${emp}`;
+          li.append(key, span);
+          return li;
+        }),
+      );
+      const sr = strip!.getBoundingClientRect();
+      // The current month's crosshair stops at Today, like the strip itself.
+      const frac = (Math.min(month + 0.5, todayPos) - d0) / span;
+      const x = sr.left + sr.width * frac;
+      if (cross) {
+        cross.hidden = false;
+        cross.style.left = `${frac * 100}%`;
+        const dot = cross.querySelector<HTMLElement>("i");
+        if (dot) dot.style.top = `calc(${100 - (list.length / data.ymax) * 100}% - 3px)`;
+      }
+      shown = "strip";
+      strip!.setAttribute(
+        "aria-valuetext",
+        `${label}: ${tv.textContent}${list.length ? `: ${list.map((i) => data.roles[i][0] + ", " + data.roles[i][1]).join("; ")}` : ""}`,
+      );
+      place(x, sr, "below");
+    }
+    function monthAt(clientX: number) {
+      const r = strip!.getBoundingClientRect();
+      const f = (clientX - r.left) / r.width;
+      return Math.floor(d0 + f * span);
+    }
+    strip.addEventListener("pointermove", (e) => {
+      hovering = true;
+      showMonth(monthAt(e.clientX));
+    });
+    strip.addEventListener("pointerdown", (e) => {
+      hovering = true;
+      showMonth(monthAt(e.clientX));
+    });
+    strip.addEventListener("pointerleave", (e) => {
+      hovering = false;
+      if (e.pointerType !== "touch" && document.activeElement !== strip) hide();
+    });
+    strip.addEventListener("focus", () => {
+      if (!hovering) showMonth(month);
+    });
+    strip.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        showMonth(month - 1);
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        showMonth(month + 1);
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        showMonth(data?.first ?? month);
+      } else if (e.key === "End") {
+        e.preventDefault();
+        showMonth(nowIdx);
+      } else if (e.key === "PageUp") {
+        e.preventDefault();
+        showMonth(month - 12);
+      } else if (e.key === "PageDown") {
+        e.preventDefault();
+        showMonth(month + 12);
+      }
+    });
+    document.addEventListener("pointerdown", (e) => {
+      if (!(e.target as Element).closest(".xt-strip, .xt-bar")) hide();
+    });
+    // A resize or rotation leaves the tooltip in the wrong place.
+    window.addEventListener("resize", hide);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") hide();
+    });
+  }
+</script>

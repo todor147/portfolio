@@ -1,6 +1,7 @@
 ---
 title: Lifeguard
 employer: West Lake Aqua Park
+employerShort: "West Lake"
 employerUrl: https://westlakeaquapark.ie/
 location: Killaloe, Co. Clare, Ireland
 category: lifeguarding

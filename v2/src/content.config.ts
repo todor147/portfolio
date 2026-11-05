@@ -9,6 +9,8 @@ const experience = defineCollection({
   schema: z.object({
     title: z.string(),
     employer: z.string(),
+    // Compact employer name for tight layouts (the experience timeline); falls back to `employer`.
+    employerShort: z.string().optional(),
     employerUrl: z.string().url().optional(),
     location: z.string().optional(),
     category: z.enum([
@@ -171,6 +173,7 @@ const cellar = defineCollection({
       "austria",
       "italy",
       "hungary",
+      "usa",
     ]),
     order: z.number().default(100),
     // Real photo of this exact bottle, when one exists under a licence that

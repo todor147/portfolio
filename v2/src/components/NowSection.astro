@@ -5,6 +5,7 @@ import SectionHeader from "./SectionHeader.astro";
 import Button from "./Button.astro";
 import Tag from "./Tag.astro";
 import { byMostRecent, formatRange } from "../lib/dates";
+import { categoryLabels } from "../lib/experience";
 
 const experience = await getCollection("experience");
 const current = experience
@@ -16,15 +17,6 @@ const current = experience
     return aSw - bSw || byMostRecent(a.data, b.data);
   });
 
-const categoryLabels: Record<string, string> = {
-  software: "Software",
-  hospitality: "Hospitality",
-  education: "Education",
-  lifeguarding: "Lifeguarding",
-  interpretation: "Languages",
-  delivery: "Delivery",
-  other: "Other",
-};
 ---
 
 <section class="py-(--spacing-section)">

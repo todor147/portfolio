@@ -12,7 +12,8 @@ export type Location =
   | "portugal"
   | "austria"
   | "italy"
-  | "hungary";
+  | "hungary"
+  | "usa";
 
 /**
  * `color` is the light-theme text colour (>= 4.5:1 on #FAF6F0). For theme-aware
@@ -64,6 +65,7 @@ export const locationConfig: Record<Location, string> = {
   austria:  "Austria",
   italy:    "Italy",
   hungary:  "Hungary",
+  usa:      "USA",
 };
 
 /**

@@ -1,6 +1,7 @@
 ---
 import Tag from "./Tag.astro";
 import { formatRange, diffMonths, formatDuration } from "../lib/dates";
+import { categoryLabels } from "../lib/experience";
 import { render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
@@ -17,16 +18,6 @@ const months = data.current
   : data.end
     ? diffMonths(data.start, data.end)
     : 0;
-
-const categoryLabels: Record<string, string> = {
-  software: "Software",
-  hospitality: "Hospitality",
-  education: "Education",
-  lifeguarding: "Lifeguarding",
-  interpretation: "Languages",
-  delivery: "Delivery",
-  other: "Other",
-};
 
 const searchHaystack = [
   data.title,

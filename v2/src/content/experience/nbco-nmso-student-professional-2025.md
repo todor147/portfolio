@@ -1,6 +1,7 @@
 ---
 title: Student Professional
 employer: National Building Control and Market Surveillance Office (NBC&MSO)
+employerShort: "NBC&MSO"
 employerUrl: https://www.nbco.localgov.ie/
 location: Dublin, Ireland (remote)
 category: other

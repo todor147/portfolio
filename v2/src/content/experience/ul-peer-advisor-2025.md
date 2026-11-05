@@ -1,6 +1,7 @@
 ---
 title: Peer Advisor
 employer: Glucksman Library, University of Limerick
+employerShort: "UL Library"
 employerUrl: https://www.ul.ie/library
 location: Limerick, Ireland
 category: education

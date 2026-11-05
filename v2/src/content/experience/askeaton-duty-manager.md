@@ -1,6 +1,7 @@
 ---
 title: Duty Manager
 employer: Askeaton Pool & Leisure
+employerShort: "Askeaton Pool"
 employerUrl: https://swimireland.ie/get-swimming/askeaton-pool-and-leisure/
 location: Askeaton, Co. Limerick, Ireland
 category: lifeguarding

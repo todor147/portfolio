@@ -1,6 +1,7 @@
 ---
 title: Duty Manager (Part-Time)
 employer: Aura Holohan Group
+employerShort: "Aura Grove Island"
 employerUrl: https://www.auraleisure.ie/
 location: Grove Island, Limerick, Ireland
 category: lifeguarding

@@ -1,6 +1,7 @@
 ---
 title: PSLG Tutor
 employer: University of Limerick
+employerShort: "UL"
 employerUrl: https://ictlc.ul.ie/
 location: Limerick, Ireland
 category: education

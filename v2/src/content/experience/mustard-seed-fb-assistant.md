@@ -1,6 +1,7 @@
 ---
 title: Food and Beverage Assistant
 employer: The Mustard Seed
+employerShort: "Mustard Seed"
 employerUrl: https://www.mustardseed.ie/
 location: Ballingarry, Co. Limerick, Ireland
 category: hospitality

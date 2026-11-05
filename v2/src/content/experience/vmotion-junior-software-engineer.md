@@ -1,6 +1,7 @@
 ---
 title: Junior Software Engineer
 employer: VMotion IT Solutions
+employerShort: "VMotion"
 employerUrl: https://vmotionitsolutions.com/
 location: Limerick, Ireland
 category: software

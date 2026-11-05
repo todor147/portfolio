@@ -5,7 +5,9 @@ import Container from "../components/Container.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import ExperienceItem from "../components/ExperienceItem.astro";
 import ExperienceFilters from "../components/ExperienceFilters.astro";
+import ExperienceTimeline from "../components/ExperienceTimeline.astro";
 import { byMostRecent } from "../lib/dates";
+import { categoryLabels } from "../lib/experience";
 
 const experience = await getCollection("experience");
 const sorted = experience.sort((a, b) => byMostRecent(a.data, b.data));
@@ -18,17 +20,6 @@ for (const entry of sorted) {
   grouped[year].push(entry);
 }
 const yearsDesc = Object.keys(grouped).sort((a, b) => Number(b) - Number(a));
-
-// Build category counts
-const categoryLabels: Record<string, string> = {
-  software: "Software",
-  hospitality: "Hospitality",
-  education: "Education",
-  lifeguarding: "Lifeguarding",
-  interpretation: "Languages",
-  delivery: "Delivery",
-  other: "Other",
-};
 
 const categoryCounts = sorted.reduce<Record<string, number>>((acc, e) => {
   acc[e.data.category] = (acc[e.data.category] ?? 0) + 1;
@@ -57,6 +48,10 @@ const categories = Object.entries(categoryCounts)
     />
 
     <div class="mt-12">
+      <ExperienceTimeline />
+    </div>
+
+    <div class="mt-16">
       <ExperienceFilters categories={categories} highlightCount={highlightCount} />
 
       <div class="relative">

@@ -120,6 +120,25 @@
       }
     ]
   },
+  "cellar-bottles/aya-estate-disegno-petit-manseng-late-harvest-2019.jpg": {
+    "width": 279,
+    "height": 1078,
+    "webp": "cellar-bottles/aya-estate-disegno-petit-manseng-late-harvest-2019.webp",
+    "webpWidth": 279,
+    "variants": []
+  },
+  "cellar-bottles/aya-estate-early-melnik-2022.jpg": {
+    "width": 435,
+    "height": 1266,
+    "webp": "cellar-bottles/aya-estate-early-melnik-2022.webp",
+    "webpWidth": 435,
+    "variants": [
+      {
+        "src": "cellar-bottles/aya-estate-early-melnik-2022-160.webp",
+        "width": 160
+      }
+    ]
+  },
   "cellar-bottles/bessa-valley-enira-reserva-2018.jpg": {
     "width": 800,
     "height": 800,
@@ -189,6 +208,62 @@
       {
         "src": "cellar-bottles/bollinger-la-grande-annee-2014-512.webp",
         "width": 512
+      }
+    ]
+  },
+  "cellar-bottles/bratanov-3-blend-red-2019.jpg": {
+    "width": 378,
+    "height": 1441,
+    "webp": "cellar-bottles/bratanov-3-blend-red-2019.webp",
+    "webpWidth": 378,
+    "variants": [
+      {
+        "src": "cellar-bottles/bratanov-3-blend-red-2019-160.webp",
+        "width": 160
+      }
+    ]
+  },
+  "cellar-bottles/bratanov-symbiose.jpg": {
+    "width": 508,
+    "height": 1600,
+    "webp": "cellar-bottles/bratanov-symbiose.webp",
+    "webpWidth": 508,
+    "variants": [
+      {
+        "src": "cellar-bottles/bratanov-symbiose-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/bratanov-symbiose-320.webp",
+        "width": 320
+      }
+    ]
+  },
+  "cellar-bottles/bratanov-syrah-elitsa-private-reserve-2021.jpg": {
+    "width": 479,
+    "height": 1441,
+    "webp": "cellar-bottles/bratanov-syrah-elitsa-private-reserve-2021.webp",
+    "webpWidth": 479,
+    "variants": [
+      {
+        "src": "cellar-bottles/bratanov-syrah-elitsa-private-reserve-2021-160.webp",
+        "width": 160
+      }
+    ]
+  },
+  "cellar-bottles/bratanov-vintage-pop-up-syrah-viognier.jpg": {
+    "width": 497,
+    "height": 1600,
+    "webp": "cellar-bottles/bratanov-vintage-pop-up-syrah-viognier.webp",
+    "webpWidth": 497,
+    "variants": [
+      {
+        "src": "cellar-bottles/bratanov-vintage-pop-up-syrah-viognier-160.webp",
+        "width": 160
+      },
+      {
+        "src": "cellar-bottles/bratanov-vintage-pop-up-syrah-viognier-320.webp",
+        "width": 320
       }
     ]
   },
@@ -392,6 +467,13 @@
       }
     ]
   },
+  "cellar-bottles/usonia-new-suns-2024.jpg": {
+    "width": 202,
+    "height": 675,
+    "webp": "cellar-bottles/usonia-new-suns-2024.webp",
+    "webpWidth": 202,
+    "variants": []
+  },
   "cellar-bottles/vecchia-romagna-etichetta-nera.jpg": {
     "width": 1200,
     "height": 1807,
@@ -437,6 +519,18 @@
       {
         "src": "cellar-bottles/veuve-clicquot-vintage-brut-1996-720.webp",
         "width": 720
+      }
+    ]
+  },
+  "cellar-bottles/villa-melnik-aplauz-mavrud-reserve-2022.jpg": {
+    "width": 332,
+    "height": 1167,
+    "webp": "cellar-bottles/villa-melnik-aplauz-mavrud-reserve-2022.webp",
+    "webpWidth": 332,
+    "variants": [
+      {
+        "src": "cellar-bottles/villa-melnik-aplauz-mavrud-reserve-2022-160.webp",
+        "width": 160
       }
     ]
   },

@@ -89,6 +89,14 @@ const total = categories.reduce((sum, c) => sum + c.count, 0);
   html.js:not(.exp-ready) [data-year-group]:not(:has(.experience-item[data-featured="true"])) {
     display: none;
   }
+  /* Entries reached from the timeline chart must clear the sticky header + filter bar (set by the script). */
+  .experience-item {
+    scroll-margin-top: var(--exp-scroll-margin, 12rem);
+  }
+  /* The filter controls need JS; without it they would only cover entries as a sticky bar. */
+  html:not(.js) #exp-filters {
+    display: none;
+  }
 </style>
 
 <script>
@@ -165,18 +173,66 @@ const total = categories.reduce((sum, c) => sum + c.count, 0);
     apply();
   });
 
-  // Deep-linked entry: show everything if it would be filtered out, then expand it
-  const target = location.hash ? document.getElementById(location.hash.slice(1)) : null;
-  const deepLink = target && target.tagName === "DETAILS" ? (target as HTMLDetailsElement) : null;
-  selectCategory(deepLink && !matchesCategory(deepLink, "highlights") ? "all" : "highlights");
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const siteHeader = document.getElementById("site-nav");
+  const filterBar = document.getElementById("exp-filters");
+
+  /** Keep a jumped-to entry clear of the sticky site header and the sticky filter bar. */
+  function updateScrollMargin() {
+    const need = (siteHeader?.offsetHeight ?? 0) + (filterBar?.offsetHeight ?? 0) + 16;
+    const padding = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+    document.documentElement.style.setProperty("--exp-scroll-margin", `${Math.max(0, need - padding)}px`);
+  }
+
+  /** Show an entry even if the current filter hides it, open it and scroll it into view. */
+  const safeDecode = (s: string) => {
+    try {
+      return decodeURIComponent(s);
+    } catch {
+      return s;
+    }
+  };
+
+  function reveal(id: string, { smooth = true, focus = false }: { smooth?: boolean; focus?: boolean } = {}) {
+    const el = id ? document.getElementById(id) : null;
+    if (!el || !el.classList.contains("experience-item")) return;
+    const item = el as HTMLDetailsElement;
+    if (item.hidden) {
+      if (search) search.value = "";
+      activeQuery = "";
+      selectCategory("all");
+      apply();
+    }
+    item.open = true;
+    if (focus) item.querySelector<HTMLElement>("summary")?.focus({ preventScroll: true });
+    updateScrollMargin();
+    requestAnimationFrame(() => {
+      item.scrollIntoView({ behavior: smooth && !prefersReduced.matches ? "smooth" : "auto", block: "start" });
+    });
+  }
+
+  // Open on Highlights. A deep link to a hidden entry switches to "All" (via reveal) below.
+  selectCategory("highlights");
   apply();
   // Hand over from the pre-paint CSS (see the <style is:global> above) to the script.
   document.documentElement.classList.add("exp-ready");
 
-  if (deepLink) {
-    deepLink.open = true;
-    requestAnimationFrame(() => {
-      deepLink.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  }
+  if (location.hash) reveal(safeDecode(location.hash.slice(1)), { smooth: false });
+
+  window.addEventListener("hashchange", () => reveal(safeDecode(location.hash.slice(1)), { focus: true }));
+
+  // Re-clicking a link to the current hash fires no hashchange, so handle in-page links directly.
+  document.addEventListener("click", (e) => {
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const link = (e.target as Element).closest<HTMLAnchorElement>("a[href^=\"#\"]");
+    if (!link) return;
+    const id = safeDecode(link.getAttribute("href")!.slice(1));
+    const el = id ? document.getElementById(id) : null;
+    if (!el || !el.classList.contains("experience-item")) return;
+    // Capture phase + preventDefault: the site-wide smooth-anchor handler checks defaultPrevented and steps aside,
+    // so it cannot scroll to a still-hidden entry. Propagation continues for other listeners.
+    e.preventDefault();
+    if (location.hash !== `#${id}`) history.pushState(null, "", `#${id}`);
+    reveal(id, { focus: true });
+  }, true);
 </script>

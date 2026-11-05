@@ -77,6 +77,8 @@ function initMagneticButtons() {
 function initSmoothAnchors() {
   document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
     a.addEventListener("click", (e) => {
+      // Another handler (e.g. the experience page's capture listener) already took this click.
+      if (e.defaultPrevented) return;
       const id = a.getAttribute("href")?.slice(1);
       if (!id) return;
       const target = document.getElementById(id);
