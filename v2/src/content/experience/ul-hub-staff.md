@@ -2,6 +2,7 @@
 title: Hub Staff
 employer: First 7 Weeks, University of Limerick
 employerShort: "UL First 7 Weeks"
+workplace: University of Limerick
 employerUrl: https://www.ul.ie/ctl/students/first-seven-weeks
 location: Limerick, Ireland
 category: education

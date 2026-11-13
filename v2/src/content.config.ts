@@ -11,6 +11,8 @@ const experience = defineCollection({
     employer: z.string(),
     // Compact employer name for tight layouts (the experience timeline); falls back to `employer`.
     employerShort: z.string().optional(),
+    // Groups roles on the experience timeline under one workplace; defaults to `employer`.
+    workplace: z.string().optional(),
     employerUrl: z.string().url().optional(),
     location: z.string().optional(),
     category: z.enum([

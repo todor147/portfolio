@@ -2,6 +2,7 @@
 title: ICT Learning Centre Tutor
 employer: ICTLC, University of Limerick
 employerShort: "UL ICTLC"
+workplace: University of Limerick
 employerUrl: https://ictlc.ul.ie/
 location: Limerick, Ireland
 category: education

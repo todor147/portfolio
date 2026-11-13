@@ -2,6 +2,7 @@
 title: Temporary Computing Assistant
 employer: Information Technology Division, University of Limerick
 employerShort: "UL IT Division"
+workplace: University of Limerick
 employerUrl: https://www.ul.ie/itd
 location: Limerick, Ireland
 category: software

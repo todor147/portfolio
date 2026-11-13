@@ -48,3 +48,32 @@ export function todayPosition(now: Date = new Date()): number {
   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
   return monthIndex(currentYm(now)) + (now.getDate() - 0.5) / daysInMonth;
 }
+
+/** Group key on the timeline: the optional `workplace`, else the employer. */
+export function workplaceKey(d: { workplace?: string; employer: string }): string {
+  return d.workplace ?? d.employer;
+}
+
+/** Group display name: `workplace`, else the short employer name, else the employer. */
+export function workplaceName(d: {
+  workplace?: string;
+  employerShort?: string;
+  employer: string;
+}): string {
+  return d.workplace ?? d.employerShort ?? d.employer;
+}
+
+/** "Limerick, Ireland" -> "Limerick"; "Dublin, Ireland (remote)" -> "Dublin (remote)". Other values pass through. */
+export function placeLocation(location?: string): string {
+  return (location ?? "").replace(", Ireland", "").trim();
+}
+
+/**
+ * Department shown after a role title when a workplace has several employers (University of Limerick).
+ * Takes the short employer name, drops a leading "UL ", and returns "" when nothing useful is left
+ * (just "UL", or the same as the workplace name).
+ */
+export function departmentLabel(shortEmployer: string, groupName: string): string {
+  const dept = shortEmployer.replace(/^UL /, "");
+  return dept === "UL" || dept === groupName ? "" : dept;
+}

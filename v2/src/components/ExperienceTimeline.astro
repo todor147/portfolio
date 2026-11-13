@@ -8,11 +8,15 @@ import {
   indexToYm,
   currentYm,
   todayPosition,
+  workplaceKey,
+  workplaceName,
+  placeLocation,
+  departmentLabel,
 } from "../lib/experience";
 
 /**
- * "How the roles overlap": a concurrency strip plus a Gantt of every role.
- * Fully server-rendered; the client script only adds the tooltip, crosshair and keyboard stepping.
+ * "Where I worked, when": a concurrency strip plus a Gantt of every role, grouped by workplace.
+ * Fully server-rendered; the client script only adds the tooltip, month cursor and keyboard stepping.
  */
 
 const entries = await getCollection("experience");
@@ -20,11 +24,20 @@ const now = new Date();
 const nowYm = currentYm(now);
 const nowIdx = monthIndex(nowYm);
 const todayPos = todayPosition(now);
+const pl = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
 interface Stint {
+  /** Index in `stints`. */
+  i: number;
   id: string;
   title: string;
   employer: string;
+  short: string;
+  /** Workplace group key. */
+  place: string;
+  placeName: string;
+  /** Location without ", Ireland". */
+  location: string;
   category: string;
   startIdx: number;
   /** Last month, inclusive. */
@@ -35,15 +48,20 @@ interface Stint {
   months: number;
 }
 
-const stints: Stint[] = entries.map((e) => {
+const stints: Stint[] = entries.map((e, i) => {
   const d = e.data;
   const startIdx = monthIndex(d.start);
   const endIdx = d.current ? nowIdx : d.end ? monthIndex(d.end) : startIdx;
   const months = endIdx - startIdx + 1;
   return {
+    i,
     id: e.id,
     title: d.title,
     employer: d.employer,
+    short: d.employerShort ?? d.employer,
+    place: workplaceKey(d),
+    placeName: workplaceName(d),
+    location: placeLocation(d.location),
     category: d.category,
     startIdx,
     endIdx,
@@ -53,8 +71,6 @@ const stints: Stint[] = entries.map((e) => {
     months,
   };
 });
-const shortOf = new Map(entries.map((e) => [e.id, e.data.employerShort ?? e.data.employer]));
-const short = (s: Stint) => shortOf.get(s.id) ?? s.employer;
 
 // ── Time domain: first start (minus a month) .. end of the current month (plus a month) ──
 const firstIdx = Math.min(...stints.map((s) => s.startIdx));
@@ -66,6 +82,90 @@ const pct = (m: number) => ((m - d0) / span) * 100;
 const round2 = (n: number) => Math.round(n * 100) / 100;
 const pct2 = (m: number) => round2(Math.min(Math.max(pct(m), 0), 100));
 
+// ── Gantt: workplaces, each with rows that merge stints with the same title + employer ──
+interface Row {
+  key: string;
+  title: string;
+  employer: string;
+  short: string;
+  /** Department shown after the title (see below); "" when none. */
+  dept: string;
+  category: string;
+  stints: Stint[];
+  first: number;
+  featured: boolean;
+  current: boolean;
+}
+interface Group {
+  key: string;
+  name: string;
+  location: string;
+  first: number;
+  employers: Set<string>;
+  locations: Set<string>;
+  rows: Row[];
+}
+const groupMap = new Map<string, Group>();
+const rowMap = new Map<string, Row>();
+for (const s of stints) {
+  let g = groupMap.get(s.place);
+  if (!g) {
+    g = {
+      key: s.place,
+      name: s.placeName,
+      location: "",
+      first: s.startIdx,
+      employers: new Set(),
+      locations: new Set(),
+      rows: [],
+    };
+    groupMap.set(s.place, g);
+  }
+  g.first = Math.min(g.first, s.startIdx);
+  g.employers.add(s.employer);
+  if (s.location) g.locations.add(s.location);
+
+  const key = `${s.place}|${s.category}|${s.title}|${s.employer}`;
+  let r = rowMap.get(key);
+  if (!r) {
+    r = {
+      key,
+      title: s.title,
+      employer: s.employer,
+      short: s.short,
+      dept: "",
+      category: s.category,
+      stints: [],
+      first: s.startIdx,
+      featured: false,
+      current: false,
+    };
+    rowMap.set(key, r);
+    g.rows.push(r);
+  }
+  r.stints.push(s);
+  r.first = Math.min(r.first, s.startIdx);
+  r.featured ||= s.featured;
+  r.current ||= s.current;
+}
+// Workplaces run chronologically by their earliest start; rows inside a workplace by first start.
+const groups = [...groupMap.values()].sort((a, b) => a.first - b.first || a.name.localeCompare(b.name));
+for (const g of groups) {
+  g.location = [...g.locations].join(" / ");
+  g.rows.sort((a, b) => a.first - b.first);
+  g.rows.forEach((r) => r.stints.sort((a, b) => a.startIdx - b.startIdx));
+  // Only a workplace with several employers (University of Limerick) labels each row with its
+  // department: the short employer name minus a leading "UL ", dropped when it adds nothing
+  // (just "UL", or the same as the workplace name).
+  if (g.employers.size > 1) g.rows.forEach((r) => (r.dept = departmentLabel(r.short, g.name)));
+}
+// Gantt order of every stint, so month readouts list roles the way the chart does.
+const rank: number[] = [];
+{
+  let n = 0;
+  for (const g of groups) for (const r of g.rows) for (const s of r.stints) rank[s.i] = n++;
+}
+
 // ── Concurrency per month ──
 const monthCount = nowIdx - firstIdx + 1;
 const active: number[][] = Array.from({ length: monthCount }, () => []);
@@ -74,23 +174,17 @@ stints.forEach((s, i) => {
     active[m - firstIdx].push(i);
   }
 });
-// List each month's roles in Gantt group order, so the readout matches the chart.
-const catRank = (c: string) => {
-  const i = (categoryOrder as readonly string[]).indexOf(c);
-  return i === -1 ? categoryOrder.length : i;
-};
-active.forEach((a) =>
-  a.sort(
-    (x, y) =>
-      catRank(stints[x].category) - catRank(stints[y].category) ||
-      stints[x].startIdx - stints[y].startIdx ||
-      x - y,
-  ),
-);
+active.forEach((a) => a.sort((x, y) => rank[x] - rank[y]));
 const counts = active.map((a) => a.length);
+const placeCounts = active.map((a) => new Set(a.map((i) => stints[i].place)).size);
 const peak = Math.max(...counts);
 const peakMonths = counts.flatMap((c, i) => (c === peak ? [firstIdx + i] : []));
 const nowCount = counts[nowIdx - firstIdx] ?? 0;
+const nowPlaces = placeCounts[nowIdx - firstIdx] ?? 0;
+const peakPlaceVals = peakMonths.map((m) => placeCounts[m - firstIdx]);
+const pMin = Math.min(...peakPlaceVals);
+const pMax = Math.max(...peakPlaceVals);
+const peakPlacesText = pMin === pMax ? pl(pMin, "place") : `${pMin}–${pMax} places`;
 
 // Peak months as consecutive runs, e.g. "Jun – Aug 2026".
 const peakRuns: [number, number][] = [];
@@ -134,8 +228,9 @@ const peakAlign = peakX > 82 ? "end" : peakX < 12 ? "start" : "mid";
 const stripData = {
   first: firstIdx,
   ymax: yMax,
-  roles: stints.map((s) => [s.title, short(s), s.category]),
+  roles: stints.map((s) => [s.title, s.placeName, s.category]),
   by: active,
+  pc: placeCounts,
 };
 
 // ── Gridlines (one per January) + Today line, as one background shared by every track ──
@@ -151,53 +246,16 @@ const gridLayers = years
   )
   .join(",");
 
-// ── Gantt rows: merge stints with the same title + employer ──
-interface Row {
-  key: string;
-  title: string;
-  employer: string;
-  short: string;
-  category: string;
-  stints: Stint[];
-  first: number;
-  featured: boolean;
-  current: boolean;
-}
-const rowMap = new Map<string, Row>();
-for (const s of stints) {
-  const key = `${s.category}|${s.title}|${s.employer}`;
-  let r = rowMap.get(key);
-  if (!r) {
-    r = {
-      key,
-      title: s.title,
-      employer: s.employer,
-      short: short(s),
-      category: s.category,
-      stints: [],
-      first: s.startIdx,
-      featured: false,
-      current: false,
-    };
-    rowMap.set(key, r);
-  }
-  r.stints.push(s);
-  r.first = Math.min(r.first, s.startIdx);
-  r.featured ||= s.featured;
-  r.current ||= s.current;
-}
-const rows = [...rowMap.values()];
-const orderedCats = [
-  ...categoryOrder.filter((c) => rows.some((r) => r.category === c)),
-  ...[...new Set(rows.map((r) => r.category))].filter(
+const legendCats = [
+  ...categoryOrder.filter((c) => stints.some((s) => s.category === c)),
+  ...[...new Set(stints.map((s) => s.category))].filter(
     (c) => !(categoryOrder as readonly string[]).includes(c),
   ),
 ];
-const groups = orderedCats.map((cat) => ({
+const legend = legendCats.map((cat) => ({
   cat,
   label: categoryLabels[cat] ?? cat,
   count: stints.filter((s) => s.category === cat).length,
-  rows: rows.filter((r) => r.category === cat).sort((a, b) => a.first - b.first),
 }));
 
 function barStyle(s: Stint): string {
@@ -207,7 +265,7 @@ function barStyle(s: Stint): string {
   return `--l:${left};--w:${width}`;
 }
 function barLabel(s: Stint): string {
-  return `${s.title}, ${s.employer}: ${s.range}, ${formatDuration(s.months)}`;
+  return `${s.title} at ${s.employer}${s.location ? `, ${s.location}` : ""}: ${s.range}, ${formatDuration(s.months)}`;
 }
 
 // ── Table twin ──
@@ -224,8 +282,19 @@ const period = (from: number, to: number) =>
   from === to
     ? formatMonthYear(indexToYm(from))
     : `${formatMonthYear(indexToYm(from))} – ${formatMonthYear(indexToYm(to))}`;
+/** "Place: role, role; Place: role", in Gantt group order. */
+function whereText(set: number[]): string {
+  const byPlace = new Map<string, string[]>();
+  for (const i of set) {
+    const s = stints[i];
+    const list = byPlace.get(s.placeName) ?? [];
+    list.push(s.title);
+    byPlace.set(s.placeName, list);
+  }
+  return [...byPlace].map(([p, t]) => `${p}: ${t.join(", ")}`).join("; ");
+}
 
-const stripLabel = `Roles per month, ${formatMonthYear(indexToYm(firstIdx))} to ${nowLabel}. Busiest: ${peak} roles in ${peakLabel}. Now: ${nowCount} (${nowLabel}).`;
+const stripLabel = `Roles per month, ${formatMonthYear(indexToYm(firstIdx))} to ${nowLabel}. Busiest: ${pl(peak, "role")} at ${peakPlacesText} in ${peakLabel}. Now: ${pl(nowCount, "role")} at ${pl(nowPlaces, "place")} (${nowLabel}).`;
 const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
 ---
 
@@ -244,39 +313,42 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
   <a class="xt-skip" href="#exp-filters">Skip the chart</a>
   <div class="xt-head">
     <p class="eyebrow">At a glance</p>
-    <h2 id="xt-title" class="font-display xt-h2">How the roles overlap</h2>
+    <h2 id="xt-title" class="font-display xt-h2">Where I worked, and when</h2>
     <p class="xt-lede">
-      Each bar is one stretch in a role, grouped by type. The strip on top counts the roles active in each month. Select a bar to jump to its entry.
+      Each row is a role, grouped by where I worked; colour shows the type of work. Read down any month to see where I was, move along the strip to list them, or select a bar to jump to its entry.
     </p>
   </div>
 
   <dl class="xt-stats">
     <div class="xt-stat">
-      <dt>Positions</dt>
+      <dt>Roles</dt>
       <dd class="xt-num">{stints.length}</dd>
-      <dd class="xt-sub">since {formatMonthYear(indexToYm(firstIdx))}</dd>
+      <dd class="xt-sub">at {groups.length} workplaces since {formatMonthYear(indexToYm(firstIdx))}</dd>
     </div>
     <div class="xt-stat">
       <dt>{peakMonths.length === 1 ? "Busiest month" : "Busiest months"}</dt>
       <dd class="xt-num">{peak}</dd>
-      <dd class="xt-sub">roles &middot; {peakLabel}</dd>
+      <dd class="xt-sub">roles at {peakPlacesText} &middot; {peakLabel}</dd>
     </div>
     <div class="xt-stat">
-      <dt>Active now</dt>
+      <dt>Right now</dt>
       <dd class="xt-num">{nowCount}</dd>
-      <dd class="xt-sub">roles &middot; {nowLabel}</dd>
+      <dd class="xt-sub">roles at {pl(nowPlaces, "place")} &middot; {nowLabel}</dd>
     </div>
   </dl>
 
-  <ul class="xt-legend" aria-label="Role types">
-    {groups.map((g) => (
-      <li>
-        <span class="xt-swatch" data-cat={g.cat} aria-hidden="true"></span>
-        <span class="xt-legend-label">{g.label}</span>
-        <span class="xt-legend-count">{g.count}</span>
-      </li>
-    ))}
-  </ul>
+  <div class="xt-legend-wrap">
+    <p class="xt-legend-t" aria-hidden="true">Type of work</p>
+    <ul class="xt-legend" aria-label="Type of work">
+      {legend.map((g) => (
+        <li>
+          <span class="xt-swatch" data-cat={g.cat} aria-hidden="true"></span>
+          <span class="xt-legend-label">{g.label}</span>
+          <span class="xt-legend-count">{g.count}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
 
   <div class="xt-chart">
     <p id="xt-strip-desc" class="sr-only">{stripLabel} Use the arrow keys to step through months.</p>
@@ -296,7 +368,7 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
           aria-valuemin={firstIdx}
           aria-valuemax={nowIdx}
           aria-valuenow={nowIdx}
-          aria-valuetext={`${nowLabel}: ${nowCount} roles`}
+          aria-valuetext={`${nowLabel}: ${pl(nowCount, "role")} at ${pl(nowPlaces, "place")}`}
           aria-describedby="xt-strip-desc"
           data-strip={JSON.stringify(stripData)}
         >
@@ -324,7 +396,7 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
     </div>
 
     <!-- Axis (top) -->
-    <div class="xt-row xt-axis-row" aria-hidden="true">
+    <div class="xt-row xt-axis-row xt-axis-top" aria-hidden="true">
       <div class="xt-label"></div>
       <div class="xt-track xt-axis">
         {leadYear !== null && (
@@ -345,21 +417,14 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
 
     {groups.map((g) => (
       <div class="xt-group">
-        <div class="xt-row xt-gh-row">
-          <div class="xt-label">
-            <h3 class="xt-gh">
-              <span class="xt-swatch" data-cat={g.cat} aria-hidden="true"></span>
-              {g.label}
-              <span class="xt-gh-count">{g.count}</span>
-            </h3>
-          </div>
-          <div class="xt-track xt-gh-track" aria-hidden="true"></div>
+        <div class="xt-place">
+          <h3 class="xt-gh"><span class="xt-gh-name">{g.name}</span>{g.location && <>{" "}<span class="xt-gh-loc">{g.location}</span></>}</h3>
         </div>
         <ul class="xt-rows">
           {g.rows.map((r) => (
             <li class="xt-row xt-role">
               <div class="xt-label">
-                <span class:list={["xt-title", { "xt-feat": r.featured }]}>{r.title}</span><span class="xt-emp">&nbsp;&middot; {r.short}</span>{r.current && <>&nbsp;<span class="xt-now">Now</span></>}
+                <span class:list={["xt-title", { "xt-feat": r.featured }]}>{r.title}</span>{r.dept && <span class="xt-emp">&nbsp;&middot; {r.dept}</span>}{r.current && <>&nbsp;<span class="xt-now">Now</span></>}
               </div>
               <div class="xt-track" data-cat={r.category}>
                 {r.stints.map((s) => (
@@ -368,12 +433,15 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
                     href={`#${s.id}`}
                     style={barStyle(s)}
                     aria-label={barLabel(s)}
+                    data-s={s.startIdx}
+                    data-e={s.endIdx}
                     data-dur={formatDuration(s.months)}
                     data-title={s.title}
                     data-emp={s.employer}
+                    data-loc={s.location}
                     data-range={s.range}
                     data-cat={s.category}
-                    data-catlabel={g.label}
+                    data-catlabel={categoryLabels[s.category] ?? s.category}
                   ></a>
                 ))}
               </div>
@@ -399,6 +467,10 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
         ))}
       </div>
     </div>
+
+    <!-- Month cursor (positioned by the script) -->
+    <span class="xt-vline" hidden aria-hidden="true"></span>
+    <span class="xt-chip" hidden aria-hidden="true"></span>
   </div>
 
   <div class="xt-tip" hidden aria-hidden="true">
@@ -424,7 +496,8 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
           <tr>
             <th scope="col">Role</th>
             <th scope="col">Employer</th>
-            <th scope="col">Category</th>
+            <th scope="col">Location</th>
+            <th scope="col">Type</th>
             <th scope="col">From</th>
             <th scope="col">To</th>
             <th scope="col">Length</th>
@@ -436,8 +509,9 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
               <th scope="row"><a href={`#${s.id}`}>{s.title}</a></th>
               <td>
                 <span class="xt-emp-full">{s.employer}</span>
-                <span class="xt-emp-short">{short(s)}</span>
+                <span class="xt-emp-short">{s.short}</span>
               </td>
+              <td>{s.location}</td>
               <td class="xt-nw">{categoryLabels[s.category] ?? s.category}</td>
               <td class="xt-nw">{formatMonthYear(indexToYm(s.startIdx))}</td>
               <td class="xt-nw">{s.current ? "Present" : formatMonthYear(indexToYm(s.endIdx))}</td>
@@ -454,8 +528,9 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
         <thead>
           <tr>
             <th scope="col">Period</th>
-            <th scope="col">Active</th>
             <th scope="col">Roles</th>
+            <th scope="col">Places</th>
+            <th scope="col">Where</th>
           </tr>
         </thead>
         <tbody>
@@ -463,7 +538,8 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
             <tr>
               <th scope="row" class="xt-nw">{period(r.from, r.to)}</th>
               <td class="xt-nw">{r.set.length}</td>
-              <td class="xt-roles">{r.set.map((i) => `${stints[i].title} (${short(stints[i])})`).join("; ")}</td>
+              <td class="xt-nw">{new Set(r.set.map((i) => stints[i].place)).size}</td>
+              <td class="xt-roles">{whereText(r.set)}</td>
             </tr>
           ))}
         </tbody>
@@ -484,7 +560,10 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
     --xt-delivery: #6250d6;
     --xt-grid: color-mix(in oklab, var(--text) 10%, transparent);
     --xt-today: var(--accent);
+    /* Label column width (tablet/phone). On desktop it is the place column + the role column. */
     --xt-lw: clamp(13rem, 24vw, 17rem);
+    --xt-pw: clamp(8.5rem, 9vw, 9.5rem);
+    --xt-rw: clamp(12rem, 13vw, 13rem);
 
     position: relative;
     margin: 0;
@@ -496,7 +575,7 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
     min-width: 0;
   }
   @media (min-width: 1024px) {
-    .xt { --xt-lw: clamp(17rem, 26vw, 21rem); }
+    .xt { --xt-lw: calc(var(--xt-pw) + var(--xt-rw)); }
   }
   :root.dark .xt {
     --xt-software: #3987e5;
@@ -527,14 +606,16 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
   .xt-stat .xt-num { margin: 0.1rem 0 0; font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; font-variant-numeric: proportional-nums; color: var(--text); }
   .xt-stat .xt-sub { margin: 0.15rem 0 0; font-size: 0.8125rem; line-height: 1.35; color: var(--text-soft); }
 
-  /* Legend */
-  .xt-legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; margin: 1.25rem 0 0; padding: 0; list-style: none; font-size: 0.8125rem; }
+  /* Legend (colour = type of work) */
+  .xt-legend-wrap { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 1rem; margin: 1.25rem 0 0; }
+  .xt-legend-t { margin: 0; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.04em; color: var(--text-soft); }
+  .xt-legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; margin: 0; padding: 0; list-style: none; font-size: 0.8125rem; }
   .xt-legend li { display: inline-flex; align-items: center; gap: 0.4rem; }
   .xt-swatch { display: inline-block; flex: none; width: 12px; height: 12px; border-radius: 3px; background: var(--c); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .xt-legend-label { color: var(--text); }
   .xt-legend-count { color: var(--text-soft); font-variant-numeric: tabular-nums; }
 
-  /* Chart grid: every row shares the same two columns so gridlines line up */
+  /* Chart grid: strip and axis rows share the label | track columns, so gridlines line up with every role track */
   .xt-chart { margin-top: 1.5rem; position: relative; }
   .xt-row { display: grid; grid-template-columns: var(--xt-lw) minmax(0, 1fr); align-items: stretch; margin: 0; padding: 0; list-style: none; }
   .xt-rows { margin: 0; padding: 0; list-style: none; }
@@ -545,19 +626,41 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
   .xt-emp { color: var(--text-soft); }
   .xt-now { display: inline; margin-left: 0.15rem; padding: 0 0.3rem; font-size: 0.6875rem; font-weight: 600; line-height: 1.35; letter-spacing: 0.03em; text-transform: uppercase; color: var(--accent); border: 1px solid color-mix(in oklab, var(--accent) 55%, transparent); border-radius: 4px; vertical-align: 1px; white-space: nowrap; }
 
-  /* Group heads */
-  .xt-group { margin-top: 0; }
-  .xt-gh-row .xt-track { min-height: calc(30px + 0.5rem); border-bottom: 1px solid var(--xt-grid); }
-  .xt-gh-row .xt-label { border-bottom: 1px solid var(--xt-grid); padding-top: 0.8rem; padding-bottom: 0.4rem; align-self: end; }
-  .xt-gh { display: flex; align-items: center; gap: 0.5rem; margin: 0; font-family: var(--font-sans); font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.02em; line-height: 1.3; color: var(--text); }
-  .xt-gh-count { color: var(--text-soft); font-weight: 450; font-variant-numeric: tabular-nums; }
+  /* Workplaces. Tablet default: a header row (place in the label column, gridlines in its track), then role rows. */
+  .xt-group { border-top: 1px solid var(--xt-grid); }
+  .xt-place { display: grid; grid-template-columns: var(--xt-lw) minmax(0, 1fr); min-width: 0; transition: opacity 0.12s; }
+  .xt-place::after { content: ""; background: var(--xt-grid-bg); min-height: 1.6rem; }
+  .xt-gh { margin: 0; padding: 0.55rem 0.9rem 0.4rem 0; min-width: 0; font-family: var(--font-sans); font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.02em; line-height: 1.3; color: var(--text); overflow-wrap: anywhere; }
+  .xt-gh-name { display: block; }
+  .xt-gh-loc { display: block; margin-top: 0.1rem; font-size: 0.75rem; font-weight: 450; letter-spacing: 0; color: var(--text-soft); }
+
+  /* Desktop: place | role | track. The place spans every row of its workplace and the rows stretch to fill its height. */
+  @media (min-width: 1024px) {
+    .xt-group { display: grid; grid-template-columns: var(--xt-pw) minmax(0, 1fr); }
+    .xt-place { display: block; }
+    .xt-place::after { display: none; }
+    .xt-gh { padding: 0.6rem 0.75rem 0.5rem 0; }
+    .xt-rows { display: flex; flex-direction: column; min-width: 0; }
+    .xt-role { flex: 1 1 auto; grid-template-columns: var(--xt-rw) minmax(0, 1fr); }
+  }
 
   /* Bars */
   /* The element is the 24px target; the visible 12px bar is painted inside it. */
   .xt-bar { position: absolute; top: 50%; height: 24px; left: calc(var(--l) * 1%); width: max(24px, calc(var(--w) * 1%)); margin-left: min(0px, calc((var(--w) * 1% - 24px) / 2)); transform: translateY(-50%); background: none; border-radius: 4px; }
-  .xt-bar::before { content: ""; position: absolute; inset-block: 6px; left: 50%; width: calc(var(--w) * 1cqw); translate: -50% 0; border-radius: 4px; background: var(--c); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .xt-bar::before { content: ""; position: absolute; inset-block: 6px; left: 50%; width: calc(var(--w) * 1cqw); translate: -50% 0; border-radius: 4px; background: var(--c); print-color-adjust: exact; -webkit-print-color-adjust: exact; transition: opacity 0.12s; }
   .xt-bar:hover::before { filter: brightness(1.14) saturate(1.05); }
   .xt-bar:focus-visible { outline-offset: 1px; }
+  .xt-label { transition: opacity 0.12s; }
+
+  /* Month cursor: while a month is selected (strip or hover), only what was happening then stays at full strength. */
+  .xt-scrub .xt-bar:not(.is-on)::before { opacity: 0.2; }
+  .xt-scrub .xt-role:not(.is-on) .xt-label { opacity: 0.35; }
+  .xt-scrub .xt-group:not(.is-on) .xt-place { opacity: 0.45; }
+  .xt-vline { position: absolute; z-index: 2; bottom: 0; width: 0; margin-left: -0.5px; border-left: 1px solid var(--text); pointer-events: none; }
+  .xt-chip { position: absolute; z-index: 3; top: 0; left: 0; padding: 0.1rem 0.45rem; font-size: 0.6875rem; font-weight: 600; line-height: 1.2; white-space: nowrap; color: var(--text); background: var(--bg); border: 1px solid color-mix(in oklab, var(--text) 35%, transparent); border-radius: 999px; pointer-events: none; font-variant-numeric: tabular-nums; }
+  @media (prefers-reduced-motion: reduce) {
+    .xt-bar::before, .xt-label, .xt-place { transition: none; }
+  }
 
   /* Strip */
   .xt-strip-row { margin-bottom: 0; }
@@ -573,14 +676,17 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
   .xt-peak { position: absolute; font-size: 0.75rem; font-weight: 600; line-height: 1; white-space: nowrap; color: var(--text); pointer-events: none; transform: translateX(-50%); }
   .xt-peak[data-align="end"] { transform: translateX(-100%); }
   .xt-peak[data-align="start"] { transform: none; }
-  .xt-cross { position: absolute; top: 0; bottom: 0; width: 0; pointer-events: none; border-left: 1px solid var(--text); }
+  /* Only the dot lives here; the vertical line is the chart-wide .xt-vline. */
+  .xt-cross { position: absolute; top: 0; bottom: 0; width: 0; pointer-events: none; }
   .xt-cross i { position: absolute; left: -4px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px var(--bg); }
 
   /* Axis */
   .xt-axis-row .xt-track { min-height: 22px; }
   .xt-year { position: absolute; top: 5px; padding-left: 4px; font-size: 0.6875rem; line-height: 1; color: var(--text-soft); font-variant-numeric: tabular-nums; }
   .xt-y-short { display: none; }
-  .xt-today-l { position: absolute; top: 3px; transform: translateX(-100%); padding-right: 5px; font-size: 0.6875rem; font-weight: 600; line-height: 1.2; white-space: nowrap; color: var(--accent); }
+  .xt-today-l { position: absolute; top: 17px; transform: translateX(-100%); padding-right: 5px; font-size: 0.6875rem; font-weight: 600; line-height: 1.2; white-space: nowrap; color: var(--accent); }
+  /* The top axis has two lines: years, then Today, so the Today label never meets a year label. */
+  .xt-axis-top .xt-track { min-height: 34px; }
   .xt-axis-bottom .xt-track { min-height: 20px; }
 
   /* Tooltip */
@@ -617,7 +723,7 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
   .xt-skip:focus { width: auto; height: auto; margin: 0; padding: 0.3rem 0.6rem; top: 0.5rem; left: 0.5rem; z-index: 6; overflow: visible; clip-path: none; background: var(--bg); color: var(--accent); border: 1px solid var(--accent); border-radius: 0.4rem; font-size: 0.8125rem; }
   html:not(.js) .xt-skip { display: none; }
 
-  /* Narrow screens: label above its track, abbreviated years */
+  /* Narrow screens: "Place · location" line, then each role label above its track; abbreviated years */
   @media (max-width: 639.98px) {
     .xt-stats { gap: 0.75rem 0.5rem; }
     .xt-stat .xt-sub { font-size: 0.75rem; }
@@ -628,13 +734,16 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
     .xt-role .xt-track { background: none; }
     .xt-label > span { background: var(--bg); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
     .xt-row { grid-template-columns: minmax(0, 1fr); }
-    .xt-label { padding: 0.45rem 0 0.1rem; align-self: auto; }
-    .xt-axis-row .xt-label, .xt-gh-row .xt-track { display: none; }
-    .xt-gh-row .xt-label { border-bottom: 1px solid var(--xt-grid); padding-top: 1rem; padding-bottom: 0.4rem; }
+    .xt-label { padding: 0.3rem 0 0; align-self: auto; }
+    .xt-axis-row .xt-label { display: none; }
+    .xt-place { display: block; }
+    .xt-place::after { display: none; }
+    .xt-gh { padding: 0.65rem 0 0.1rem; }
+    .xt-gh-name, .xt-gh-loc { display: inline; }
+    .xt-gh-loc { margin: 0; }
+    .xt-gh-loc::before { content: "\00b7\00a0"; margin-left: 0.15rem; }
     .xt-role .xt-track { min-height: 24px; }
     .xt-strip-track { min-height: 92px; margin-top: 0.4rem; }
-    .xt-axis-row .xt-track { min-height: 34px; }
-    .xt-today-l { top: 17px; }
     .xt-axis-bottom .xt-track { min-height: 22px; }
     .xt-y-full, .xt-today-m { display: none; }
     .xt-y-short { display: inline; }
@@ -646,14 +755,15 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
     .xt { --xt-grid: GrayText; --xt-today: Highlight; border-color: CanvasText; }
     .xt-bar::before, .xt-swatch, .xt-key { forced-color-adjust: none; background: CanvasText; }
     /* Gradients (gridlines, Today line) are dropped in forced colors, so opt the tracks out and use system colours. */
-    .xt-track { forced-color-adjust: none; }
+    .xt-track, .xt-place::after { forced-color-adjust: none; }
     .xt-line { stroke: CanvasText; }
     .xt-area { fill: none; }
     .xt-year, .xt-now, .xt-yticks span, .xt-peak { color: CanvasText; }
     .xt-today-l { color: Highlight; }
     .xt-strip { border-color: GrayText; }
     .xt-ygrid { stroke: GrayText; }
-    .xt-cross { border-color: CanvasText; }
+    .xt-vline { border-color: CanvasText; }
+    .xt-chip { color: CanvasText; background: Canvas; border-color: CanvasText; }
     .xt-cross i { background: Highlight; box-shadow: 0 0 0 2px Canvas; }
   }
 </style>
@@ -671,10 +781,14 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
     const span = d1 - d0;
     const nowIdx = Number(root.dataset.now);
     const todayPos = Number(root.dataset.today);
+    const chart = root.querySelector<HTMLElement>(".xt-chart");
     const strip = root.querySelector<HTMLElement>(".xt-strip");
     const tip = root.querySelector<HTMLElement>(".xt-tip");
     const cross = root.querySelector<HTMLElement>(".xt-cross");
-    if (!strip || !tip) return;
+    const vline = root.querySelector<HTMLElement>(".xt-vline");
+    const chip = root.querySelector<HTMLElement>(".xt-chip");
+    const topAxis = root.querySelector<HTMLElement>(".xt-axis-top .xt-track");
+    if (!chart || !strip || !tip || !vline || !chip) return;
 
     const q = <T extends HTMLElement>(sel: string) => tip.querySelector<T>(sel)!;
     const tv = q(".xt-tip-v");
@@ -685,17 +799,56 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
     const tkText = tk.querySelector<HTMLElement>("span")!;
     const tl = q<HTMLUListElement>(".xt-tip-list");
 
-    type StripData = { first: number; ymax: number; roles: [string, string, string][]; by: number[][] };
+    type StripData = {
+      first: number;
+      ymax: number;
+      roles: [string, string, string][];
+      by: number[][];
+      pc: number[];
+    };
     const data = JSON.parse(strip.dataset.strip ?? "null") as StripData | null;
+
+    // The Gantt as data, so a month change only toggles classes.
+    const model = [...root.querySelectorAll<HTMLElement>(".xt-group")].map((el) => ({
+      el,
+      rows: [...el.querySelectorAll<HTMLElement>(".xt-role")].map((row) => ({
+        el: row,
+        bars: [...row.querySelectorAll<HTMLElement>(".xt-bar")].map((b) => ({
+          el: b,
+          s: Number(b.dataset.s),
+          e: Number(b.dataset.e),
+        })),
+      })),
+    }));
+
+    const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
     let hovering = false;
     /** What the tooltip currently shows, so pointermove can skip redundant rebuilds. */
     let shown: "bar" | "strip" | null = null;
+    /** Month cursor: the month applied to the chart (null = off) and which input drives it. */
+    type Src = "strip" | "hover";
+    let applied: number | null = null;
+    let mode: Src | null = null;
+    let month = nowIdx;
 
-    function hide() {
+    function hideTip() {
       tip!.hidden = true;
       shown = null;
+    }
+    function clearMonth() {
+      if (shown === "strip") hideTip();
+      if (applied === null && mode === null) return;
+      applied = null;
+      mode = null;
+      root.classList.remove("xt-scrub");
+      vline!.hidden = true;
+      chip!.hidden = true;
       if (cross) cross.hidden = true;
+    }
+    function clearAll() {
+      hideTip();
+      clearMonth();
     }
     /**
      * Place the tooltip next to the anchor rect (viewport coordinates), on the preferred side
@@ -721,7 +874,7 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
       const d = bar.dataset;
       tv.textContent = d.dur ?? "";
       ta.textContent = d.title ?? "";
-      tb.textContent = d.emp ?? "";
+      tb.textContent = d.loc ? `${d.emp} · ${d.loc}` : (d.emp ?? "");
       tc.textContent = d.range ?? "";
       tkText.textContent = d.catlabel ?? "";
       tk.querySelector<HTMLElement>(".xt-key")!.dataset.cat = d.cat ?? "";
@@ -739,7 +892,7 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
     });
     root.addEventListener("pointerout", (e) => {
       const bar = (e.target as Element).closest<HTMLElement>(".xt-bar");
-      if (bar && !bar.contains(e.relatedTarget as Node | null)) hide();
+      if (bar && !bar.contains(e.relatedTarget as Node | null)) hideTip();
     });
     root.addEventListener("focusin", (e) => {
       const bar = (e.target as Element).closest<HTMLElement>(".xt-bar");
@@ -747,104 +900,191 @@ const todayShortMonth = formatMonthYear(nowYm).slice(0, 3);
     });
     root.addEventListener("focusout", (e) => {
       const t = e.target as Element;
-      if (t.closest(".xt-bar") || t === strip) hide();
+      if (t.closest(".xt-bar")) hideTip();
+      else if (t === strip) clearAll();
     });
 
-    // ── Strip ──
-    let month = nowIdx;
-    function showMonth(m: number) {
+    // ── Month cursor, shared by the strip and the Gantt ──
+    function setMonth(m: number, src: Src) {
       if (!data) return;
-      const first = data.first;
-      const next = Math.min(Math.max(m, first), nowIdx);
-      // Same month, same tooltip: nothing to rebuild or re-measure.
-      if (next === month && shown === "strip" && !tip!.hidden) return;
+      const next = Math.min(Math.max(m, data.first), nowIdx);
+      const monthChanged = next !== applied;
+      const srcChanged = src !== mode;
       month = next;
-      const list = data.by[month - first] ?? [];
-      const label = formatMonthYear(indexToYm(month));
-      tv.textContent = `${list.length} role${list.length === 1 ? "" : "s"}`;
-      ta.textContent = label;
-      ta.hidden = false;
-      [tb, tc, tk].forEach((e) => (e.hidden = true));
-      tl.hidden = false;
-      strip!.setAttribute("aria-valuenow", String(month));
-      tl.replaceChildren(
-        ...list.map((i) => {
-          const [title, emp, cat] = data.roles[i];
-          const li = document.createElement("li");
-          const key = document.createElement("i");
-          key.className = "xt-key";
-          key.dataset.cat = cat;
-          const span = document.createElement("span");
-          span.textContent = `${title} · ${emp}`;
-          li.append(key, span);
-          return li;
-        }),
-      );
-      const sr = strip!.getBoundingClientRect();
-      // The current month's crosshair stops at Today, like the strip itself.
-      const frac = (Math.min(month + 0.5, todayPos) - d0) / span;
-      const x = sr.left + sr.width * frac;
-      if (cross) {
-        cross.hidden = false;
-        cross.style.left = `${frac * 100}%`;
-        const dot = cross.querySelector<HTMLElement>("i");
-        if (dot) dot.style.top = `calc(${100 - (list.length / data.ymax) * 100}% - 3px)`;
+      if (!monthChanged && !srcChanged && (src === "hover" || shown === "strip")) return;
+      mode = src;
+
+      const idx = next - data.first;
+      const list = data.by[idx] ?? [];
+      const label = formatMonthYear(indexToYm(next));
+      const roles = plural(list.length, "role");
+      const summary = `${roles} at ${plural(data.pc[idx] ?? 0, "place")}`;
+
+      if (monthChanged) {
+        applied = next;
+        root.classList.add("xt-scrub");
+        for (const g of model) {
+          let groupOn = false;
+          for (const r of g.rows) {
+            let rowOn = false;
+            for (const b of r.bars) {
+              const on = b.s <= next && next <= b.e;
+              b.el.classList.toggle("is-on", on);
+              rowOn ||= on;
+            }
+            r.el.classList.toggle("is-on", rowOn);
+            groupOn ||= rowOn;
+          }
+          g.el.classList.toggle("is-on", groupOn);
+        }
       }
-      shown = "strip";
-      strip!.setAttribute(
-        "aria-valuetext",
-        `${label}: ${tv.textContent}${list.length ? `: ${list.map((i) => data.roles[i][0] + ", " + data.roles[i][1]).join("; ")}` : ""}`,
-      );
-      place(x, sr, "below");
+
+      const sr = strip!.getBoundingClientRect();
+      const cr = chart!.getBoundingClientRect();
+      // The current month's cursor stops at Today, like the strip itself.
+      const frac = (Math.min(next + 0.5, todayPos) - d0) / span;
+      const x = sr.left + sr.width * frac;
+      if (monthChanged || srcChanged || vline!.hidden) {
+        vline!.hidden = false;
+        vline!.style.left = `${x - cr.left}px`;
+        vline!.style.top = `${sr.top - cr.top}px`;
+      }
+
+      if (src === "strip") {
+        chip!.hidden = true;
+        strip!.setAttribute("aria-valuenow", String(next));
+        if (cross) {
+          cross.hidden = false;
+          cross.style.left = `${frac * 100}%`;
+          const dot = cross.querySelector<HTMLElement>("i");
+          if (dot) dot.style.top = `calc(${100 - (list.length / data.ymax) * 100}% - 3px)`;
+        }
+        tv.textContent = `${label} · ${summary}`;
+        [ta, tb, tc, tk].forEach((e) => (e.hidden = true));
+        tl.hidden = false;
+        tl.replaceChildren(
+          ...list.map((i) => {
+            const [title, place, cat] = data.roles[i];
+            const li = document.createElement("li");
+            const key = document.createElement("i");
+            key.className = "xt-key";
+            key.dataset.cat = cat;
+            const span = document.createElement("span");
+            span.textContent = `${place} — ${title}`;
+            li.append(key, span);
+            return li;
+          }),
+        );
+        shown = "strip";
+        strip!.setAttribute(
+          "aria-valuetext",
+          `${label}: ${summary}${list.length ? `: ${list.map((i) => data.roles[i][1] + ", " + data.roles[i][0]).join("; ")}` : ""}`,
+        );
+        place(x, sr, "below");
+      } else {
+        // Hovering the Gantt: no list tooltip, just a chip at the line. A bar tooltip may stay.
+        if (shown === "strip") hideTip();
+        if (cross) cross.hidden = true;
+        if (monthChanged || srcChanged || chip!.hidden) {
+          chip!.textContent = `${label} · ${roles}`;
+          chip!.hidden = false;
+          const w = chip!.offsetWidth;
+          const left = Math.min(Math.max(x, sr.left + w / 2), sr.right - w / 2) - cr.left;
+          chip!.style.left = `${left - w / 2}px`;
+        }
+        placeChipY();
+      }
+    }
+    /**
+     * Vertical spot of the hover chip: on the top axis's year line at rest; once that has scrolled
+     * away, just under the sticky header, so it stays visible while hovering the lower rows.
+     */
+    function placeChipY() {
+      if (mode !== "hover" || chip!.hidden) return;
+      const cr = chart!.getBoundingClientRect();
+      const ar = (topAxis ?? strip!).getBoundingClientRect();
+      const navBottom = document.getElementById("site-nav")?.getBoundingClientRect().bottom ?? 0;
+      const axisTop = ar.top - cr.top - 2;
+      const stuck = navBottom + 8 - cr.top;
+      const top = Math.min(Math.max(axisTop, stuck), cr.height - chip!.offsetHeight);
+      chip!.style.top = `${top}px`;
     }
     function monthAt(clientX: number) {
       const r = strip!.getBoundingClientRect();
       const f = (clientX - r.left) / r.width;
       return Math.floor(d0 + f * span);
     }
+
+    // Strip: pointer, touch drag and keyboard.
     strip.addEventListener("pointermove", (e) => {
       hovering = true;
-      showMonth(monthAt(e.clientX));
+      setMonth(monthAt(e.clientX), "strip");
     });
     strip.addEventListener("pointerdown", (e) => {
       hovering = true;
-      showMonth(monthAt(e.clientX));
+      setMonth(monthAt(e.clientX), "strip");
     });
-    strip.addEventListener("pointerleave", (e) => {
+    strip.addEventListener("pointerleave", () => {
+      // Leaving to another part of the chart is handled by the chart's own pointermove.
       hovering = false;
-      if (e.pointerType !== "touch" && document.activeElement !== strip) hide();
     });
     strip.addEventListener("focus", () => {
-      if (!hovering) showMonth(month);
+      if (!hovering) setMonth(month, "strip");
     });
     strip.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft") {
         e.preventDefault();
-        showMonth(month - 1);
+        setMonth(month - 1, "strip");
       } else if (e.key === "ArrowRight") {
         e.preventDefault();
-        showMonth(month + 1);
+        setMonth(month + 1, "strip");
       } else if (e.key === "Home") {
         e.preventDefault();
-        showMonth(data?.first ?? month);
+        setMonth(data?.first ?? month, "strip");
       } else if (e.key === "End") {
         e.preventDefault();
-        showMonth(nowIdx);
+        setMonth(nowIdx, "strip");
       } else if (e.key === "PageUp") {
         e.preventDefault();
-        showMonth(month - 12);
+        setMonth(month - 12, "strip");
       } else if (e.key === "PageDown") {
         e.preventDefault();
-        showMonth(month + 12);
+        setMonth(month + 12, "strip");
       }
     });
-    document.addEventListener("pointerdown", (e) => {
-      if (!(e.target as Element).closest(".xt-strip, .xt-bar")) hide();
+
+    // Gantt: mouse and pen hover over the track column (touch keeps scrolling and tapping as normal).
+    chart.addEventListener("pointermove", (e) => {
+      if (e.pointerType === "touch") return;
+      const t = e.target as Element;
+      if (t.closest(".xt-strip")) return;
+      const sr = strip.getBoundingClientRect();
+      const inTracks = !!t.closest(".xt-track, .xt-place") && e.clientX >= sr.left && e.clientX <= sr.right;
+      if (inTracks) {
+        let m = monthAt(e.clientX);
+        // A short bar's 24px hit box can reach past its true span: never dim the bar under the pointer.
+        const bar = t.closest<HTMLElement>(".xt-bar");
+        if (bar) m = Math.min(Math.max(m, Number(bar.dataset.s)), Number(bar.dataset.e));
+        setMonth(m, "hover");
+        placeChipY();
+      }
+      else if (document.activeElement !== strip) clearMonth();
     });
-    // A resize or rotation leaves the tooltip in the wrong place.
-    window.addEventListener("resize", hide);
+    chart.addEventListener("pointerleave", (e) => {
+      if (e.pointerType === "touch" || document.activeElement === strip) return;
+      clearMonth();
+    });
+
+    document.addEventListener("pointerdown", (e) => {
+      const t = e.target as Element;
+      if (!t.closest("[data-xt] .xt-chart")) clearAll();
+      else if ((e as PointerEvent).pointerType === "touch" && !t.closest(".xt-strip, .xt-bar")) clearAll();
+    });
+    window.addEventListener("scroll", placeChipY, { passive: true });
+    // A resize or rotation leaves the cursor and tooltip in the wrong place.
+    window.addEventListener("resize", clearAll);
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") hide();
+      if (e.key === "Escape") clearAll();
     });
   }
 </script>

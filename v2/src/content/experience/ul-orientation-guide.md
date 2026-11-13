@@ -2,6 +2,7 @@
 title: Orientation Guide
 employer: Academic Registry, University of Limerick
 employerShort: "UL Academic Registry"
+workplace: University of Limerick
 employerUrl: https://www.ul.ie/academic-registry
 location: Limerick, Ireland
 category: education
